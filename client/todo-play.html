@@ -44,7 +44,7 @@
 
 <template name="habit_item">
   <li id="habit-{{_id}}" class="item">
-    <div class="item-checkbox"><label class="{{ticked}}">¬</label></div>
+    <div class="item-checkbox {{habit_status}}"><label class="habit-plus">+</label></div>
     <div class="item-text"> {{text}}</div>
     <div class="item-remove"><label class="item-remove-x"> + </label></div>
   </li>

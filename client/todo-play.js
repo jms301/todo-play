@@ -42,9 +42,11 @@ Template.habits.events(okCancelEvents(
   {
     ok: function (text, evt) { 
       Habits.insert({
+        ticktime: (new Date(0)),
         text: text, 
         done: false, 
         timestamp: (new Date()).getTime(),
+        freq: 7 //default frequency is once per week  
     });
     evt.target.value='';
   }, 
@@ -63,11 +65,23 @@ Template.habit_item.events({
         Habits.remove(this._id); 
    },
   'click .item-checkbox': function () { 
-      Habits.update(this._id, {$set: {done: !this.done}}); 
+      Habits.update(this._id, {$set: {done: !this.done, ticktime: (new Date()).getTime()}}); 
    }
  });
 
+Template.habit_item.habit_status = function() {
+  //returns the urgency of this habit this.freq = ideal frequency in days.
+  // this.tickedtime = time of last completion. 
+  days = 86400000; //milliseconds in one day;
 
+  age = new Date() - this.ticktime; 
+  if(age < (this.freq/2) * days)
+    return "habit-status-1";
+  else if(age < this.freq * days)
+    return "habit-status-2";
+  else 
+    return "habit-status-3";
+};
 
 //Dailies
 
@@ -83,6 +97,7 @@ Template.dailies.events(okCancelEvents(
         text: text, 
         done: false, 
         timestamp: (new Date()).getTime(),
+        ticktime: (new Date(0))
     });
     evt.target.value='';
   }, 
@@ -92,7 +107,10 @@ Template.dailies.events(okCancelEvents(
  }));
 
 Template.daily_item.ticked = function () { 
-  return this.done ? 'ticked' : 'unticked';
+  if (this.done && (this.ticktime > new Date(new Date().toDateString()).getTime() ))
+    return 'ticked';
+  else
+    return 'unticked';
 };
 
 Template.daily_item.events({
@@ -101,7 +119,7 @@ Template.daily_item.events({
         Dailies.remove(this._id); 
    },
   'click .item-checkbox': function () { 
-      Dailies.update(this._id, {$set: {done: !this.done}}); 
+      Dailies.update(this._id, {$set: {done: !this.done, ticktime: (new Date()).getTime()}}); 
    }
  });
 

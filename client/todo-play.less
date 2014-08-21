@@ -83,6 +83,10 @@ div.item-remove {
 
 };
 
+div.item-remove:hover { 
+  border: 1px solid #555;
+}; 
+
 label.item-remove-x { 
   transform: rotate(135deg);
   font-size: 2em;
@@ -94,7 +98,7 @@ label.item-remove-x {
 // add item css
 .add-item-form { 
   outline: 1px solid rgba( 0, 0, 0, 0.15); 
-  outline-offset: -1; 
+  outline-offset: -1px; 
   background-color: #FFF; 
   position: relative;   
   margin-bottom: 2em;
@@ -124,7 +128,7 @@ label.item-remove-x {
   right: 0px;
   height: 3em; 
   display: inline;
-  width: 10%;
+  width: 46px;
   margin: 0px;
   padding: 0px;
   border: 0px none; 
@@ -136,3 +140,23 @@ label.item-remove-x {
 };
 
 
+// Habit specific CSS
+label.habit-plus { 
+  text-align: center; 
+  display: inline-block;
+  font-size: 2em;
+  margin-left: 14px;
+  margin-top: -2px;
+};
+
+div.habit-status-1 {
+  background-color: #BFA;
+};
+
+div.habit-status-2 {
+  background-color: #BAF;
+};
+
+div.habit-status-3 {
+  background-color: #FAB;
+};
