@@ -1,0 +1,138 @@
+/* CSS declarations go here */
+@import "/packages/bootstrap3-less/bootstrap.import.less";
+@import "/packages/bootstrap3-less/lib/less/theme.import.less";
+
+
+
+// list items (todo list, dailies, habits)
+
+ul.items-list {
+  margin: 0px;
+  padding: 0px;
+};
+
+li.item  { 
+  list-style-type: none;
+  list-style-image: none;
+  list-style-position: outside;
+  clear: both;
+  padding: 0px;
+  min-height: 3em;
+  margin-bottom: 0.75em;
+  box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.5) inset;
+  position: relative;
+};
+
+div.item-checkbox { 
+  position: absolute;
+  top: 0px;
+  bottom: 0px;
+  left: 0px;
+
+  float: none;
+  margin: 0px;
+  display:block;  
+  width: 45px;
+
+  margin: auto;
+  border: 1px solid #AAA;
+  background-color: #BAF; 
+}; 
+
+div.item-checkbox:hover { 
+  border: 1px solid #555;
+}; 
+
+div.ticked { 
+  border: 1px solid #BBB;
+  background-color: #BFA; 
+};
+
+label.unticked { 
+  display: none;
+};
+
+label.ticked { 
+  text-align: center; 
+  transform: rotate(135deg);
+  display: inline-block;
+  font-size: 2.5em;
+  margin-left: 0.4em;
+  margin-top: -0.1em;
+
+};
+
+div.item-text {
+  display: block;  
+  padding-left:52px;
+  padding-right:52px;
+  padding-top: 0.75em; 
+  padding-bottom: 0.75em; 
+};
+
+div.item-remove { 
+  display: block;
+  position: absolute;
+  top: 0px;
+  bottom: 0px;
+  right: 0px;
+
+  width: 45px;
+  margin: auto;
+  border: 1px solid #BBB;
+
+};
+
+label.item-remove-x { 
+  transform: rotate(135deg);
+  font-size: 2em;
+  margin-left: 0.56em;
+  margin-top: 0.1em;
+  
+};
+
+// add item css
+.add-item-form { 
+  outline: 1px solid rgba( 0, 0, 0, 0.15); 
+  outline-offset: -1; 
+  background-color: #FFF; 
+  position: relative;   
+  margin-bottom: 2em;
+  
+}; 
+
+.add-item-field { 
+  display: block; 
+  width: 100%;
+};
+
+.add-item-text { 
+  width: 100%;
+  height: 3em;  
+  margin: 0px;
+  padding: 0px;
+  border: 0px none;
+  outline: 0px none;
+  height: 3em;
+  background-color: #FFF;
+  padding-left: 1em;
+};
+
+.add-item-btn { 
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  height: 3em; 
+  display: inline;
+  width: 10%;
+  margin: 0px;
+  padding: 0px;
+  border: 0px none; 
+  outline: 0px none; 
+  font-size: 22px;
+  font-size-adjust: none; 
+  height: 2em;
+
+};
+
+

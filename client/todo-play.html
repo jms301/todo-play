@@ -1,0 +1,99 @@
+<head>
+  <title>todo:play</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
+<body>
+  <div id="top-pane" class="container-fluid">
+  </div>
+  <div id="main-pane" class="container-fluid">
+    {{>todo_play}}
+  </div>
+</body>
+
+<template name="todo_play">
+    <div class="col-md-2">
+    </div>
+    <div class="col-md-3">
+      <h1>Habits</h1>
+	{{>habits}}
+    </div>
+    <div class="col-md-3">
+      <h1>Dailies</h1>
+	{{>dailies}}
+    </div>
+    <div class="col-md-3">
+      <h1>Todos</h1>
+	{{>todos}}
+    </div>
+</template>
+
+<template name="habits">
+ <div class="add-item-form">
+ <span class="add-item-field">
+ <input type="text"  placeholder="New Habit" id="add-habit" class="add-item-text"/>
+ </span>
+ <input type="submit" value="+" class="add-item-btn"/>
+ </div> 
+<ul id="habit-list" class="items-list"> 
+  {{#each habits}}
+    {{> habit_item}}
+  {{/each}}
+</ul>
+</template>
+
+<template name="habit_item">
+  <li id="habit-{{_id}}" class="item">
+    <div class="item-checkbox"><label class="{{ticked}}">¬</label></div>
+    <div class="item-text"> {{text}}</div>
+    <div class="item-remove"><label class="item-remove-x"> + </label></div>
+  </li>
+</template>
+
+
+<template name="dailies">
+ <div class="add-item-form">
+ <span class="add-item-field">
+ <input type="text"  placeholder="New Daily" id="add-daily" class="add-item-text"/>
+ </span>
+ <input type="button" value="+" class="add-item-btn"/>
+ </div> 
+<ul id="daily-list" class="items-list"> 
+  {{#each dailies}}
+    {{> daily_item}}
+  {{/each}}
+</ul>
+</template>
+
+<template name="daily_item">
+  <li id="daily-{{_id}}" class="item">
+    <div class="item-checkbox {{ticked}}"><label class="{{ticked}}">¬</label></div>
+    <div class="item-text"> {{text}}</div>
+    <div class="item-remove"><label class="item-remove-x"> + </label></div>
+  </li>
+</template>
+
+<template name="todos">
+ <div class="add-item-form">
+ <span class="add-item-field">
+ <input type="text"  placeholder="New Todo" class="add-item-text"/>
+ </span>
+ <input type="button" value="+" class="add-item-btn"/>
+ </div> 
+<ul id="todo-list" class="items-list"> 
+  {{#each todos}}
+    {{> todo_item}}
+  {{/each}}
+</ul>
+</template>
+
+
+
+
+<template name="todo_item">
+  <li id="todo-{{_id}}" class="item">
+    <div class="item-checkbox {{ticked}}"><label class="{{ticked}}">¬</label></div>
+    <div class="item-text"><span class="item-text"> {{text}}</span></div>
+    <div class="item-remove"><label class="item-remove-x"> + </label></div>
+  </li>
+</template>
