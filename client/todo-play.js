@@ -1,10 +1,31 @@
+Session.setDefault('edit_todo_id', null);
+Session.setDefault('edit_daily_id', null);
+Session.setDefault('edit_habit_id', null);
+
+var cancelEdit = function (id, List) { 
+  if(id) {
+    title_input = $('#item-title-' + id);
+    notes_input = $('#item-notes-' + id);
+    item = List.findOne({_id: id});
+  
+    title_input.val(item.text);
+    notes_input.val(item.notes);
+ } 
+}; 
+
+var saveEdit = function (id, List) { 
+  title_input = $('#item-title-' + id);
+  notes_input = $('#item-notes-' + id);
+  List.update(id, {$set: {notes: notes_input.val(), text: title_input.val()}});
+
+};
+
 // Returns an event map that handles the "escape" and "return" keys and
 // "blur" events on a text input (given by selector) and interprets them
 // as "ok" or "cancel".
 var okCancelEvents = function (selector, callbacks) { 
   var ok = callbacks.ok || function () {};
   var cancel = callbacks.cancel || function () {};
-
   var events = {}; 
   events['keyup '+selector+', keydown '+selector+', focusout '+selector] =
     function (evt) {
@@ -26,10 +47,26 @@ var okCancelEvents = function (selector, callbacks) {
   return events;
 };
 
-var activateInput = function (input) {
-  input.focus();
-  input.select();
-};
+$(document).keyup(function(e) {
+    if (e.keyCode == 27) { 
+      cancelEdit(Session.get('edit_todo_id'), Todos);
+      cancelEdit(Session.get('edit_daily_id'), Dailies);
+      cancelEdit(Session.get('edit_habit_id'), Habits);
+      Session.set('edit_todo_id', null);
+      Session.set('edit_daily_id', null);
+      Session.set('edit_habit_id', null);
+      
+    }   // esc
+});
+
+UI.body.events({'click' : function (evt)  { 
+    saveEdit(Session.get('edit_todo_id'), Todos);
+    saveEdit(Session.get('edit_daily_id'), Dailies);
+    saveEdit(Session.get('edit_habit_id'), Habits);
+    Session.set('edit_todo_id', null);
+    Session.set('edit_daily_id', null);
+    Session.set('edit_habit_id', null);
+}});
 
 //Habits
 
@@ -136,6 +173,7 @@ Template.todos.events(okCancelEvents(
       Todos.insert({
         text: text, 
         done: false, 
+        notes: "",
         timestamp: (new Date()).getTime(),
       });
       evt.target.value='';
@@ -143,7 +181,8 @@ Template.todos.events(okCancelEvents(
     cancel: function (evt) {
       evt.target.value='';
     }
-  }));
+  }
+));
 
 Template.todo_item.ticked = function () { 
   return this.done ? 'ticked' : 'unticked';
@@ -153,9 +192,45 @@ Template.todo_item.events({
   'click .item-remove': function () { 
       //if(confirm("sure you want to delete that?"))
         Todos.remove(this._id); 
-   },
+  },
+  'click li': function (evt) { 
+    if (evt.stopPropagation) {
+      evt.stopPropagation();
+    } else {
+      evt.cancelBubble = true;
+    }
+  },
+  'click .cancel-edit': function () { 
+      cancelEdit(this._id, Todos);
+      Session.set('edit_todo_id', null);
+  },
   'click .item-checkbox': function () { 
-      Todos.update(this._id, {$set: {done: !this.done}}); 
-   }
- });
+    Todos.update(this._id, {$set: {done: !this.done}}); 
+  },
+  'dblclick .item-text': function (evt) { 
+    if(Session.get('edit_todo_id') != this._id)
+      Session.set('edit_todo_id', this._id);
+    else {
+      Session.set('edit_todo_id', null);
+      saveEdit(this._id, Todos);
+    }
+
+    if (evt.stopPropagation) {
+      evt.stopPropagation();
+    } else {
+      evt.cancelBubble = true;
+    }
+  },
+  'dblclick .item-edit-title, dblclick .item-edit-notes' : function(evt) { 
+    if (evt.stopPropagation) {
+      evt.stopPropagation();
+    } else {
+      evt.cancelBubble = true;
+    }
+  }
+});
+
+Template.todo_item.editing = function () { 
+  return this._id == Session.get('edit_todo_id') ? "editing" : "";
+};
 

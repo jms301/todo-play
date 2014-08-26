@@ -23,6 +23,33 @@ li.item  {
   position: relative;
 };
 
+div.item-details { 
+  display: none;
+};
+
+div.editing { 
+  display: block;
+  margin-top: 1em;
+};
+input.item-edit-title { 
+  width: 20em;  
+};
+textarea.item-edit-notes { 
+  cols: 20;
+  padding-right: 3px;
+};
+div.cancel-edit { 
+  position: absolute; 
+  top: 0px;
+  right: 0px;
+  width: 20px;
+  height: 30px;
+};
+label.cancel-edit { 
+  transform: rotate(135deg);
+  font-size: 2em;
+
+};
 div.item-checkbox { 
   position: absolute;
   top: 0px;
@@ -31,7 +58,7 @@ div.item-checkbox {
 
   float: none;
   margin: 0px;
-  display:block;  
+  display: block;  
   width: 45px;
 
   margin: auto;
@@ -63,9 +90,10 @@ label.ticked {
 };
 
 div.item-text {
+  position: relative;
   display: block;  
-  padding-left:52px;
-  padding-right:52px;
+  margin-left:52px;
+  margin-right:52px;
   padding-top: 0.75em; 
   padding-bottom: 0.75em; 
 };
