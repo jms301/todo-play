@@ -19,6 +19,14 @@ var saveEdit = function (id, List) {
 
 };
 
+var stopProp = function (evt) {
+  if (evt.stopPropagation) {
+    evt.stopPropagation();
+  } else {
+    evt.cancelBubble = true;
+  }
+};
+
 // Returns an event map that handles the "escape" and "return" keys and
 // "blur" events on a text input (given by selector) and interprets them
 // as "ok" or "cancel".
@@ -187,23 +195,21 @@ Template.todo_item.ticked = function () {
 };
 
 Template.todo_item.events({
-  'click .item-remove': function () {
-      //if(confirm("sure you want to delete that?"))
-        Todos.remove(this._id);
+  'click .item-remove': function (evt) {
+    //if(confirm("sure you want to delete that?"))
+      Todos.remove(this._id);
+    stopProp(evt);
   },
   'click li': function (evt) {
-    if (evt.stopPropagation) {
-      evt.stopPropagation();
-    } else {
-      evt.cancelBubble = true;
-    }
+    stopProp(evt);
   },
-  'click .cancel-edit': function () {
-      cancelEdit(this._id, Todos);
-      Session.set('edit_todo_id', null);
+  'click .cancel-edit': function (evt) {
+    cancelEdit(this._id, Todos);
+    Session.set('edit_todo_id', null);
   },
-  'click .item-checkbox': function () {
+  'click .item-checkbox': function (evt) {
     Todos.update(this._id, {$set: {done: !this.done}});
+    stopProp(evt);
   },
   'dblclick .item-text': function (evt) {
     if(Session.get('edit_todo_id') != this._id)
@@ -213,22 +219,14 @@ Template.todo_item.events({
       saveEdit(this._id, Todos);
     }
 
-    if (evt.stopPropagation) {
-      evt.stopPropagation();
-    } else {
-      evt.cancelBubble = true;
-    }
+    stopProp(evt);
   },
   'dblclick .item-edit-title, dblclick .item-edit-notes' : function(evt) {
-    if (evt.stopPropagation) {
-      evt.stopPropagation();
-    } else {
-      evt.cancelBubble = true;
-    }
+    stopProp(evt);
   }
 });
 
-Template.todo_item.editing = function () {
+Template.todo_item.editing = function (evt) {
   return this._id == Session.get('edit_todo_id') ? "editing" : "";
 };
 
