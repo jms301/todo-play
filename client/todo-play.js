@@ -1,6 +1,18 @@
-Session.setDefault('edit_todo_id', null);
-Session.setDefault('edit_daily_id', null);
-Session.setDefault('edit_habit_id', null);
+Session.setDefault('edit_todo', null);
+Session.setDefault('edit_daily', null);
+Session.setDefault('edit_habit', null);
+
+var clearSelect = function() { 
+  if (window.getSelection) {
+    if (window.getSelection().empty) {  // Chrome
+      window.getSelection().empty();
+    } else if (window.getSelection().removeAllRanges) {  // Firefox
+      window.getSelection().removeAllRanges();
+    }
+  } else if (document.selection) {  // IE?
+    document.selection.empty();
+  }
+}; 
 
 var cancelEdit = function (id, List) {
   if(id) {
@@ -54,24 +66,25 @@ var okCancelEvents = function (selector, callbacks) {
   return events;
 };
 
+
 $(document).keyup(function(e) {
     if (e.keyCode == 27) {
-      cancelEdit(Session.get('edit_todo_id'), Todos);
-      cancelEdit(Session.get('edit_daily_id'), Dailies);
-      cancelEdit(Session.get('edit_habit_id'), Habits);
-      Session.set('edit_todo_id', null);
-      Session.set('edit_daily_id', null);
-      Session.set('edit_habit_id', null);
+      cancelEdit(Session.get('edit_todo'), Todos);
+      cancelEdit(Session.get('edit_daily'), Dailies);
+      cancelEdit(Session.get('edit_habit'), Habits);
+      Session.set('edit_todo', null);
+      Session.set('edit_daily', null);
+      Session.set('edit_habit', null);
     }   // esc
 });
 
 UI.body.events({'click' : function (evt)  {
-    saveEdit(Session.get('edit_todo_id'), Todos);
-    saveEdit(Session.get('edit_daily_id'), Dailies);
-    saveEdit(Session.get('edit_habit_id'), Habits);
-    Session.set('edit_todo_id', null);
-    Session.set('edit_daily_id', null);
-    Session.set('edit_habit_id', null);
+    saveEdit(Session.get('edit_todo'), Todos);
+    saveEdit(Session.get('edit_daily'), Dailies);
+    saveEdit(Session.get('edit_habit'), Habits);
+    Session.set('edit_todo', null);
+    Session.set('edit_daily', null);
+    Session.set('edit_habit', null);
 }});
 
 //Habits
@@ -205,20 +218,22 @@ Template.todo_item.events({
   },
   'click .cancel-edit': function (evt) {
     cancelEdit(this._id, Todos);
-    Session.set('edit_todo_id', null);
+    Session.set('edit_todo', null);
+    stopProp(evt);
   },
   'click .item-checkbox': function (evt) {
     Todos.update(this._id, {$set: {done: !this.done}});
     stopProp(evt);
   },
   'dblclick .item-text': function (evt) {
-    if(Session.get('edit_todo_id') != this._id)
-      Session.set('edit_todo_id', this._id);
+    if(Session.get('edit_todo') != this._id)
+      Session.set('edit_todo', this._id);
     else {
-      Session.set('edit_todo_id', null);
+      Session.set('edit_todo', null);
       saveEdit(this._id, Todos);
     }
 
+    clearSelect();
     stopProp(evt);
   },
   'dblclick .item-edit-title, dblclick .item-edit-notes' : function(evt) {
@@ -227,6 +242,6 @@ Template.todo_item.events({
 });
 
 Template.todo_item.editing = function (evt) {
-  return this._id == Session.get('edit_todo_id') ? "editing" : "";
+  return this._id == Session.get('edit_todo') ? "editing" : "";
 };
 
