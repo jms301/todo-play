@@ -65,14 +65,6 @@
 </ul>
 </template>
 
-<template name="daily_item">
-  <li id="daily-{{_id}}" class="item">
-    <div class="item-checkbox {{ticked}}"><label class="{{ticked}}">¬</label></div>
-    <div class="item-text"> {{text}}</div>
-    <div class="item-remove"><label class="item-remove-x"> + </label></div>
-  </li>
-</template>
-
 <template name="todos">
  <div class="add-item-form">
  <span class="add-item-field">
@@ -85,6 +77,21 @@
     {{> todo_item}}
   {{/each}}
 </ul>
+</template>
+
+<template name="daily_item">
+  <li id="daily-{{_id}}" class="item">
+    <div class="item-checkbox {{ticked}}"><label class="{{ticked}}">¬</label></div>
+    <div class="item-text"><span class="item-text"> {{text}}</span>
+      <div class="item-details {{editing}}">
+      Title: <input id="item-title-{{_id}}" value="{{text}}" class="item-edit-title"/>
+      Notes: <br/>
+      <textarea id="item-notes-{{_id}}" rows=3 cols=35 class="item-edit-notes">{{notes}}</textarea>
+      <div class="cancel-edit"><label class="cancel-edit">+</label></div>
+      </div>
+    </div>
+    <div class="item-remove"><label class="item-remove-x"> + </label></div>
+  </li>
 </template>
 
 
@@ -100,7 +107,7 @@
       <textarea id="item-notes-{{_id}}" rows=3 cols=35 class="item-edit-notes">{{notes}}</textarea>
       <div class="cancel-edit"><label class="cancel-edit">+</label></div>
       </div>
-      </div>
+    </div>
     <div class="item-remove"><label class="item-remove-x"> + </label></div>
   </li>
 </template>

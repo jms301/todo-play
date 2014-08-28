@@ -2,7 +2,7 @@ Session.setDefault('edit_todo', null);
 Session.setDefault('edit_daily', null);
 Session.setDefault('edit_habit', null);
 
-var clearSelect = function() { 
+var clearSelect = function() {
   if (window.getSelection) {
     if (window.getSelection().empty) {  // Chrome
       window.getSelection().empty();
@@ -12,7 +12,7 @@ var clearSelect = function() {
   } else if (document.selection) {  // IE?
     document.selection.empty();
   }
-}; 
+};
 
 var cancelEdit = function (id, List) {
   if(id) {
@@ -170,15 +170,42 @@ Template.daily_item.ticked = function () {
 };
 
 Template.daily_item.events({
-  'click .item-remove': function () {
+  'click li': function (evt) {
+    stopProp(evt);
+  },
+  'click .item-remove': function (evt) {
       //if(confirm("sure you want to delete that?"))
         Dailies.remove(this._id);
-   },
-  'click .item-checkbox': function () {
-      Dailies.update(this._id, {$set: {done: !this.done, ticktime: (new Date()).getTime()}});
-   }
- });
+    stopProp(evt);
+  },
+  'click .item-checkbox': function (evt) {
+    Dailies.update(this._id, {$set: {done: !this.done, ticktime: (new Date()).getTime()}});
+    stopProp(evt);
+  },
+  'click .cancel-edit': function (evt) {
+    cancelEdit(this._id, Dailies);
+    Session.set('edit_daily', null);
+    stopProp(evt);
+  },
+  'dblclick .item-text': function (evt) {
+    if(Session.get('edit_daily') != this._id)
+      Session.set('edit_daily', this._id);
+    else {
+      Session.set('edit_daily', null);
+      saveEdit(this._id, Dailies);
+    }
 
+    clearSelect();
+    stopProp(evt);
+  },
+  'dblclick .item-edit-title, dblclick .item-edit-notes' : function(evt) {
+    stopProp(evt);
+  }
+});
+
+Template.daily_item.editing = function (evt) {
+  return this._id == Session.get('edit_daily') ? "editing" : "";
+};
 
 //Todos
 Template.todos.todos = function () {
@@ -222,7 +249,8 @@ Template.todo_item.events({
     stopProp(evt);
   },
   'click .item-checkbox': function (evt) {
-    Todos.update(this._id, {$set: {done: !this.done}});
+    Todos.update(this._id, {$set:
+                              {done: !this.done, ticktime: (new Date())}});
     stopProp(evt);
   },
   'dblclick .item-text': function (evt) {
