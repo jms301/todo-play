@@ -5,6 +5,8 @@
 
 <body>
   <div id="top-pane" class="container-fluid">
+    {{>loginButtons}}
+
   </div>
   <div id="main-pane" class="container-fluid">
     {{>todo_play}}
@@ -42,14 +44,6 @@
 </ul>
 </template>
 
-<template name="habit_item">
-  <li id="habit-{{_id}}" class="item">
-    <div class="item-checkbox {{habit_status}}"><label class="habit-plus">+</label></div>
-    <div class="item-text"> {{text}}</div>
-    <div class="item-remove"><label class="item-remove-x"> + </label></div>
-  </li>
-</template>
-
 
 <template name="dailies">
  <div class="add-item-form">
@@ -79,6 +73,26 @@
 </ul>
 </template>
 
+<template name="habit_item">
+  <li id="habit-{{_id}}" class="item">
+    <div class="item-checkbox {{habit_status}}"><label class="habit-plus">+</label></div>
+    <div class="item-text"><span class="item-text"> {{text}}</span>
+      <div class="item-details {{editing}}">
+      Title: <br />
+      <input id="item-title-{{_id}}" value="{{text}}" class="item-edit-title"/>
+      Notes: <br/>
+      <textarea id="item-notes-{{_id}}" rows=3 cols=35 class="item-edit-notes">{{notes}}</textarea>
+      Frequency (days): <input type="number" id="habit-freq-{{_id}}" value="{{freq}}" class="item-edit-freq"/>
+      <div class="cancel-edit"><label class="cancel-edit">+</label></div>
+      </div>
+    </div>
+    <div class="item-remove"><div class="item-remove-x"> 
+      <label class="glyphicon glyphicon-trash"></label> 
+    </div></div>
+  </li>
+</template>
+
+
 <template name="daily_item">
   <li id="daily-{{_id}}" class="item">
     <div class="item-checkbox {{ticked}}"><label class="{{ticked}}">¬</label></div>
@@ -90,7 +104,9 @@
       <div class="cancel-edit"><label class="cancel-edit">+</label></div>
       </div>
     </div>
-    <div class="item-remove"><label class="item-remove-x"> + </label></div>
+    <div class="item-remove"><div class="item-remove-x"> 
+      <label class="glyphicon glyphicon-trash"></label> 
+    </div></div>
   </li>
 </template>
 
@@ -108,6 +124,8 @@
       <div class="cancel-edit"><label class="cancel-edit">+</label></div>
       </div>
     </div>
-    <div class="item-remove"><label class="item-remove-x"> + </label></div>
+    <div class="item-remove"><div class="item-remove-x"> 
+      <label class="glyphicon glyphicon-trash"></label> 
+    </div></div>
   </li>
 </template>

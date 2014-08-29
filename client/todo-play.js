@@ -31,6 +31,27 @@ var saveEdit = function (id, List) {
 
 };
 
+var cancelHabit = function (id, List) {
+  if(id) {
+    title_input = $('#item-title-' + id);
+    notes_input = $('#item-notes-' + id);
+    freq_input  = $('#habit-freq-' + id);
+    item = List.findOne({_id: id});
+    title_input.val(item.text);
+    notes_input.val(item.notes);
+    freq_input.val(item.freq);
+  }
+};
+
+var saveHabit = function (id, List) {
+  title_input = $('#item-title-' + id);
+  notes_input = $('#item-notes-' + id);
+  freq_input  = $('#habit-freq-' + id);
+
+  List.update(id, {$set: {notes: notes_input.val(), text: title_input.val(),
+                          freq: freq_input.val()}});
+};
+
 var stopProp = function (evt) {
   if (evt.stopPropagation) {
     evt.stopPropagation();
@@ -71,7 +92,7 @@ $(document).keyup(function(e) {
     if (e.keyCode == 27) {
       cancelEdit(Session.get('edit_todo'), Todos);
       cancelEdit(Session.get('edit_daily'), Dailies);
-      cancelEdit(Session.get('edit_habit'), Habits);
+      cancelHabit(Session.get('edit_habit'), Habits);
       Session.set('edit_todo', null);
       Session.set('edit_daily', null);
       Session.set('edit_habit', null);
@@ -81,7 +102,7 @@ $(document).keyup(function(e) {
 UI.body.events({'click' : function (evt)  {
     saveEdit(Session.get('edit_todo'), Todos);
     saveEdit(Session.get('edit_daily'), Dailies);
-    saveEdit(Session.get('edit_habit'), Habits);
+    saveHabit(Session.get('edit_habit'), Habits);
     Session.set('edit_todo', null);
     Session.set('edit_daily', null);
     Session.set('edit_habit', null);
@@ -89,8 +110,8 @@ UI.body.events({'click' : function (evt)  {
 
 //Habits
 
-Template.habits.habits= function () {
-  return Habits.find({});
+Template.habits.habits = function () {
+  return Habits.find({userId: Meteor.user()._id});
 };
 
 Template.habits.events(okCancelEvents(
@@ -99,8 +120,10 @@ Template.habits.events(okCancelEvents(
     ok: function (text, evt) {
       Habits.insert({
         ticktime: (new Date(0)),
+        userId: Meteor.user()._id,
         text: text,
         done: false,
+        notes: "",
         timestamp: (new Date()).getTime(),
         freq: 7 //default frequency is once per week
     });
@@ -111,18 +134,42 @@ Template.habits.events(okCancelEvents(
     }
  }));
 
-Template.habit_item.ticked = function () {
-  return this.done ? 'ticked' : 'unticked';
-};
 
 Template.habit_item.events({
-  'click .item-remove': function () {
-      //if(confirm("sure you want to delete that?"))
-        Habits.remove(this._id);
-   },
-  'click .item-checkbox': function () {
-      Habits.update(this._id, {$set: {done: !this.done, ticktime: (new Date()).getTime()}});
-   }
+ 'click .item-remove': function (evt) {
+    //if(confirm("sure you want to delete that?"))
+      Habits.remove(this._id);
+    stopProp(evt);
+  },
+  'click li': function (evt) {
+    stopProp(evt);
+  },
+  'click .cancel-edit': function (evt) {
+    cancelHabit(this._id, Habits);
+    Session.set('edit_habit', null);
+    stopProp(evt);
+  },
+  'click .item-checkbox': function (evt) {
+    Habits.update(this._id, {$set: {done: !this.done, ticktime: (new Date()).getTime()}});
+    stopProp(evt);
+  },
+  'dblclick .item-text': function (evt) {
+    if(Session.get('edit_habit') != this._id)
+      Session.set('edit_habit', this._id);
+    else {
+      Session.set('edit_habit', null);
+      saveHabit(this._id, habits);
+    }
+
+    clearSelect();
+    stopProp(evt);
+  },
+  // prevent double click selection from closing the edit box
+  'dblclick .item-edit-title, dblclick .item-edit-notes, dblclick .item-edit-freq ' : function(evt) {
+    stopProp(evt);
+  }
+
+
  });
 
 Template.habit_item.habit_status = function() {
@@ -139,10 +186,14 @@ Template.habit_item.habit_status = function() {
     return "habit-status-3";
 };
 
+Template.habit_item.editing = function (evt) {
+  return this._id == Session.get('edit_habit') ? "editing" : "";
+};
+
 //Dailies
 
 Template.dailies.dailies = function () {
-  return Dailies.find({});
+  return Dailies.find({userId: Meteor.user()._id});
 };
 
 Template.dailies.events(okCancelEvents(
@@ -150,8 +201,10 @@ Template.dailies.events(okCancelEvents(
   {
     ok: function (text, evt) {
       Dailies.insert({
+        userId: Meteor.user()._id,
         text: text,
         done: false,
+        notes: "",
         timestamp: (new Date()).getTime(),
         ticktime: (new Date(0))
     });
@@ -209,7 +262,7 @@ Template.daily_item.editing = function (evt) {
 
 //Todos
 Template.todos.todos = function () {
-  return Todos.find({}, {sort: [["done"], ["timestamp", "desc"] ]});
+  return Todos.find({userId: Meteor.user()._id}, {sort: [["done"], ["timestamp", "desc"] ]});
 };
 
 Template.todos.events(okCancelEvents(
@@ -218,6 +271,7 @@ Template.todos.events(okCancelEvents(
     ok: function (text, evt) {
       Todos.insert({
         text: text,
+        userId: Meteor.user()._id,
         done: false,
         notes: "",
         timestamp: (new Date()).getTime(),
