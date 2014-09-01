@@ -4,30 +4,85 @@
 </head>
 
 <body>
-  <div id="top-pane" class="container-fluid">
-    {{>loginButtons}}
-
+  <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div id="nav-bar" class="container-fluid">
+      <div class="navbar-header">
+        <a class="navbar-brand" href="#">Todo-Play</a>
+      </div>
+      <div class="nav navbar-nav navbar-right">
+      {{>loginButtons}}
+      </div>
+    </div>
+  </nav>
+  <div id="charts" class="container-fluid">
+  {{>days}}
   </div>
-  <div id="main-pane" class="container-fluid">
+ <div id="main-pane" class="container-fluid">
     {{>todo_play}}
   </div>
 </body>
 
-<template name="todo_play">
-    <div class="col-md-2">
+<template name = "days">
+    <div id="before" class="chart col-md-2">
+        <strong>Day Before</strong>
+      <div class="central">
+          {{#with before_chart}}
+            {{>chart}}
+          {{/with}}
+      </div>
     </div>
-    <div class="col-md-3">
-      <h1>Habits</h1>
+    <div id="yesterday" class="chart col-md-2">
+      <strong>Yesterday</strong>
+      <div class="central">
+          {{#with yesterday_chart}}
+            {{>chart}}
+          {{/with}}
+      </div>
+    </div>
+    <div id="today" class="chart col-md-4">
+      <strong>Today ({{today}})</strong>
+      <div class="central">
+          {{#with today_chart}}
+            {{>chart}}
+          {{/with}}
+      </div>
+    </div>
+    <div id="tomorrow" class="chart col-md-2"><strong>Tomorrow</strong>
+
+    </div>
+    <div id="after" class="chart col-md-2"><strong>Day After</strong>
+    </div>
+
+</template>
+<template name = "chart" >
+            <div class="bar habit-bar" style="height: {{habit_height}}"> </div>
+            <div class="bar daily-bar" style="height: {{daily_height}}"> </div>
+            <div class="bar todo-bar" style="height: {{todo_height}}"> </div>
+</template>
+<template name="todo_play">
+    <div class="col-md-2" id="goals">
+    <ul class="nav nav-tabs tabs-left" role="tablist">
+      <li class="active"><a href="#">All</a></li>
+      <li><a href="#">Goal 1</a></li>
+      <li><a href="#">Goal 2</a></li>
+      <li><a href="#">Goal 3</a></li>
+      <li><a href="#">Goal 4</a></li>
+      <li><a href="#">Goal 5</a></li>
+    </ul>
+    </div>
+    <div class="main col-md-3" id="habits">
+      <h1>Do <label class="glyphicon glyphicon-calendar"></label> Often:</h1>
 	{{>habits}}
     </div>
-    <div class="col-md-3">
-      <h1>Dailies</h1>
+    <div class="main col-md-3">
+      <h1>Do Daily:</h1>
 	{{>dailies}}
     </div>
-    <div class="col-md-3">
-      <h1>Todos</h1>
+    <div class="main col-md-3">
+      <h1>Todo:</h1>
 	{{>todos}}
     </div>
+    <div class="main col-md-1"></div>
 </template>
 
 <template name="habits">
@@ -86,8 +141,8 @@
       <div class="cancel-edit"><label class="cancel-edit">+</label></div>
       </div>
     </div>
-    <div class="item-remove"><div class="item-remove-x"> 
-      <label class="glyphicon glyphicon-trash"></label> 
+    <div class="item-remove"><div class="item-remove-x">
+      <label class="glyphicon glyphicon-trash"></label>
     </div></div>
   </li>
 </template>
@@ -104,8 +159,8 @@
       <div class="cancel-edit"><label class="cancel-edit">+</label></div>
       </div>
     </div>
-    <div class="item-remove"><div class="item-remove-x"> 
-      <label class="glyphicon glyphicon-trash"></label> 
+    <div class="item-remove"><div class="item-remove-x">
+      <label class="glyphicon glyphicon-trash"></label>
     </div></div>
   </li>
 </template>
@@ -124,8 +179,8 @@
       <div class="cancel-edit"><label class="cancel-edit">+</label></div>
       </div>
     </div>
-    <div class="item-remove"><div class="item-remove-x"> 
-      <label class="glyphicon glyphicon-trash"></label> 
+    <div class="item-remove"><div class="item-remove-x">
+      <label class="glyphicon glyphicon-trash"></label>
     </div></div>
   </li>
 </template>

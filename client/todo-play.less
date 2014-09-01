@@ -2,13 +2,168 @@
 @import "/packages/bootstrap3-less/bootstrap.import.less";
 @import "/packages/bootstrap3-less/lib/less/theme.import.less";
 
+@pastel-blue: #779ECB;
+@pastel-red: #FF7373;
+@pastel-green: #77DD77;
 
+.chart {
+  //border-bottom: 1px solid #DDD;
+  height:  10em;
+  text-align: center;
+}
+.chart>div {
+
+  height: 7em;
+}
+#before {
+  //background-color: #D2D2D2;
+}
+#yesterday {
+  border-left: 1px solid #DDD;
+  //background-color: #DDD;
+}
+#today{
+  border-left: 1px solid #DDD;
+  //background-color: #EEE;
+}
+#tomorrow{
+  border-left: 1px solid #DDD;
+}
+#after{
+  border-left: 1px solid #DDD;
+}
+.main {
+  border-top: 1px solid #DDD;
+}
+div#goals {
+  padding-right: 0px;
+}
+div#habits {
+  padding-left: 30px;
+}
+.bar {
+  height: 2px;
+  width: 35px;
+}
+
+.central {
+  height: 9em;
+  width: 125px;
+  position: relative;
+  margin-left: auto;
+  margin-right: auto;
+  border-bottom: 1px solid #555;
+}
+.habit-bar {
+  background-color: @pastel-red;
+  position: absolute;
+  bottom: 0px;
+  left: 5px;
+  height: 4em;
+}
+
+.daily-bar {
+  background-color: @pastel-green;
+  position: absolute;
+  left: 45px;
+  bottom: 0px;
+  height: 5em;
+}
+
+.todo-bar {
+  background-color: @pastel-blue;
+  position: absolute;
+  left: 85px;
+  bottom: 0px;
+  height: 7em;
+}
+
+
+body {
+
+  padding-top: 70px;
+
+}
+
+.tabs-left {
+  border-bottom: none;
+  padding-top: 20px;
+  border-right: 1px solid #ddd;
+}
+
+.tabs-left>li {
+  float: none;
+  margin-bottom: 2px;
+}
+.tabs-left>li {
+  margin-right: -1px;
+}
+.tabs-left>li.active>a,
+.tabs-left>li.active>a:hover,
+.tabs-left>li.active>a:focus {
+  border-bottom-color: #ddd;
+  border-right-color: transparent;
+}
+.tabs-left>li>a {
+  border-radius: 4px 0 0 4px;
+  margin-right: 0;
+  display:block;
+}
+
+@media (max-width: @screen-md-min) {
+
+  .tabs-left {
+    margin-top:50px;
+    border: none;
+    position: relative;
+    border-bottom: 1px solid #ddd;
+    left: 0px;
+    margin-bottom: 50px;
+    padding-bottom: 47px;
+
+
+  }
+  .tabs-left>li {
+    float: left;
+    height: 20px;
+    width: 120px;
+    margin-right: -80px;
+    //margin-top: px;
+    -webkit-transform: rotate(90deg);
+    -moz-transform: rotate(90deg);
+    -ms-transform: rotate(90deg);
+    -o-transform: rotate(90deg);
+    transform: rotate(90deg);
+
+
+
+  }
+  .tabs-left>li>a {
+    border-right: 1px solid #ddd;
+    //border-right-color: transparent;
+
+    text-align: center;
+    border-radius: 4px 0px 0px 4px;
+  }
+  .tabs-left>li.active>a,
+  .tabs-left>li.active>a:hover,
+  .tabs-left>li.active>a:focus {
+    //border-right-color: transparent;
+    //border-bottom-color: #ddd;
+    //border-left-color: #ddd;
+  }
+}
+div.border-test {
+
+  border: 1px solid #AAA;
+  }
 
 // list items (todo list, dailies, habits)
 ul.items-list {
   margin: 0px;
   padding: 0px;
-};
+}
+
 
 li.item  {
   list-style-type: none;
@@ -20,35 +175,40 @@ li.item  {
   margin-bottom: 0.75em;
   box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.5) inset;
   position: relative;
-};
+}
 
 div.item-details {
   display: none;
-};
+}
 
 div.editing {
   display: block;
   margin-top: 1em;
-};
+}
 input.item-edit-title {
   width: 100%;
-};
+}
 textarea.item-edit-notes {
   cols: 20;
   width: 100%;
   padding-right: 3px;
-};
+}
 div.cancel-edit {
   position: absolute;
   top: 0px;
   right: 0px;
   width: 20px;
   height: 30px;
-};
+}
 label.cancel-edit {
   transform: rotate(135deg);
+  -webkit-transform: rotate(135deg);
+  -moz-transform: rotate(135deg);
+  -ms-transform: rotate(135deg);
+  -o-transform: rotate(135deg);
+
   font-size: 2em;
-};
+}
 div.item-checkbox {
   position: absolute;
   top: 0px;
@@ -61,30 +221,34 @@ div.item-checkbox {
   margin: auto;
   border: 1px solid #AAA;
   background-color: #BAF;
-};
+}
 
 div.item-checkbox:hover {
   border: 1px solid #555;
-};
+}
 
 div.ticked {
   border: 1px solid #BBB;
   background-color: #BFA;
-};
+}
 
 label.unticked {
   display: none;
-};
+}
 
 label.ticked {
   text-align: center;
   transform: rotate(135deg);
+  -webkit-transform: rotate(135deg);
+  -moz-transform: rotate(135deg);
+  -ms-transform: rotate(135deg);
+  -o-transform: rotate(135deg);
   display: inline-block;
   font-size: 2.5em;
   margin-left: 0.4em;
   margin-top: -0.1em;
 
-};
+}
 
 div.item-text {
   position: relative;
@@ -93,7 +257,7 @@ div.item-text {
   margin-right: 52px;
   padding-top: 0.75em;
   padding-bottom: 0.75em;
-};
+}
 
 div.item-remove {
   display: block;
@@ -104,18 +268,18 @@ div.item-remove {
   width: 45px;
   margin: auto;
   border: 1px solid #BBB;
-};
+}
 
 div.item-remove:hover {
   border: 1px solid #555;
-};
+}
 
 div.item-remove-x {
   //transform: rotate(15deg);
   font-size: 1.4em;
   margin-left: 0.52em;
   margin-top: 0.48em;
-};
+}
 
 // add item css
 .add-item-form {
@@ -124,12 +288,12 @@ div.item-remove-x {
   background-color: #FFF;
   position: relative;
   margin-bottom: 2em;
-};
+}
 
 .add-item-field {
   display: block;
   width: 100%;
-};
+}
 
 .add-item-text {
   width: 100%;
@@ -141,7 +305,7 @@ div.item-remove-x {
   height: 3em;
   background-color: #FFF;
   padding-left: 1em;
-};
+}
 
 .add-item-btn {
   position: absolute;
@@ -158,7 +322,7 @@ div.item-remove-x {
   font-size-adjust: none;
   height: 2em;
 
-};
+}
 
 
 // Habit specific CSS
@@ -168,20 +332,20 @@ label.habit-plus {
   font-size: 2em;
   margin-left: 14px;
   margin-top: -2px;
-};
+}
 
 div.habit-status-1 {
   background-color: #BFA;
-};
+}
 
 div.habit-status-2 {
   background-color: #BAF;
-};
+}
 
 div.habit-status-3 {
   background-color: #FAB;
-};
+}
 
 input.item-edit-freq {
   width: 100%;
-};
+}

@@ -2,6 +2,80 @@ Session.setDefault('edit_todo', null);
 Session.setDefault('edit_daily', null);
 Session.setDefault('edit_habit', null);
 
+Session.setDefault('today', null);
+Session.setDefault('days_stats_today', null);
+Session.setDefault('days_stats_yesterday', null);
+Session.setDefault('days_stats_before', null);
+
+Meteor.startup(function() {
+  Deps.autorun(function() {
+    if(Meteor.userId()) {
+      setupDaysStats();               
+      Meteor.setInterval(setupDaysStats, 10000);
+    }
+  });
+});
+
+
+
+// bootstrap 3 navbar fix
+$(window).on('load resize', function() {
+      $('body').css({"padding-top": $(".navbar").height() + 30 + "px"});
+});
+
+var setupDaysStats = function () {
+  if (Session.get('today') ===
+    moment().startOf('day').add(12, 'hours').toString()) {
+    // already setup the date to today keep on trucking
+  } else {
+
+    date =  moment().startOf('day').add(12, 'hours');
+    Session.set('days_stats_today', findOrCreateDaysStats(date)._id);
+
+    Session.set('today', date.toString());
+    yesterdays_stats = DaysStats.findOne({date: date.toDate(),
+                                          userId: Meteor.userId()});
+    if(yesterdays_stats)
+      Session.set('days_stats_yesterday', yesterdays_stats._id);
+
+    date.subtract(1, 'day');
+
+    befores_stats = DaysStats.findOne({date: date.toDate(),
+                                       userId: Meteor.userId()});
+    if(befores_stats)
+      Session.set('days_stats_before', befores_stats._id);
+ 
+  }
+};
+
+findOrCreateDaysStats = function (date) {
+  day = DaysStats.findOne({date: date.toDate()});
+  console.log("testing Day:");
+  console.log(date.format("MM dd"));
+  console.log(day);
+  console.log(!day);
+  if( !day ) {
+    day = DaysStats.insert({date: date.toDate(),
+                            userId: Meteor.userId(),
+                            habits: 0,
+                            dailies: 0,
+                            todos: 0});
+
+    day = DaysStats.findOne({_id: day, userId: Meteor.userId()});
+  }
+
+  return day;
+};
+
+
+var didOneToday = function (todo_type) {
+  update = {};
+  update[todo_type] = today[todo_type] + 1;
+  DaysStats.update(today._id, {$set: update});
+
+};
+
+
 var clearSelect = function() {
   if (window.getSelection) {
     if (window.getSelection().empty) {  // Chrome
@@ -108,10 +182,54 @@ UI.body.events({'click' : function (evt)  {
     Session.set('edit_habit', null);
 }});
 
+//Days
+Template.days.today = function () {
+  return moment().format('do MMM');
+};
+
+Template.days.today_chart = function () {
+  if(Session.get('days_stats_today'))
+    return DaysStats.findOne({_id: Session.get('days_stats_today')});
+  else
+    return {blank: 1};
+};
+
+Template.days.yesterday_chart = function () {
+  return {blank: 1};
+};
+
+Template.days.before_chart = function () {
+  return {blank: 1};
+};
+
+Template.chart.habit_height = function () {
+  if(this.blank)
+    return "1px;";
+  else
+    return this.habits + "em;";
+};
+
+Template.chart.daily_height = function () {
+  if(this.blank)
+    return "1px;";
+  else
+    return this.dailies + "em;";
+
+}
+
+Template.chart.todo_height = function () {
+  if(this.blank)
+    return "1px;";
+  else
+    return this.todos + "em;";
+
+}
 //Habits
 
 Template.habits.habits = function () {
-  return Habits.find({userId: Meteor.user()._id});
+  if(Meteor.userId()) 
+    return Habits.find({userId: Meteor.userId()});
+  return {};
 };
 
 Template.habits.events(okCancelEvents(
@@ -120,7 +238,7 @@ Template.habits.events(okCancelEvents(
     ok: function (text, evt) {
       Habits.insert({
         ticktime: (new Date(0)),
-        userId: Meteor.user()._id,
+        userId: Meteor.userId(),
         text: text,
         done: false,
         notes: "",
@@ -150,7 +268,8 @@ Template.habit_item.events({
     stopProp(evt);
   },
   'click .item-checkbox': function (evt) {
-    Habits.update(this._id, {$set: {done: !this.done, ticktime: (new Date()).getTime()}});
+    didOneToday('habits');
+    Habits.update(this._id, {$set: {ticktime: (new Date()).getTime()}});
     stopProp(evt);
   },
   'dblclick .item-text': function (evt) {
@@ -193,7 +312,9 @@ Template.habit_item.editing = function (evt) {
 //Dailies
 
 Template.dailies.dailies = function () {
-  return Dailies.find({userId: Meteor.user()._id});
+  if(Meteor.userId())
+    return Dailies.find({userId: Meteor.userId()});
+  return {};
 };
 
 Template.dailies.events(okCancelEvents(
@@ -201,7 +322,7 @@ Template.dailies.events(okCancelEvents(
   {
     ok: function (text, evt) {
       Dailies.insert({
-        userId: Meteor.user()._id,
+        userId: Meteor.userId(),
         text: text,
         done: false,
         notes: "",
@@ -216,7 +337,7 @@ Template.dailies.events(okCancelEvents(
  }));
 
 Template.daily_item.ticked = function () {
-  if (this.done && (this.ticktime > new Date(new Date().toDateString()).getTime() ))
+  if (this.done && (this.ticktime > new Date(new Date().toDateString()).getTime()))
     return 'ticked';
   else
     return 'unticked';
@@ -232,6 +353,7 @@ Template.daily_item.events({
     stopProp(evt);
   },
   'click .item-checkbox': function (evt) {
+    didOneToday('dailies');
     Dailies.update(this._id, {$set: {done: !this.done, ticktime: (new Date()).getTime()}});
     stopProp(evt);
   },
@@ -260,9 +382,13 @@ Template.daily_item.editing = function (evt) {
   return this._id == Session.get('edit_daily') ? "editing" : "";
 };
 
+
 //Todos
 Template.todos.todos = function () {
-  return Todos.find({userId: Meteor.user()._id}, {sort: [["done"], ["timestamp", "desc"] ]});
+
+  if(Meteor.userId())  
+    return Todos.find({userId: Meteor.userId()}, {sort: [["done"], ["timestamp", "desc"] ]});
+  return {};
 };
 
 Template.todos.events(okCancelEvents(
@@ -271,7 +397,7 @@ Template.todos.events(okCancelEvents(
     ok: function (text, evt) {
       Todos.insert({
         text: text,
-        userId: Meteor.user()._id,
+        userId: Meteor.userId(),
         done: false,
         notes: "",
         timestamp: (new Date()).getTime(),
@@ -303,6 +429,7 @@ Template.todo_item.events({
     stopProp(evt);
   },
   'click .item-checkbox': function (evt) {
+    didOneToday('todos');
     Todos.update(this._id, {$set:
                               {done: !this.done, ticktime: (new Date())}});
     stopProp(evt);
