@@ -10,7 +10,15 @@
   //border-bottom: 1px solid #DDD;
   height:  10em;
   text-align: center;
+  display: none;
 }
+
+@media (min-width: @screen-md-min) {
+  .chart { 
+    display: block;
+  }
+}
+
 .chart>div {
 
   height: 7em;
