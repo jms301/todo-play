@@ -54,21 +54,16 @@
     </div>
 
 </template>
+
 <template name = "chart" >
             <div class="bar habit-bar" style="height: {{habit_height}}"> </div>
             <div class="bar daily-bar" style="height: {{daily_height}}"> </div>
             <div class="bar todo-bar" style="height: {{todo_height}}"> </div>
 </template>
+
 <template name="todo_play">
     <div class="col-md-2" id="goals">
-    <ul class="nav nav-tabs tabs-left" role="tablist">
-      <li class="active"><a href="#">All</a></li>
-      <li><a href="#">Goal 1</a></li>
-      <li><a href="#">Goal 2</a></li>
-      <li><a href="#">Goal 3</a></li>
-      <li><a href="#">Goal 4</a></li>
-      <li><a href="#">Goal 5</a></li>
-    </ul>
+    {{>goals}}
     </div>
     <div class="main col-md-3" id="habits">
       <h1>Do <label class="glyphicon glyphicon-calendar"></label> Often:</h1>
@@ -79,10 +74,23 @@
 	{{>dailies}}
     </div>
     <div class="main col-md-3">
-      <h1>Todo:</h1>
+      <h1>To Do:</h1>
 	{{>todos}}
     </div>
     <div class="main col-md-1"></div>
+</template>
+
+<template name="goals">
+  <ul class="nav nav-tabs tabs-left" role="tablist">
+    <li class="{{all_active}} all_goals"><a href="#">All</a></li>
+    {{#each goals}}
+      {{>goal}}
+    {{/each}}
+  </ul>
+</template>
+
+<template name="goal">
+  <li class="{{is_active}} goals"><a href="#">{{text}}</a></li>
 </template>
 
 <template name="habits">
@@ -137,6 +145,13 @@
       <input id="item-title-{{_id}}" value="{{text}}" class="item-edit-title"/>
       Notes: <br/>
       <textarea id="item-notes-{{_id}}" rows=3 cols=35 class="item-edit-notes">{{notes}}</textarea>
+      Goal: <br />
+      <select id="item-goals-{{_id}}">
+      <option> </option>
+      {{#each goals}}
+      <option value="{{_id}}" {{is_selected ..}}>{{text}}</option>
+      {{/each}}
+      </select><br />
       Frequency (days): <input type="number" id="habit-freq-{{_id}}" value="{{freq}}" class="item-edit-freq"/>
       <div class="cancel-edit"><label class="cancel-edit">+</label></div>
       </div>
@@ -156,6 +171,13 @@
       Title: <input id="item-title-{{_id}}" value="{{text}}" class="item-edit-title"/>
       Notes: <br/>
       <textarea id="item-notes-{{_id}}" rows=3 cols=35 class="item-edit-notes">{{notes}}</textarea>
+      Goal: <br />
+      <select id="item-goals-{{_id}}">
+      <option> </option>
+      {{#each goals}}
+      <option value="{{_id}}" {{is_selected ..}}>{{text}}</option>
+      {{/each}}
+      </select><br />
       <div class="cancel-edit"><label class="cancel-edit">+</label></div>
       </div>
     </div>
@@ -176,6 +198,13 @@
       Title: <input id="item-title-{{_id}}" value="{{text}}" class="item-edit-title"/>
       Notes: <br/>
       <textarea id="item-notes-{{_id}}" rows=3 cols=35 class="item-edit-notes">{{notes}}</textarea>
+      Goal: <br />
+      <select id="item-goals-{{_id}}">
+      <option> </option>
+      {{#each goals}}
+      <option value="{{_id}}" {{is_selected ..}}>{{text}}</option>
+      {{/each}}
+      </select><br />
       <div class="cancel-edit"><label class="cancel-edit">+</label></div>
       </div>
     </div>

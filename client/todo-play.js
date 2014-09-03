@@ -7,22 +7,21 @@ Session.setDefault('days_stats_today', null);
 Session.setDefault('days_stats_yesterday', null);
 Session.setDefault('days_stats_before', null);
 
+Session.setDefault('active_goal', null);
+/*
 Meteor.startup(function() {
   Deps.autorun(function() {
-    if(Meteor.userId()) {
-      setupDaysStats();               
+    if(Meteor.userId() && DaysStats.ready()) {
       Meteor.setInterval(setupDaysStats, 10000);
     }
   });
 });
-
-
-
+*/
 // bootstrap 3 navbar fix
 $(window).on('load resize', function() {
       $('body').css({"padding-top": $(".navbar").height() + 30 + "px"});
 });
-
+/*
 var setupDaysStats = function () {
   if (Session.get('today') ===
     moment().startOf('day').add(12, 'hours').toString()) {
@@ -44,7 +43,7 @@ var setupDaysStats = function () {
                                        userId: Meteor.userId()});
     if(befores_stats)
       Session.set('days_stats_before', befores_stats._id);
- 
+
   }
 };
 
@@ -66,15 +65,7 @@ findOrCreateDaysStats = function (date) {
 
   return day;
 };
-
-
-var didOneToday = function (todo_type) {
-  update = {};
-  update[todo_type] = today[todo_type] + 1;
-  DaysStats.update(today._id, {$set: update});
-
-};
-
+*/
 
 var clearSelect = function() {
   if (window.getSelection) {
@@ -92,16 +83,22 @@ var cancelEdit = function (id, List) {
   if(id) {
     title_input = $('#item-title-' + id);
     notes_input = $('#item-notes-' + id);
+    goal_input  = $('#item-goals-' + id);
+
     item = List.findOne({_id: id});
     title_input.val(item.text);
     notes_input.val(item.notes);
+    goal_input.val(item.goal);
  }
 };
 
 var saveEdit = function (id, List) {
   title_input = $('#item-title-' + id);
   notes_input = $('#item-notes-' + id);
-  List.update(id, {$set: {notes: notes_input.val(), text: title_input.val()}});
+  goal_input  = $('#item-goals-' + id + ' option:selected');
+
+  List.update(id, {$set: {notes: notes_input.val(), text: title_input.val(),
+                          goal: goal_input.val()}});
 
 };
 
@@ -110,10 +107,13 @@ var cancelHabit = function (id, List) {
     title_input = $('#item-title-' + id);
     notes_input = $('#item-notes-' + id);
     freq_input  = $('#habit-freq-' + id);
+    goal_input  = $('#item-goals-' + id);
+
     item = List.findOne({_id: id});
     title_input.val(item.text);
     notes_input.val(item.notes);
     freq_input.val(item.freq);
+    goal_input.val(item.goal);
   }
 };
 
@@ -121,9 +121,10 @@ var saveHabit = function (id, List) {
   title_input = $('#item-title-' + id);
   notes_input = $('#item-notes-' + id);
   freq_input  = $('#habit-freq-' + id);
+  goal_input  = $('#item-goals-' + id + ' option:selected');
 
   List.update(id, {$set: {notes: notes_input.val(), text: title_input.val(),
-                          freq: freq_input.val()}});
+                          freq: freq_input.val(), goal: goal_input.val()}});
 };
 
 var stopProp = function (evt) {
@@ -224,12 +225,48 @@ Template.chart.todo_height = function () {
     return this.todos + "em;";
 
 }
+
+//Goals
+
+Template.goals.all_active = function () {
+  return (Session.get("active_goal") == null ? "active" : "");
+};
+
+Template.goals.goals = function () {
+  return Goals.find({userId: Meteor.userId()});
+
+};
+
+Template.goals.is_selected = function () {
+  return "wibble";
+ //  (this._id == parentThis.goal ? "selected" : "");
+};
+
+Template.goal.is_active = function () {
+  return (Session.get("active_goal") == this._id ? "active" : "");
+};
+
+Template.goals.events({
+ 'click li.all_goals': function (evt) {
+    Session.set("active_goal", null);
+  }
+});
+
+Template.goal.events({
+ 'click li.goals': function (evt) {
+    Session.set("active_goal", this._id);
+  }
+});
+
 //Habits
 
 Template.habits.habits = function () {
-  if(Meteor.userId()) 
-    return Habits.find({userId: Meteor.userId()});
-  return {};
+  if(Meteor.userId())
+    if(Session.get('active_goal') == null)
+      return Habits.find({userId: Meteor.userId()});
+    else
+      return Habits.find({userId: Meteor.userId(), goal: Session.get('active_goal')});
+  return [];
 };
 
 Template.habits.events(okCancelEvents(
@@ -242,6 +279,7 @@ Template.habits.events(okCancelEvents(
         text: text,
         done: false,
         notes: "",
+        goal: null,
         timestamp: (new Date()).getTime(),
         freq: 7 //default frequency is once per week
     });
@@ -252,6 +290,13 @@ Template.habits.events(okCancelEvents(
     }
  }));
 
+Template.habit_item.is_selected = function (parentThis){
+  return (parentThis.goal == this._id ? "selected" : "");
+};
+
+Template.habit_item.goals = function (){
+  return Goals.find({userId: Meteor.userId()});
+};
 
 Template.habit_item.events({
  'click .item-remove': function (evt) {
@@ -268,7 +313,6 @@ Template.habit_item.events({
     stopProp(evt);
   },
   'click .item-checkbox': function (evt) {
-    didOneToday('habits');
     Habits.update(this._id, {$set: {ticktime: (new Date()).getTime()}});
     stopProp(evt);
   },
@@ -313,8 +357,11 @@ Template.habit_item.editing = function (evt) {
 
 Template.dailies.dailies = function () {
   if(Meteor.userId())
-    return Dailies.find({userId: Meteor.userId()});
-  return {};
+    if(Session.get('active_goal') == null)
+      return Dailies.find({userId: Meteor.userId()});
+    else
+      return Dailies.find({userId: Meteor.userId(), goal: Session.get('active_goal')});
+  return [];
 };
 
 Template.dailies.events(okCancelEvents(
@@ -326,6 +373,7 @@ Template.dailies.events(okCancelEvents(
         text: text,
         done: false,
         notes: "",
+        goal: null,
         timestamp: (new Date()).getTime(),
         ticktime: (new Date(0))
     });
@@ -335,6 +383,14 @@ Template.dailies.events(okCancelEvents(
       evt.target.value='';
     }
  }));
+
+Template.daily_item.is_selected = function (parentThis){
+  return (parentThis.goal == this._id ? "selected" : "");
+};
+
+Template.daily_item.goals = function (){
+  return Goals.find({userId: Meteor.userId()});
+};
 
 Template.daily_item.ticked = function () {
   if (this.done && (this.ticktime > new Date(new Date().toDateString()).getTime()))
@@ -353,7 +409,6 @@ Template.daily_item.events({
     stopProp(evt);
   },
   'click .item-checkbox': function (evt) {
-    didOneToday('dailies');
     Dailies.update(this._id, {$set: {done: !this.done, ticktime: (new Date()).getTime()}});
     stopProp(evt);
   },
@@ -386,9 +441,23 @@ Template.daily_item.editing = function (evt) {
 //Todos
 Template.todos.todos = function () {
 
-  if(Meteor.userId())  
-    return Todos.find({userId: Meteor.userId()}, {sort: [["done"], ["timestamp", "desc"] ]});
-  return {};
+  if(Meteor.userId())
+    if(Session.get('active_goal') == null)
+      return Todos.find({userId: Meteor.userId()},
+                      {sort: [["done"], ["timestamp", "desc"] ]});
+    else
+      return Todos.find({userId: Meteor.userId(),
+                       goal: Session.get('active_goal')},
+                      {sort: [["done"], ["timestamp", "desc"] ]});
+
+  return [{
+        text: "Sign up for Todo:play",
+        userId: null,
+        done: false,
+        notes: "",
+        timestamp: (new Date()).getTime(),
+        _id: "fake"
+      }];
 };
 
 Template.todos.events(okCancelEvents(
@@ -397,6 +466,7 @@ Template.todos.events(okCancelEvents(
     ok: function (text, evt) {
       Todos.insert({
         text: text,
+        goal: null,
         userId: Meteor.userId(),
         done: false,
         notes: "",
@@ -409,6 +479,14 @@ Template.todos.events(okCancelEvents(
     }
   }
 ));
+
+Template.todo_item.is_selected = function (parentThis){
+  return (parentThis.goal == this._id ? "selected" : "");
+};
+
+Template.todo_item.goals = function (){
+  return Goals.find({userId: Meteor.userId()});
+};
 
 Template.todo_item.ticked = function () {
   return this.done ? 'ticked' : 'unticked';
@@ -429,7 +507,6 @@ Template.todo_item.events({
     stopProp(evt);
   },
   'click .item-checkbox': function (evt) {
-    didOneToday('todos');
     Todos.update(this._id, {$set:
                               {done: !this.done, ticktime: (new Date())}});
     stopProp(evt);

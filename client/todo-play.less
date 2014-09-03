@@ -14,7 +14,7 @@
 }
 
 @media (min-width: @screen-md-min) {
-  .chart { 
+  .chart {
     display: block;
   }
 }
@@ -121,21 +121,25 @@ body {
 @media (max-width: @screen-md-min) {
 
   .tabs-left {
-    margin-top:50px;
+    margin-top: 50px;
+    //margin-left: 0px;
     border: none;
     position: relative;
     border-bottom: 1px solid #ddd;
     left: 0px;
+
     margin-bottom: 50px;
-    padding-bottom: 47px;
+    padding-bottom: 62px;
 
 
   }
   .tabs-left>li {
     float: left;
     height: 20px;
-    width: 120px;
-    margin-right: -80px;
+    min-width: 150px;
+    margin-right: -110px;
+
+    padding-bottom: 0px;
     //margin-top: px;
     -webkit-transform: rotate(90deg);
     -moz-transform: rotate(90deg);
@@ -147,7 +151,7 @@ body {
 
   }
   .tabs-left>li>a {
-    border-right: 1px solid #ddd;
+    //border-right: 1px solid #ddd;
     //border-right-color: transparent;
 
     text-align: center;
