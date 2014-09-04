@@ -8,64 +8,94 @@ Session.setDefault('days_stats_yesterday', null);
 Session.setDefault('days_stats_before', null);
 
 Session.setDefault('active_goal', null);
-/*
-Meteor.startup(function() {
-  Deps.autorun(function() {
-    if(Meteor.userId() && DaysStats.ready()) {
-      Meteor.setInterval(setupDaysStats, 10000);
-    }
-  });
+
+var daysStatsHandle = Meteor.subscribe('days_stats', function () {
+  setupDaysStats();
 });
-*/
+
+
 // bootstrap 3 navbar fix
 $(window).on('load resize', function() {
       $('body').css({"padding-top": $(".navbar").height() + 30 + "px"});
 });
-/*
+
 var setupDaysStats = function () {
-  if (Session.get('today') ===
-    moment().startOf('day').add(12, 'hours').toString()) {
+  date = todaysMoment();
+  if (Session.get('today') === date.toString()) {
     // already setup the date to today keep on trucking
   } else {
 
-    date =  moment().startOf('day').add(12, 'hours');
-    Session.set('days_stats_today', findOrCreateDaysStats(date)._id);
-
     Session.set('today', date.toString());
-    yesterdays_stats = DaysStats.findOne({date: date.toDate(),
-                                          userId: Meteor.userId()});
-    if(yesterdays_stats)
+
+    todays_stats = DaysStats.findOne({date: date.toDate()});
+    if(todays_stats == null)
+      Session.set('days_stats_today', null);
+    else
+      Session.set('days_stats_today', todays_stats._id);
+
+    date = date.subtract(1, 'day');
+    yesterdays_stats = DaysStats.findOne({date: date.toDate()});
+    if(yesterdays_stats == null)
+      Session.set('days_stats_yesterday', null);
+    else
       Session.set('days_stats_yesterday', yesterdays_stats._id);
 
-    date.subtract(1, 'day');
-
-    befores_stats = DaysStats.findOne({date: date.toDate(),
-                                       userId: Meteor.userId()});
-    if(befores_stats)
+    date = date.subtract(1, 'day');
+    befores_stats = DaysStats.findOne({date: date.toDate()});
+    if(befores_stats == null)
+      Session.set('days_stats_before', null);
+    else
       Session.set('days_stats_before', befores_stats._id);
 
   }
 };
 
-findOrCreateDaysStats = function (date) {
-  day = DaysStats.findOne({date: date.toDate()});
-  console.log("testing Day:");
-  console.log(date.format("MM dd"));
-  console.log(day);
-  console.log(!day);
-  if( !day ) {
-    day = DaysStats.insert({date: date.toDate(),
+var todaysMoment = function () {
+  return moment().startOf('day').add(12, 'hours');
+
+};
+
+var whatDayIsThis = function (date) {
+  return (moment(date).startOf('day').add(12, 'hours'));
+};
+
+var findOrCreateTodaysStats = function () {
+  today_id = Session.get('days_stats_today');
+  day = DaysStats.findOne({_id: Session.get('days_stats_today')});
+
+  if(!day) {
+    day = DaysStats.insert({date: todaysMoment().toDate(),
                             userId: Meteor.userId(),
                             habits: 0,
                             dailies: 0,
                             todos: 0});
 
-    day = DaysStats.findOne({_id: day, userId: Meteor.userId()});
+    day = DaysStats.findOne({_id: day});
   }
-
+  Session.set('days_stats_today', day._id);
   return day;
 };
-*/
+
+var updateStats = function (type, upOrDown, tickedOn) {
+
+  if(daysStatsHandle.ready()) {
+      to_set = {};
+    if(upOrDown) {
+      todaysStats = findOrCreateTodaysStats();
+      to_set[type] = todaysStats[type] + 1;
+      DaysStats.update(todaysStats._id, {$set: to_set});
+    } else {
+      stats = DaysStats.findOne({date: whatDayIsThis(tickedOn).toDate()});
+      if(stats) {
+        to_set[type] = stats[type] < 1 ? 0 : stats[type] - 1;
+        DaysStats.update(stats._id, {$set: to_set});
+      } else {
+        console.log("could not find a stats entry for ticked time of " + tickedOn + " this should be impossible...");
+
+      }
+    }
+  }
+};
 
 var clearSelect = function() {
   if (window.getSelection) {
@@ -196,34 +226,63 @@ Template.days.today_chart = function () {
 };
 
 Template.days.yesterday_chart = function () {
-  return {blank: 1};
+  if(Session.get('days_stats_yesterday'))
+    return DaysStats.findOne({_id: Session.get('days_stats_yesterday')});
+  else
+    return {blank: 1};
 };
 
 Template.days.before_chart = function () {
-  return {blank: 1};
+  if(Session.get('days_stats_before') != null)
+    return DaysStats.findOne({_id: Session.get('days_stats_before')});
+  else
+    return {blank: 1};
+};
+
+//return the highest value of 'type' in today/yesterday/before stats
+var findChartMax = function(type) {
+  today = DaysStats.findOne({_id: Session.get('days_stats_today')});
+  yesterday = DaysStats.findOne({_id: Session.get('days_stats_yesterday')});
+  before = DaysStats.findOne({_id: Session.get('days_stats_before')});
+  //console.log(today);
+  //console.log(yesterday);
+  //console.log(before);
+  max = 5; // if max is <5 we pretend it's 5 so 1 done item isn't a whole chart
+  if ( today && max < today[type])
+    max = today[type];
+  else if (yesterday && max < yesterday[type])
+    max = yesterday[type];
+  else if (before && max < before[type])
+    max = before[type];
+
+  return max;
 };
 
 Template.chart.habit_height = function () {
-  if(this.blank)
+  if(this.blank || this.habits == 0)
     return "1px;";
   else
-    return this.habits + "em;";
+    max = findChartMax('habits');
+    return ((this.habits / max) * 7) + "em;";
 };
 
 Template.chart.daily_height = function () {
-  if(this.blank)
+  if(this.blank || this.dailies == 0)
     return "1px;";
-  else
-    return this.dailies + "em;";
-
+  else {
+    // 7em max height;
+    max = Dailies.find({}).count();
+    return ((this.dailies / max) * 7) + "em;";
+  }
 }
 
 Template.chart.todo_height = function () {
-  if(this.blank)
+  if(this.blank || this.todos == 0)
     return "1px;";
-  else
-    return this.todos + "em;";
-
+  else {
+    max = findChartMax('todos');
+    return ((this.todos / max) * 7) + "em;";
+  }
 }
 
 //Goals
@@ -235,11 +294,6 @@ Template.goals.all_active = function () {
 Template.goals.goals = function () {
   return Goals.find({userId: Meteor.userId()});
 
-};
-
-Template.goals.is_selected = function () {
-  return "wibble";
- //  (this._id == parentThis.goal ? "selected" : "");
 };
 
 Template.goal.is_active = function () {
@@ -314,6 +368,7 @@ Template.habit_item.events({
   },
   'click .item-checkbox': function (evt) {
     Habits.update(this._id, {$set: {ticktime: (new Date()).getTime()}});
+    updateStats('habits', true, null); // habits can only be incremented
     stopProp(evt);
   },
   'dblclick .item-text': function (evt) {
@@ -410,6 +465,7 @@ Template.daily_item.events({
   },
   'click .item-checkbox': function (evt) {
     Dailies.update(this._id, {$set: {done: !this.done, ticktime: (new Date()).getTime()}});
+    updateStats('dailies', !this.done, this.ticktime);
     stopProp(evt);
   },
   'click .cancel-edit': function (evt) {
@@ -509,6 +565,7 @@ Template.todo_item.events({
   'click .item-checkbox': function (evt) {
     Todos.update(this._id, {$set:
                               {done: !this.done, ticktime: (new Date())}});
+    updateStats('todos', !this.done, this.ticktime);
     stopProp(evt);
   },
   'dblclick .item-text': function (evt) {
