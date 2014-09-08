@@ -2,9 +2,17 @@
 @import "/packages/bootstrap3-less/bootstrap.import.less";
 @import "/packages/bootstrap3-less/lib/less/theme.import.less";
 
+//colours for todos
 @pastel-blue: #779ECB;
 @pastel-red: #FF7373;
 @pastel-green: #77DD77;
+
+
+//colours for other things
+@slate-blue: #AEC6CF;
+@pastel-pink: #F49AC2;
+@pastel-purple: #B39EB5;
+
 
 .chart {
   //border-bottom: 1px solid #DDD;
@@ -22,9 +30,6 @@
 .chart>div {
 
   height: 7em;
-}
-#before {
-  //background-color: #D2D2D2;
 }
 #yesterday {
   border-left: 1px solid #DDD;
@@ -68,7 +73,7 @@ div#today {
   border-bottom: 1px solid #555;
 }
 .habit-bar {
-  background-color: @pastel-red;
+  background-color: @pastel-pink;
   position: absolute;
   bottom: 0px;
   left: 5px;
@@ -76,7 +81,7 @@ div#today {
 }
 
 .daily-bar {
-  background-color: @pastel-green;
+  background-color: @pastel-purple;
   position: absolute;
   left: 45px;
   bottom: 0px;
@@ -84,7 +89,7 @@ div#today {
 }
 
 .todo-bar {
-  background-color: @pastel-blue;
+  background-color: @slate-blue;
   position: absolute;
   left: 85px;
   bottom: 0px;
@@ -237,7 +242,7 @@ div.item-checkbox {
   width: 45px;
   margin: auto;
   border: 1px solid #AAA;
-  background-color: #BAF;
+  background-color: @pastel-blue;
 }
 
 div.item-checkbox:hover {
@@ -246,7 +251,7 @@ div.item-checkbox:hover {
 
 div.ticked {
   border: 1px solid #BBB;
-  background-color: #BFA;
+  background-color: @pastel-green;
 }
 
 label.unticked {
@@ -353,15 +358,15 @@ label.habit-plus {
 }
 
 div.habit-status-1 {
-  background-color: #BFA;
+  background-color: @pastel-green;
 }
 
 div.habit-status-2 {
-  background-color: #BAF;
+  background-color: @pastel-blue;
 }
 
 div.habit-status-3 {
-  background-color: #FAB;
+  background-color: @pastel-red;
 }
 
 input.item-edit-freq {
