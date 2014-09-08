@@ -6,4 +6,4 @@ DaysStats = new Meteor.Collection("days_stats");
 
 
 //user config stuff
-Config = new Meteor.Collection("config"); 
+UserConfig = new Meteor.Collection("user_config");

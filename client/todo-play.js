@@ -1,3 +1,4 @@
+// Sessions
 Session.setDefault('edit_todo', null);
 Session.setDefault('edit_daily', null);
 Session.setDefault('edit_habit', null);
@@ -9,15 +10,42 @@ Session.setDefault('days_stats_before', null);
 
 Session.setDefault('active_goal', null);
 
+// Subscriptions
+
 var daysStatsHandle = Meteor.subscribe('days_stats', function () {
   setupDaysStats();
 });
 
+var todoHandle = Meteor.subscribe('todos', function () {
 
+});
+
+var goalHandle = Meteor.subscribe('goals', function () {
+
+});
+
+var dailiesHandle = Meteor.subscribe('dailies', function () {
+
+});
+
+var habitsHandle = Meteor.subscribe('habits', function () {
+
+});
+
+var configHandle = Meteor.subscribe('user_config', function () {
+
+});
+
+
+// Hacks & Cludges:
 // bootstrap 3 navbar fix
 $(window).on('load resize', function() {
       $('body').css({"padding-top": $(".navbar").height() + 30 + "px"});
 });
+
+
+
+
 
 var setupDaysStats = function () {
   date = todaysMoment();

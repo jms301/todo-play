@@ -4,11 +4,9 @@
 # but you can also edit it by hand.
 
 standard-app-packages
-autopublish
 insecure
 less
 bootstrap3-less
 accounts-ui-bootstrap-3
 accounts-password
 mrt:moment
-
