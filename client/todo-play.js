@@ -21,8 +21,9 @@ $(window).on('load resize', function() {
 
 var setupDaysStats = function () {
   date = todaysMoment();
-  if (Session.get('today') === date.toString()) {
-    // already setup the date to today keep on trucking
+  if (Session.get('today') === date.toString() || !Meteor.userId()) {
+    // already setup the date to today or have no user so keep on trucking
+
   } else {
 
     Session.set('today', date.toString());
@@ -78,7 +79,7 @@ var findOrCreateTodaysStats = function () {
 
 var updateStats = function (type, upOrDown, tickedOn) {
 
-  if(daysStatsHandle.ready()) {
+  if(daysStatsHandle.ready() && Meteor.userId() != null) {
       to_set = {};
     if(upOrDown) {
       todaysStats = findOrCreateTodaysStats();
