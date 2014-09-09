@@ -1,3 +1,15 @@
+// Collections
+
+Goals = new Meteor.Collection("goals");
+Habits = new Meteor.Collection("habits");
+Dailies = new Meteor.Collection("dailies");
+Todos = new Meteor.Collection("todos");
+DaysStats = new Meteor.Collection("days_stats");
+
+
+//user config stuff
+UserConfig = new Meteor.Collection("user_config");
+
 // Sessions
 Session.setDefault('edit_todo', null);
 Session.setDefault('edit_daily', null);
