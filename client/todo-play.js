@@ -334,15 +334,30 @@ Template.goals.all_active = function () {
 
 Template.goals.goals = function () {
   return Goals.find({userId: Meteor.userId()});
-
 };
+
+Template.goals.events(okCancelEvents(
+  '#add-goal',
+  {
+    ok: function (text, evt) {
+      Goals.insert({
+      userId: Meteor.userId(),
+      text: text
+      });
+      evt.target.value='';
+    },
+      cancel: function (evt) {
+        evt.target.value='';
+    }
+  })
+);
 
 Template.goal.is_active = function () {
   return (Session.get("active_goal") == this._id ? "active" : "");
 };
 
 Template.goals.events({
- 'click li.all_goals': function (evt) {
+ 'click li.all-goals': function (evt) {
     Session.set("active_goal", null);
   }
 });

@@ -80,10 +80,11 @@
 
 <template name="goals">
   <ul class="nav nav-tabs tabs-left" role="tablist">
-    <li class="{{all_active}} all_goals"><a href="#">All</a></li>
+    <li class="{{all_active}} all-goals"><a href="#">All</a></li>
     {{#each goals}}
       {{>goal}}
     {{/each}}
+    <li class="hide-on-small"><input id="add-goal" type="text" placeholder="New Goal" class="add-goal"/></li>
   </ul>
 </template>
 

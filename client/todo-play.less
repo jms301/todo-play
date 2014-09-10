@@ -21,9 +21,16 @@
   display: none;
 }
 
+li.hide-on-small {
+  display: none;
+}
+
 @media (min-width: @screen-md-min) {
   .chart {
     display: block;
+  }
+  li.hide-on-small {
+    display: inline-block;
   }
 }
 
