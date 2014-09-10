@@ -540,13 +540,21 @@ Template.todos.todos = function () {
 
   if(Meteor.userId())
     if(Session.get('active_goal') == null)
-      return Todos.find({userId: Meteor.userId()},
-                      {sort: [["done"], ["timestamp", "desc"] ]});
-    else
+    {
+      var day_start =  moment().startOf('day').toDate();
       return Todos.find({userId: Meteor.userId(),
-                       goal: Session.get('active_goal')},
-                      {sort: [["done"], ["timestamp", "desc"] ]});
-
+                         $or: [{done: true, ticktime: {$gt: day_start}},
+                               {done: false}]
+                        },
+                      {sort: [["done", "desc"], ["timestamp", "desc"] ]});
+    } else {
+      return Todos.find({userId: Meteor.userId(),
+                         goal: Session.get('active_goal'),
+                         $or: [{done: true, ticktime: {$gt: day_start}},
+                             {done: false}]
+                       },
+                      {sort: [["done", "desc"], ["timestamp", "desc"] ]});
+    }
   return [{
         text: "Sign up for Todo:play",
         userId: null,
@@ -567,6 +575,7 @@ Template.todos.events(okCancelEvents(
         userId: Meteor.userId(),
         done: false,
         notes: "",
+        ticktime: (new Date(0)),
         timestamp: (new Date()).getTime(),
       });
       evt.target.value='';
