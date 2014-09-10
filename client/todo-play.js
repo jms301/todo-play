@@ -256,7 +256,7 @@ UI.body.events({'click' : function (evt)  {
 
 //Days
 Template.days.today = function () {
-  return moment().format('do MMM');
+  return moment().format('Do MMM');
 };
 
 Template.days.today_chart = function () {
