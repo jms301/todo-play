@@ -291,9 +291,9 @@ var findChartMax = function(type) {
   max = 5; // if max is <5 we pretend it's 5 so 1 done item isn't a whole chart
   if ( today && max < today[type])
     max = today[type];
-  else if (yesterday && max < yesterday[type])
+  if (yesterday && max < yesterday[type])
     max = yesterday[type];
-  else if (before && max < before[type])
+  if (before && max < before[type])
     max = before[type];
 
   return max;
