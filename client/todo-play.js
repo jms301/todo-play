@@ -256,7 +256,7 @@ UI.body.events({'click' : function (evt)  {
 
 //Days
 Template.days.today = function () {
-  return moment().format('Do MMM');
+  return moment().format('Do MMM YY');
 };
 
 Template.days.today_chart = function () {
@@ -505,8 +505,9 @@ Template.daily_item.events({
     stopProp(evt);
   },
   'click .item-checkbox': function (evt) {
-    Dailies.update(this._id, {$set: {done: !this.done, ticktime: (new Date()).getTime()}});
-    updateStats('dailies', !this.done, this.ticktime);
+    var is_ticked = (this.done && (this.ticktime > new Date(new Date().toDateString()).getTime()));
+    Dailies.update(this._id, {$set: {done: !is_ticked, ticktime: (new Date()).getTime()}});
+    updateStats('dailies', !is_ticked, this.ticktime);
     stopProp(evt);
   },
   'click .cancel-edit': function (evt) {
