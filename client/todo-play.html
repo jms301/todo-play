@@ -10,16 +10,29 @@
         <a class="navbar-brand" href="#">Todo-Play</a>
       </div>
       <div class="nav navbar-nav navbar-right">
+      {{#if currentUser}}
+      <ul class="nav navbar-nav">
+        <li> <a id="edit_config" href="#">config</a></li>
+      </ul>
+      {{/if}}
       {{>loginButtons}}
       </div>
     </div>
   </nav>
+  {{#if session 'show_config'}}
+    <div class="container-fluid">
+      {{#with user_config}}
+        {{>config}}
+      {{/with}}
+    </div>
+  {{else}}
   <div id="charts" class="container-fluid">
-  {{>days}}
+    {{>days}}
   </div>
- <div id="main-pane" class="container-fluid">
-    {{>todo_play}}
+  <div id="main-pane" class="container-fluid">
+      {{>todo_play}}
   </div>
+  {{/if}}
 </body>
 
 <template name = "days">
@@ -57,6 +70,21 @@
             <div class="bar habit-bar" style="height: {{habit_height}}"> </div>
             <div class="bar daily-bar" style="height: {{daily_height}}"> </div>
             <div class="bar todo-bar" style="height: {{todo_height}}"> </div>
+</template>
+<template name = "config">
+  <div class="col-md-2">
+  </div>
+  <div class="col-md-8" id="config">
+    <h1>User Config:</h1>
+    <div id="config-items">
+      <p><label>Display Name: </label> <input id="display_name" value="{{display_name}}"></p>
+      <p><label>Day Ends At: </label> <input id="day_end" value="{{day_end}}"></p>
+      <p><button id='save' class="btn btn-primary">Save</button>
+      <button id='cancel' class="btn">Cancel</button></p>
+    </div>
+  </div>
+  <div class="col-md-2">
+  </div>
 </template>
 
 <template name="todo_play">

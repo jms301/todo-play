@@ -21,7 +21,9 @@ Session.setDefault('days_stats_yesterday', null);
 Session.setDefault('days_stats_before', null);
 
 Session.setDefault('active_goal', null);
+Session.setDefault('show_config', null);
 
+Session.setDefault('time_now', new Date().getTime());
 // Subscriptions
 
 var daysStatsHandle = Meteor.subscribe('days_stats', function () {
@@ -56,9 +58,7 @@ $(window).on('load resize', function() {
 });
 
 
-
-
-
+// Initialize stats
 var setupDaysStats = function () {
   date = todaysMoment();
   if (Session.get('today') === date.toString() || !Meteor.userId()) {
@@ -90,6 +90,19 @@ var setupDaysStats = function () {
 
   }
 };
+
+Tracker.autorun( function (comp) {
+  if(Meteor.userId())
+  {
+    setupDaysStats();
+  }
+});
+
+Meteor.setInterval(function () {
+  Session.set('time_now', new Date().getTime());
+  setupDaysStats();
+
+}, 60000);
 
 var todaysMoment = function () {
   return moment().startOf('day').add(12, 'hours');
@@ -245,14 +258,52 @@ $(document).keyup(function(e) {
     }   // esc
 });
 
-UI.body.events({'click' : function (evt)  {
+//Body
+Template.body.events({
+  'click a#edit_config' : function (evt) {
+    Session.set('show_config', true);
+  },
+  'click' : function (evt)  {
     saveEdit(Session.get('edit_todo'), Todos);
     saveEdit(Session.get('edit_daily'), Dailies);
     saveHabit(Session.get('edit_habit'), Habits);
     Session.set('edit_todo', null);
     Session.set('edit_daily', null);
     Session.set('edit_habit', null);
-}});
+  }});
+
+Template.body.user_config = function () {
+  // find or create a UserConfig
+  if(Meteor.userId) {
+    user_config = UserConfig.findOne({userId: Meteor.userId()});
+    if(user_config)
+      return user_config
+    else
+      user_config = UserConfig.insert({
+        userId: Meteor.userId(),
+        day_end: 0,
+        display_name: "Anon"
+      });
+    return UserConfig.findOne({_id: user_config});
+  }
+  return null
+}
+
+//Config
+Template.config.events({
+  'click button#cancel': function (evt, template) {
+    template.$('#day_end').val(this.day_end);
+    template.$('#display_name').val(this.display_name);
+
+    Session.set('show_config', false);
+  },
+  'click button#save': function (evt, template) {
+    UserConfig.update(this._id, {$set: { day_end: template.$('#day_end').val(),
+                               display_name: template.$('#display_name').val()}
+                      });
+    Session.set('show_config', false);
+  }
+});
 
 //Days
 Template.days.today = function () {
@@ -504,7 +555,7 @@ Template.daily_item.goals = function (){
 };
 
 Template.daily_item.ticked = function () {
-  if (this.done && (this.ticktime > new Date(new Date().toDateString()).getTime()))
+  if (this.done && (this.ticktime > new Date(new Date(Session.get('time_now')).toDateString()).getTime()))
     return 'ticked';
   else
     return 'unticked';
@@ -520,7 +571,7 @@ Template.daily_item.events({
     stopProp(evt);
   },
   'click .item-checkbox': function (evt) {
-    var is_ticked = (this.done && (this.ticktime > new Date(new Date().toDateString()).getTime()));
+    var is_ticked = (this.done && (this.ticktime > new Date(new Date(Session.get('time_now')).toDateString()).getTime()));
     Dailies.update(this._id, {$set: {done: !is_ticked, ticktime: (new Date()).getTime()}});
     updateStats('dailies', !is_ticked, this.ticktime);
     stopProp(evt);
