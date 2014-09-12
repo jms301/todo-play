@@ -57,6 +57,10 @@ $(window).on('load resize', function() {
       $('body').css({"padding-top": $(".navbar").height() + 30 + "px"});
 });
 
+var todaysMoment = function () {
+  return moment().startOf('day').add(12, 'hours');
+
+};
 
 // Initialize stats
 var setupDaysStats = function () {
@@ -103,11 +107,6 @@ Meteor.setInterval(function () {
   setupDaysStats();
 
 }, 60000);
-
-var todaysMoment = function () {
-  return moment().startOf('day').add(12, 'hours');
-
-};
 
 var whatDayIsThis = function (date) {
   return (moment(date).startOf('day').add(12, 'hours'));
