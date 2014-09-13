@@ -65,7 +65,8 @@ var todaysMoment = function () {
 // Initialize stats
 var setupDaysStats = function () {
   date = todaysMoment();
-  if (Session.get('today') === date.toString() || !Meteor.userId()) {
+  if (Session.get('today') === date.toString() || !Meteor.userId()
+    || !daysStatsHandle.ready() ) {
     // already setup the date to today or have no user so keep on trucking
 
   } else {
@@ -105,7 +106,6 @@ Tracker.autorun( function (comp) {
 Meteor.setInterval(function () {
   Session.set('time_now', new Date().getTime());
   setupDaysStats();
-
 }, 60000);
 
 var whatDayIsThis = function (date) {
