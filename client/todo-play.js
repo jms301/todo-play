@@ -4,8 +4,10 @@ Goals = new Meteor.Collection("goals");
 Habits = new Meteor.Collection("habits");
 Dailies = new Meteor.Collection("dailies");
 Todos = new Meteor.Collection("todos");
-DaysStats = new Meteor.Collection("days_stats");
 
+// Header stuff
+DaysStats = new Meteor.Collection("days_stats");
+DoneTicker = new Meteor.Collection("done_ticker");
 
 //user config stuff
 UserConfig = new Meteor.Collection("user_config");
@@ -26,6 +28,10 @@ Session.setDefault('show_config', null);
 Session.setDefault('time_now', new Date().getTime());
 // Subscriptions
 
+
+var doneTickerHandle = Meteor.subscribe('done_ticker', function () {
+
+});
 var daysStatsHandle = Meteor.subscribe('days_stats', function () {
   setupDaysStats();
 });
@@ -328,6 +334,10 @@ Template.days.before_chart = function () {
     return DaysStats.findOne({_id: Session.get('days_stats_before')});
   else
     return {blank: 1};
+};
+
+Template.days.ticker = function () {
+  return DoneTicker.findOne();
 };
 
 //return the highest value of 'type' in today/yesterday/before stats
