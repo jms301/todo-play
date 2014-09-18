@@ -181,6 +181,7 @@
   <li id="habit-{{_id}}" class="item">
     <div class="item-checkbox {{habit_status}}"><label class="habit-plus">+</label></div>
     <div class="item-text"><span class="item-text"> {{text}}</span>
+      <div class="expand-edit {{not_editing}}"><label class="glyphicon glyphicon-collapse-down"></label></div>
       <div class="item-details {{editing}}">
       Title: <br />
       <input id="item-title-{{_id}}" value="{{text}}" class="item-edit-title"/>
@@ -208,6 +209,7 @@
   <li id="daily-{{_id}}" class="item">
     <div class="item-checkbox {{ticked}}"><label class="{{ticked}}">¬</label></div>
     <div class="item-text"><span class="item-text"> {{text}}</span>
+      <div class="expand-edit {{not_editing}}"><label class="glyphicon glyphicon-collapse-down"></label></div>
       <div class="item-details {{editing}}">
       Title: <input id="item-title-{{_id}}" value="{{text}}" class="item-edit-title"/>
       Notes: <br/>
@@ -228,13 +230,11 @@
   </li>
 </template>
 
-
-
-
 <template name="todo_item">
   <li id="todo-{{_id}}" class="item">
     <div class="item-checkbox {{ticked}}" style="background-color: {{color}}"><label class="{{ticked}}">¬</label></div>
     <div class="item-text"><span class="item-text"> {{text}}</span>
+      <div class="expand-edit {{not_editing}}"><label class="glyphicon glyphicon-collapse-down"></label></div>
      <div class="item-details {{editing}}">
       Title: <input id="item-title-{{_id}}" value="{{text}}" class="item-edit-title"/>
       Notes: <br/>
@@ -246,6 +246,7 @@
       <option value="{{_id}}" {{is_selected ..}}>{{text}}</option>
       {{/each}}
       </select><br />
+      Private: <input type="checkbox" id="item-private-{{_id}}" class="item-private"/>
       <div class="cancel-edit"><label class="cancel-edit">+</label></div>
       </div>
     </div>

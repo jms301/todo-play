@@ -491,13 +491,32 @@ Template.habit_item.events({
     updateStats('habits', true, null); // habits can only be incremented
     stopProp(evt);
   },
-  'dblclick .item-text': function (evt) {
-    if(Session.get('edit_habit') != this._id)
+  'click .expand-edit': function (evt) {
+    if(Session.get('edit_habit') == null) {
       Session.set('edit_habit', this._id);
-    else {
+    } else if(Session.get('edit_habit') != this._id) {
+      saveHabit(Session.get('edit_habit'),  Habits);
+      Session.set('edit_habit', this._id);
+    } else {
       Session.set('edit_habit', null);
-      saveHabit(this._id, habits);
+      saveHabit(this._id, Habits);
     }
+
+    stopProp(evt);
+  },
+
+  'dblclick .item-text': function (evt) {
+    if(Session.get('edit_habit') == null)
+      Session.set('edit_habit', this._id);
+    else if(Session.get('edit_habit') != this._id) {
+      saveHabit(Session.get('edit_habit'),  Habits);
+      Session.set('edit_habit', this._id);
+    } else {
+      Session.set('edit_habit', null);
+      saveHabit(this._id, Habits);
+    }
+
+
 
     clearSelect();
     stopProp(evt);
@@ -522,6 +541,10 @@ Template.habit_item.habit_status = function() {
     return "habit-status-2";
   else
     return "habit-status-3";
+};
+
+Template.habit_item.not_editing = function (evt) {
+  return this._id == Session.get('edit_habit') ? "" : "editing";
 };
 
 Template.habit_item.editing = function (evt) {
@@ -594,10 +617,27 @@ Template.daily_item.events({
     Session.set('edit_daily', null);
     stopProp(evt);
   },
-  'dblclick .item-text': function (evt) {
-    if(Session.get('edit_daily') != this._id)
+  'click .expand-edit': function (evt) {
+    if(Session.get('edit_daily') == null) {
       Session.set('edit_daily', this._id);
-    else {
+    } else if(Session.get('edit_daily') != this._id) {
+      saveEdit(Session.get('edit_daily'),  Dailies);
+      Session.set('edit_daily', this._id);
+    } else {
+      Session.set('edit_daily', null);
+      saveEdit(this._id, Dailies);
+    }
+
+    stopProp(evt);
+  },
+
+  'dblclick .item-text': function (evt) {
+    if(Session.get('edit_daily') == null) {
+      Session.set('edit_daily', this._id);
+    } else if(Session.get('edit_daily') != this._id) {
+      saveEdit(Session.get('edit_daily'), Dailies);
+      Session.set('edit_daily', this._id);
+    } else {
       Session.set('edit_daily', null);
       saveEdit(this._id, Dailies);
     }
@@ -609,6 +649,10 @@ Template.daily_item.events({
     stopProp(evt);
   }
 });
+
+Template.daily_item.not_editing = function (evt) {
+  return this._id == Session.get('edit_daily') ? "" : "editing";
+}
 
 Template.daily_item.editing = function (evt) {
   return this._id == Session.get('edit_daily') ? "editing" : "";
@@ -737,10 +781,27 @@ Template.todo_item.events({
     updateStats('todos', !this.done, this.ticktime);
     stopProp(evt);
   },
-  'dblclick .item-text': function (evt) {
-    if(Session.get('edit_todo') != this._id)
+  'click .expand-edit': function (evt) {
+    if(Session.get('edit_todo') == null) {
       Session.set('edit_todo', this._id);
-    else {
+    } else if(Session.get('edit_todo') != this._id) {
+      saveEdit(Session.get('edit_todo'),  Todos);
+      Session.set('edit_todo', this._id);
+    } else {
+      Session.set('edit_todo', null);
+      saveEdit(this._id, Todos);
+    }
+
+    stopProp(evt);
+  },
+  'dblclick .item-text': function (evt) {
+
+    if(Session.get('edit_todo') == null) {
+      Session.set('edit_todo', this._id);
+    } else if(Session.get('edit_todo') != this._id) {
+      saveEdit(Session.get('edit_todo'),  Todos);
+      Session.set('edit_todo', this._id);
+    } else {
       Session.set('edit_todo', null);
       saveEdit(this._id, Todos);
     }
@@ -752,6 +813,10 @@ Template.todo_item.events({
     stopProp(evt);
   }
 });
+
+Template.todo_item.not_editing = function (evt) {
+  return this._id == Session.get('edit_todo') ? "" : "editing";
+};
 
 Template.todo_item.editing = function (evt) {
   return this._id == Session.get('edit_todo') ? "editing" : "";

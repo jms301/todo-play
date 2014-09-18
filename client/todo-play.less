@@ -221,20 +221,33 @@ li.item  {
 
 div.item-details {
   display: none;
+  margin-top: 1em;
+}
+
+div.expand-edit {
+  display: none;
+  position: absolute;
+  top: 0px;
+  padding-top: 8px;
+  right: 0px;
+  width: 20px;
+  height: 30px;
 }
 
 div.editing {
   display: block;
-  margin-top: 1em;
 }
+
 input.item-edit-title {
   width: 100%;
 }
+
 textarea.item-edit-notes {
   cols: 20;
   width: 100%;
   padding-right: 3px;
 }
+
 div.cancel-edit {
   position: absolute;
   top: 0px;
@@ -242,6 +255,7 @@ div.cancel-edit {
   width: 20px;
   height: 30px;
 }
+
 label.cancel-edit {
   transform: rotate(135deg);
   -webkit-transform: rotate(135deg);
