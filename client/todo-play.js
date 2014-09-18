@@ -287,6 +287,7 @@ Template.body.user_config = function () {
       user_config = UserConfig.insert({
         userId: Meteor.userId(),
         day_end: 0,
+        red_age: 30,
         display_name: "Anon"
       });
     return UserConfig.findOne({_id: user_config});
@@ -299,11 +300,14 @@ Template.config.events({
   'click button#cancel': function (evt, template) {
     template.$('#day_end').val(this.day_end);
     template.$('#display_name').val(this.display_name);
+    template.$('#red_age').val(this.red_age);
+
 
     Session.set('show_config', false);
   },
   'click button#save': function (evt, template) {
-    UserConfig.update(this._id, {$set: { day_end: template.$('#day_end').val(),
+    UserConfig.update(this._id, {$set: { red_age: template.$('#red_age').val(),
+                               day_end: template.$('#day_end').val(),
                                display_name: template.$('#display_name').val()}
                       });
     Session.set('show_config', false);
@@ -449,7 +453,7 @@ Template.habits.events(okCancelEvents(
         text: text,
         done: false,
         notes: "",
-        goal: null,
+        goal: Session.get('active_goal'),
         timestamp: (new Date()).getTime(),
         freq: 7 //default frequency is once per week
     });
@@ -544,7 +548,7 @@ Template.dailies.events(okCancelEvents(
         text: text,
         done: false,
         notes: "",
-        goal: null,
+        goal: Session.get('active_goal'),
         timestamp: (new Date()).getTime(),
         ticktime: (new Date(0))
     });
@@ -647,7 +651,7 @@ Template.todos.events(okCancelEvents(
     ok: function (text, evt) {
       Todos.insert({
         text: text,
-        goal: null,
+        goal: Session.get('active_goal'),
         userId: Meteor.userId(),
         done: false,
         notes: "",
@@ -672,6 +676,45 @@ Template.todo_item.goals = function (){
 
 Template.todo_item.ticked = function () {
   return this.done ? 'ticked' : 'unticked';
+};
+
+Template.todo_item.color = function () {
+  if(this.done){
+    return ""
+  } else {
+    user_config = UserConfig.findOne({userId: Meteor.userId()});
+    if(!user_config || !user_config.red_age)
+      user_config = {red_age: 30}; // default red_age of 30 days
+
+    //blue: #779ECB
+    //blue = rgb(119, 158, 203)
+    //red:  #FF7373
+    //red = rgb(255, 115, 115)
+
+    rblue = 119;
+    gblue = 158;
+    bblue = 203;
+
+    rdiff = -136;
+    gdiff = 43;
+    bdiff = 88;
+
+    age = new Date() - new Date(this.timestamp);
+    red_age = user_config.red_age * 24 * 60 * 60 * 1000;
+
+    if(age < 0)
+      return '#779ECB';
+    if(age > red_age)
+      age = red_age;
+
+    age_frac = age / red_age;
+
+    to_ret =  'rgb(' + Math.floor(rblue - (rdiff * age_frac)) + ',' +
+    Math.floor(gblue - (gdiff * age_frac)) + ',' +
+    Math.floor(bblue - (bdiff * age_frac)) + ')';
+
+    return to_ret;
+  }
 };
 
 Template.todo_item.events({
