@@ -478,7 +478,7 @@ Template.habit_item.goals = function (){
 
 Template.habit_item.events({
  'click .item-remove': function (evt) {
-    //if(confirm("sure you want to delete that?"))
+    if(confirm("sure you want to delete that?"))
       Habits.remove(this._id);
     stopProp(evt);
   },
@@ -609,7 +609,7 @@ Template.daily_item.events({
     stopProp(evt);
   },
   'click .item-remove': function (evt) {
-      //if(confirm("sure you want to delete that?"))
+      if(confirm("sure you want to delete that?"))
         Dailies.remove(this._id);
     stopProp(evt);
   },
@@ -770,7 +770,7 @@ Template.todo_item.color = function () {
 
 Template.todo_item.events({
   'click .item-remove': function (evt) {
-    //if(confirm("sure you want to delete that?"))
+    if(confirm("sure you want to delete that?"))
       Todos.remove(this._id);
     stopProp(evt);
   },
