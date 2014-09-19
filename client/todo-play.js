@@ -437,9 +437,13 @@ Template.goal.events({
 Template.habits.habits = function () {
   if(Meteor.userId())
     if(Session.get('active_goal') == null)
-      return Habits.find({userId: Meteor.userId()});
+      return Habits.find({userId: Meteor.userId()},
+                         {sort: ["timestamp", "desc"]});
     else
-      return Habits.find({userId: Meteor.userId(), goal: Session.get('active_goal')});
+      return Habits.find({userId: Meteor.userId(),
+                                  goal: Session.get('active_goal')},
+                         {sort: ["timestamp", "desc"]});
+    else
   return [];
 };
 
@@ -556,9 +560,12 @@ Template.habit_item.editing = function (evt) {
 Template.dailies.dailies = function () {
   if(Meteor.userId())
     if(Session.get('active_goal') == null)
-      return Dailies.find({userId: Meteor.userId()});
+      return Dailies.find({userId: Meteor.userId()},
+                      {sort: ["timestamp", "desc"]});
     else
-      return Dailies.find({userId: Meteor.userId(), goal: Session.get('active_goal')});
+      return Dailies.find({userId: Meteor.userId(),
+                           goal: Session.get('active_goal')},
+                          {sort: ["timestamp", "desc"]});
   return [];
 };
 
