@@ -94,7 +94,7 @@ DaysStats.deny({
 // Code to select todos done for the ticker.
 
 Meteor.setInterval( function () {
-  candidates = Todos.find({done: true}, {sort: {ticktime: -1}, limit: 10});
+  candidates = Todos.find({done: true, private: false}, {sort: {ticktime: -1}, limit: 10});
   DoneTicker.remove({});
 
   candidates.forEach(function (todo) {

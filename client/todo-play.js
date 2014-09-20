@@ -173,11 +173,14 @@ var cancelEdit = function (id, List) {
     title_input = $('#item-title-' + id);
     notes_input = $('#item-notes-' + id);
     goal_input  = $('#item-goals-' + id);
+    private_input = $('#item-private-' + id);
 
     item = List.findOne({_id: id});
     title_input.val(item.text);
     notes_input.val(item.notes);
     goal_input.val(item.goal);
+    goal_input.val(item.goal);
+    private_input.checked = item.private;
  }
 };
 
@@ -185,9 +188,11 @@ var saveEdit = function (id, List) {
   title_input = $('#item-title-' + id);
   notes_input = $('#item-notes-' + id);
   goal_input  = $('#item-goals-' + id + ' option:selected');
+  private_input = $('#item-private-' + id);
 
   List.update(id, {$set: {notes: notes_input.val(), text: title_input.val(),
-                          goal: goal_input.val()}});
+                          goal: goal_input.val(),
+                          private: private_input.prop("checked")}});
 
 };
 
@@ -269,9 +274,12 @@ Template.body.events({
     Session.set('show_config', true);
   },
   'click' : function (evt)  {
-    saveEdit(Session.get('edit_todo'), Todos);
-    saveEdit(Session.get('edit_daily'), Dailies);
-    saveHabit(Session.get('edit_habit'), Habits);
+    if (Session.get('edit_todo'))
+      saveEdit(Session.get('edit_todo'), Todos);
+    if (Session.get('edit_daily'))
+      saveEdit(Session.get('edit_daily'), Dailies);
+    if (Session.get('edit_habit'))
+      saveHabit(Session.get('edit_habit'), Habits);
     Session.set('edit_todo', null);
     Session.set('edit_daily', null);
     Session.set('edit_habit', null);
@@ -577,6 +585,7 @@ Template.dailies.events(okCancelEvents(
         userId: Meteor.userId(),
         text: text,
         done: false,
+        private: null,
         notes: "",
         goal: Session.get('active_goal'),
         timestamp: (new Date()).getTime(),
@@ -705,6 +714,7 @@ Template.todos.events(okCancelEvents(
         goal: Session.get('active_goal'),
         userId: Meteor.userId(),
         done: false,
+        private: false,
         notes: "",
         ticktime: (new Date(0)),
         timestamp: (new Date()).getTime(),
