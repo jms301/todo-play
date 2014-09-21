@@ -70,7 +70,7 @@ var todaysMoment = function () {
 
 // Initialize stats
 var setupDaysStats = function () {
-  date = todaysMoment();
+  var date = todaysMoment();
   if (Session.get('today') === date.toString() || !Meteor.userId()
     || !daysStatsHandle.ready() ) {
     // already setup the date to today or have no user so keep on trucking
@@ -79,21 +79,21 @@ var setupDaysStats = function () {
 
     Session.set('today', date.toString());
 
-    todays_stats = DaysStats.findOne({date: date.toDate()});
+    var todays_stats = DaysStats.findOne({date: date.toDate()});
     if(todays_stats == null)
       Session.set('days_stats_today', null);
     else
       Session.set('days_stats_today', todays_stats._id);
 
-    date = date.subtract(1, 'day');
-    yesterdays_stats = DaysStats.findOne({date: date.toDate()});
+    var date = date.subtract(1, 'day');
+    var yesterdays_stats = DaysStats.findOne({date: date.toDate()});
     if(yesterdays_stats == null)
       Session.set('days_stats_yesterday', null);
     else
       Session.set('days_stats_yesterday', yesterdays_stats._id);
 
     date = date.subtract(1, 'day');
-    befores_stats = DaysStats.findOne({date: date.toDate()});
+    var befores_stats = DaysStats.findOne({date: date.toDate()});
     if(befores_stats == null)
       Session.set('days_stats_before', null);
     else
@@ -119,8 +119,8 @@ var whatDayIsThis = function (date) {
 };
 
 var findOrCreateTodaysStats = function () {
-  today_id = Session.get('days_stats_today');
-  day = DaysStats.findOne({_id: Session.get('days_stats_today')});
+  var today_id = Session.get('days_stats_today');
+  var day = DaysStats.findOne({_id: Session.get('days_stats_today')});
 
   if(!day) {
     day = DaysStats.insert({date: todaysMoment().toDate(),
@@ -138,13 +138,13 @@ var findOrCreateTodaysStats = function () {
 var updateStats = function (type, upOrDown, tickedOn) {
 
   if(daysStatsHandle.ready() && Meteor.userId() != null) {
-      to_set = {};
+      var to_set = {};
     if(upOrDown) {
-      todaysStats = findOrCreateTodaysStats();
-      to_set[type] = todaysStats[type] + 1;
+      var todaysStats = findOrCreateTodaysStats();
+      var to_set[type] = todaysStats[type] + 1;
       DaysStats.update(todaysStats._id, {$set: to_set});
     } else {
-      stats = DaysStats.findOne({date: whatDayIsThis(tickedOn).toDate()});
+      var stats = DaysStats.findOne({date: whatDayIsThis(tickedOn).toDate()});
       if(stats) {
         to_set[type] = stats[type] < 1 ? 0 : stats[type] - 1;
         DaysStats.update(stats._id, {$set: to_set});
@@ -170,12 +170,12 @@ var clearSelect = function() {
 
 var cancelEdit = function (id, List) {
   if(id) {
-    title_input = $('#item-title-' + id);
-    notes_input = $('#item-notes-' + id);
-    goal_input  = $('#item-goals-' + id);
-    private_input = $('#item-private-' + id);
+    var title_input = $('#item-title-' + id);
+    var notes_input = $('#item-notes-' + id);
+    var goal_input  = $('#item-goals-' + id);
+    var private_input = $('#item-private-' + id);
 
-    item = List.findOne({_id: id});
+    var item = List.findOne({_id: id});
     title_input.val(item.text);
     notes_input.val(item.notes);
     goal_input.val(item.goal);
@@ -185,10 +185,10 @@ var cancelEdit = function (id, List) {
 };
 
 var saveEdit = function (id, List) {
-  title_input = $('#item-title-' + id);
-  notes_input = $('#item-notes-' + id);
-  goal_input  = $('#item-goals-' + id + ' option:selected');
-  private_input = $('#item-private-' + id);
+  var title_input = $('#item-title-' + id);
+  var notes_input = $('#item-notes-' + id);
+  var goal_input  = $('#item-goals-' + id + ' option:selected');
+  var private_input = $('#item-private-' + id);
 
   List.update(id, {$set: {notes: notes_input.val(), text: title_input.val(),
                           goal: goal_input.val(),
@@ -198,12 +198,12 @@ var saveEdit = function (id, List) {
 
 var cancelHabit = function (id, List) {
   if(id) {
-    title_input = $('#item-title-' + id);
-    notes_input = $('#item-notes-' + id);
-    freq_input  = $('#habit-freq-' + id);
-    goal_input  = $('#item-goals-' + id);
+    var title_input = $('#item-title-' + id);
+    var notes_input = $('#item-notes-' + id);
+    var freq_input  = $('#habit-freq-' + id);
+    var goal_input  = $('#item-goals-' + id);
 
-    item = List.findOne({_id: id});
+    var item = List.findOne({_id: id});
     title_input.val(item.text);
     notes_input.val(item.notes);
     freq_input.val(item.freq);
@@ -212,10 +212,10 @@ var cancelHabit = function (id, List) {
 };
 
 var saveHabit = function (id, List) {
-  title_input = $('#item-title-' + id);
-  notes_input = $('#item-notes-' + id);
-  freq_input  = $('#habit-freq-' + id);
-  goal_input  = $('#item-goals-' + id + ' option:selected');
+  var title_input = $('#item-title-' + id);
+  var notes_input = $('#item-notes-' + id);
+  var freq_input  = $('#habit-freq-' + id);
+  var goal_input  = $('#item-goals-' + id + ' option:selected');
 
   List.update(id, {$set: {notes: notes_input.val(), text: title_input.val(),
                           freq: freq_input.val(), goal: goal_input.val()}});
@@ -354,13 +354,13 @@ Template.days.ticker = function () {
 
 //return the highest value of 'type' in today/yesterday/before stats
 var findChartMax = function(type) {
-  today = DaysStats.findOne({_id: Session.get('days_stats_today')});
-  yesterday = DaysStats.findOne({_id: Session.get('days_stats_yesterday')});
-  before = DaysStats.findOne({_id: Session.get('days_stats_before')});
+  var today = DaysStats.findOne({_id: Session.get('days_stats_today')});
+  var yesterday = DaysStats.findOne({_id: Session.get('days_stats_yesterday')});
+  var before = DaysStats.findOne({_id: Session.get('days_stats_before')});
   //console.log(today);
   //console.log(yesterday);
   //console.log(before);
-  max = 5; // if max is <5 we pretend it's 5 so 1 done item isn't a whole chart
+  var max = 5; // if max is <5 we pretend it's 5 so 1 done item isn't a whole chart
   if ( today && max < today[type])
     max = today[type];
   if (yesterday && max < yesterday[type])
@@ -375,7 +375,7 @@ Template.chart.habit_height = function () {
   if(this.blank || this.habits == 0)
     return "1px;";
   else
-    max = findChartMax('habits');
+    var max = findChartMax('habits');
     return ((this.habits / max) * 7) + "em;";
 };
 
@@ -384,7 +384,7 @@ Template.chart.daily_height = function () {
     return "1px;";
   else {
     // 7em max height;
-    max = Dailies.find({}).count();
+    var max = Dailies.find({}).count();
     return ((this.dailies / max) * 7) + "em;";
   }
 }
@@ -393,7 +393,7 @@ Template.chart.todo_height = function () {
   if(this.blank || this.todos == 0)
     return "1px;";
   else {
-    max = findChartMax('todos');
+    var max = findChartMax('todos');
     return ((this.todos / max) * 7) + "em;";
   }
 }
@@ -459,7 +459,7 @@ Template.habits.events(okCancelEvents(
   '#add-habit',
   {
     ok: function (text, evt) {
-      Habits.insert({
+    Habits.insert({
         ticktime: (new Date(0)),
         userId: Meteor.userId(),
         text: text,
@@ -549,9 +549,9 @@ Template.habit_item.events({
 Template.habit_item.habit_status = function() {
   //returns the urgency of this habit this.freq = ideal frequency in days.
   // this.tickedtime = time of last completion.
-  days = 86400000; //milliseconds in one day;
+  var days = 86400000; //milliseconds in one day;
 
-  age = new Date() - this.ticktime;
+  var age = new Date() - this.ticktime;
   if(age < (this.freq/2) * days)
     return "habit-status-1";
   else if(age < this.freq * days)
@@ -753,7 +753,7 @@ Template.todo_item.color = function () {
   if(this.done){
     return ""
   } else {
-    user_config = UserConfig.findOne({userId: Meteor.userId()});
+    var user_config = UserConfig.findOne({userId: Meteor.userId()});
     if(!user_config || !user_config.red_age)
       user_config = {red_age: 30}; // default red_age of 30 days
 
@@ -762,16 +762,16 @@ Template.todo_item.color = function () {
     //red:  #FF7373
     //red = rgb(255, 115, 115)
 
-    rblue = 119;
-    gblue = 158;
-    bblue = 203;
+    var rblue = 119;
+    var gblue = 158;
+    var bblue = 203;
 
-    rdiff = -136;
-    gdiff = 43;
-    bdiff = 88;
+    var rdiff = -136;
+    var gdiff = 43;
+    var bdiff = 88;
 
-    age = new Date() - new Date(this.timestamp);
-    red_age = user_config.red_age * 24 * 60 * 60 * 1000;
+    var age = new Date() - new Date(this.timestamp);
+    var red_age = user_config.red_age * 24 * 60 * 60 * 1000;
 
     if(age < 0)
       return '#779ECB';
@@ -780,7 +780,7 @@ Template.todo_item.color = function () {
 
     age_frac = age / red_age;
 
-    to_ret =  'rgb(' + Math.floor(rblue - (rdiff * age_frac)) + ',' +
+    var to_ret =  'rgb(' + Math.floor(rblue - (rdiff * age_frac)) + ',' +
     Math.floor(gblue - (gdiff * age_frac)) + ',' +
     Math.floor(bblue - (bdiff * age_frac)) + ')';
 
