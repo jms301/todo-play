@@ -141,7 +141,7 @@ var updateStats = function (type, upOrDown, tickedOn) {
       var to_set = {};
     if(upOrDown) {
       var todaysStats = findOrCreateTodaysStats();
-      var to_set[type] = todaysStats[type] + 1;
+      to_set[type] = todaysStats[type] + 1;
       DaysStats.update(todaysStats._id, {$set: to_set});
     } else {
       var stats = DaysStats.findOne({date: whatDayIsThis(tickedOn).toDate()});
@@ -459,7 +459,7 @@ Template.habits.events(okCancelEvents(
   '#add-habit',
   {
     ok: function (text, evt) {
-    Habits.insert({
+    var habit = Habits.insert({
         ticktime: (new Date(0)),
         userId: Meteor.userId(),
         text: text,
@@ -469,6 +469,7 @@ Template.habits.events(okCancelEvents(
         timestamp: (new Date()).getTime(),
         freq: 7 //default frequency is once per week
     });
+    Session.set('edit_habit', habit);
     evt.target.value='';
   },
     cancel: function (evt) {
@@ -586,7 +587,7 @@ Template.dailies.events(okCancelEvents(
   '#add-daily',
   {
     ok: function (text, evt) {
-      Dailies.insert({
+      var daily = Dailies.insert({
         userId: Meteor.userId(),
         text: text,
         done: false,
@@ -596,6 +597,7 @@ Template.dailies.events(okCancelEvents(
         timestamp: (new Date()).getTime(),
         ticktime: (new Date(0))
     });
+    Session.set('edit_daily', daily);
     evt.target.value='';
   },
     cancel: function (evt) {

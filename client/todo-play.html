@@ -126,7 +126,7 @@
     {{#each goals}}
       {{>goal}}
     {{/each}}
-    <li class="hide-on-small"><input id="add-goal" type="text" placeholder="New Goal" class="add-goal"/></li>
+    <li class="hide-on-small"><input id="add-goal" type="text" placeholder="New Project" class="add-goal"/></li>
   </ul>
 </template>
 
@@ -215,7 +215,7 @@
       Title: <input id="item-title-{{_id}}" value="{{text}}" class="item-edit-title"/>
       Notes: <br/>
       <textarea id="item-notes-{{_id}}" rows=3 cols=35 class="item-edit-notes">{{notes}}</textarea>
-      Goal: <br />
+      Project: <br />
       <select id="item-goals-{{_id}}">
       <option> </option>
       {{#each goals}}
