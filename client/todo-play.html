@@ -195,7 +195,8 @@
       {{/each}}
       </select><br />
       Frequency (days): <input type="number" id="habit-freq-{{_id}}" value="{{freq}}" class="item-edit-freq"/>
-      <div class="cancel-edit"><label class="cancel-edit">+</label></div>
+      <div class="cancel-edit"><label class="glyphicon glyphicon-floppy-remove"></label></div>
+      <div class="save-edit"><label class="glyphicon glyphicon-floppy-saved"></label></div>
       </div>
     </div>
     <div class="item-remove"><div class="item-remove-x">
@@ -221,7 +222,8 @@
       <option value="{{_id}}" {{is_selected ..}}>{{text}}</option>
       {{/each}}
       </select><br />
-      <div class="cancel-edit"><label class="cancel-edit">+</label></div>
+      <div class="cancel-edit"><label class="glyphicon glyphicon-floppy-remove"></label></div>
+      <div class="save-edit"><label class="glyphicon glyphicon-floppy-saved"></label></div>
       </div>
     </div>
     <div class="item-remove"><div class="item-remove-x">
@@ -247,7 +249,8 @@
       {{/each}}
       </select><br />
       Private: <input type="checkbox" checked="{{private}}" id="item-private-{{_id}}" class="item-private"/>
-      <div class="cancel-edit"><label class="cancel-edit">+</label></div>
+      <div class="cancel-edit"><label class="glyphicon glyphicon-floppy-remove"></label></div>
+      <div class="save-edit"><label class="glyphicon glyphicon-floppy-saved"></label></div>
       </div>
     </div>
     <div class="item-remove"><div class="item-remove-x">

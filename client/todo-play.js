@@ -493,6 +493,11 @@ Template.habit_item.events({
   'click li': function (evt) {
     stopProp(evt);
   },
+  'click .save-edit': function (evt) {
+    saveHabit(this._id, Habits);
+    Session.set('edit_habit', null);
+    stopProp(evt);
+  },
   'click .cancel-edit': function (evt) {
     cancelHabit(this._id, Habits);
     Session.set('edit_habit', null);
@@ -626,6 +631,11 @@ Template.daily_item.events({
     var is_ticked = (this.done && (this.ticktime > new Date(new Date(Session.get('time_now')).toDateString()).getTime()));
     Dailies.update(this._id, {$set: {done: !is_ticked, ticktime: (new Date()).getTime()}});
     updateStats('dailies', !is_ticked, this.ticktime);
+    stopProp(evt);
+  },
+  'click .save-edit': function (evt) {
+    saveEdit(this._id, Dailies);
+    Session.set('edit_daily', null);
     stopProp(evt);
   },
   'click .cancel-edit': function (evt) {
@@ -785,6 +795,11 @@ Template.todo_item.events({
     stopProp(evt);
   },
   'click li': function (evt) {
+    stopProp(evt);
+  },
+  'click .save-edit': function (evt) {
+    saveEdit(this._id, Todos);
+    Session.set('edit_todo', null);
     stopProp(evt);
   },
   'click .cancel-edit': function (evt) {
