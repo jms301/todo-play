@@ -613,11 +613,18 @@ Template.daily_item.goals = function (){
   return Goals.find({userId: Meteor.userId()});
 };
 
+Template.daily_item.ticked_icon = function () {
+  if (this.done && (this.ticktime > new Date(new Date(Session.get('time_now')).toDateString()).getTime()))
+    return 'glyphicon glyphicon-ok';
+  else
+    return '';
+};
+
 Template.daily_item.ticked = function () {
   if (this.done && (this.ticktime > new Date(new Date(Session.get('time_now')).toDateString()).getTime()))
     return 'ticked';
   else
-    return 'unticked';
+    return '';
 };
 
 Template.daily_item.events({
@@ -747,8 +754,12 @@ Template.todo_item.goals = function (){
   return Goals.find({userId: Meteor.userId()});
 };
 
+Template.todo_item.ticked_icon = function () {
+  return this.done ? 'glyphicon glyphicon-ok' : '';
+};
+
 Template.todo_item.ticked = function () {
-  return this.done ? 'ticked' : 'unticked';
+  return this.done ? 'ticked' : '';
 };
 
 Template.todo_item.color = function () {

@@ -277,17 +277,18 @@ div.save-edit {
 
 
 div.item-checkbox {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   position: absolute;
   top: 0px;
   bottom: 0px;
   left: 0px;
   float: none;
-  margin: 0px;
-  display: block;
   width: 45px;
-  margin: auto;
   border: 1px solid #AAA;
   background-color: @pastel-blue;
+  text-align: center; 
 }
 
 div.item-checkbox:hover {
@@ -297,24 +298,7 @@ div.item-checkbox:hover {
 div.ticked {
   border: 1px solid #BBB;
   background-color: @pastel-green;
-}
-
-label.unticked {
-  display: none;
-}
-
-label.ticked {
-  text-align: center;
-  transform: rotate(135deg);
-  -webkit-transform: rotate(135deg);
-  -moz-transform: rotate(135deg);
-  -ms-transform: rotate(135deg);
-  -o-transform: rotate(135deg);
-  display: inline-block;
-  font-size: 2.5em;
-  margin-left: 0.4em;
-  margin-top: -0.1em;
-
+  padding-top: 0.4em;
 }
 
 div.item-text {
@@ -396,23 +380,24 @@ div.item-remove-x {
 
 // Habit specific CSS
 label.habit-plus {
-  text-align: center;
   display: inline-block;
   font-size: 2em;
-  margin-left: 14px;
-  margin-top: -2px;
+  margin-bottom: 0px;
 }
 
 div.habit-status-1 {
   background-color: @pastel-green;
+  margin-bottom: 0px;
 }
 
 div.habit-status-2 {
   background-color: @pastel-blue;
+  margin-bottom: 0px;
 }
 
 div.habit-status-3 {
   background-color: @pastel-red;
+  margin-bottom: 0px;
 }
 
 input.item-edit-freq {

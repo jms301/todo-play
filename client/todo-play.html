@@ -67,7 +67,7 @@
     <ul id="ticker-item" class="items-list">
     Done by {{display_name}} -
     <li class="item">
-    <div class="item-checkbox ticked"><label class="ticked">¬</label></div>
+    <div class="item-checkbox ticked"><label class="glyphicon glyphicon-ok"></label></div>
     <div class="item-text"><span class="item-text">{{text}}</span></div>
     <div class="item-remove"><div class="item-remove-x">
       <label class="glyphicon glyphicon-trash"></label>
@@ -208,7 +208,7 @@
 
 <template name="daily_item">
   <li id="daily-{{_id}}" class="item">
-    <div class="item-checkbox {{ticked}}"><label class="{{ticked}}">¬</label></div>
+    <div class="item-checkbox {{ticked}}"><label class="{{ticked_icon}}"></label></div>
     <div class="item-text"><span class="item-text"> {{text}}</span>
       <div class="expand-edit {{not_editing}}"><label class="glyphicon glyphicon-collapse-down"></label></div>
       <div class="item-details {{editing}}">
@@ -234,7 +234,7 @@
 
 <template name="todo_item">
   <li id="todo-{{_id}}" class="item">
-    <div class="item-checkbox {{ticked}}" style="background-color: {{color}}"><label class="{{ticked}}">¬</label></div>
+    <div class="item-checkbox {{ticked}}" style="background-color: {{color}}"><label class="{{ticked_icon}}"></label></div>
     <div class="item-text"><span class="item-text"> {{text}}</span>
       <div class="expand-edit {{not_editing}}"><label class="glyphicon glyphicon-collapse-down"></label></div>
      <div class="item-details {{editing}}">
