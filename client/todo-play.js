@@ -63,14 +63,23 @@ $(window).on('load resize', function() {
       $('body').css({"padding-top": $(".navbar").height() + 30 + "px"});
 });
 
-var todaysMoment = function () {
-  return moment().startOf('day').add(12, 'hours');
 
+//returns mid day of the 'day' the user is currently in this is configured by
+// the day_end setting so if it is 02:00 on the 9th and their day end is 3am it
+// returns 12:00 on the 8th
+var whatDayIsThis = function (date) {
+  var day_end = 0;
+  user_config = UserConfig.findOne({userId: Meteor.userId()});
+  if (user_config)
+    day_end = user_config.day_end;
+
+  return moment(date).subtract(day_end, 'hours').startOf('day'
+                    ).add(12, 'hours');
 };
 
 // Initialize stats
 var setupDaysStats = function () {
-  var date = todaysMoment();
+  var date = whatDayIsThis(new Date());
   if (Session.get('today') === date.toString() || !Meteor.userId()
     || !daysStatsHandle.ready() ) {
     // already setup the date to today or have no user so keep on trucking
@@ -114,16 +123,13 @@ Meteor.setInterval(function () {
   setupDaysStats();
 }, 60000);
 
-var whatDayIsThis = function (date) {
-  return (moment(date).startOf('day').add(12, 'hours'));
-};
 
 var findOrCreateTodaysStats = function () {
   var today_id = Session.get('days_stats_today');
   var day = DaysStats.findOne({_id: Session.get('days_stats_today')});
 
   if(!day) {
-    day = DaysStats.insert({date: todaysMoment().toDate(),
+    day = DaysStats.insert({date: whatDayIsThis(new Date()).toDate(),
                             userId: Meteor.userId(),
                             habits: 0,
                             dailies: 0,
@@ -614,14 +620,29 @@ Template.daily_item.goals = function (){
 };
 
 Template.daily_item.ticked_icon = function () {
-  if (this.done && (this.ticktime > new Date(new Date(Session.get('time_now')).toDateString()).getTime()))
+  var user_config = UserConfig.findOne({userId: Meteor.userId()});
+  var day_end = 0;
+  if(user_config)
+    day_end = user_config.day_end;
+
+  if (this.done && ( this.ticktime >
+    whatDayIsThis(moment(Session.get('time_now'))).subtract((12 - day_end), 'hours').toDate().getTime()))
+
     return 'glyphicon glyphicon-ok';
   else
     return '';
 };
 
 Template.daily_item.ticked = function () {
-  if (this.done && (this.ticktime > new Date(new Date(Session.get('time_now')).toDateString()).getTime()))
+
+  var user_config = UserConfig.findOne({userId: Meteor.userId()});
+  var day_end = 0;
+  if(user_config)
+    day_end = user_config.day_end;
+
+  if (this.done && (this.ticktime >
+    whatDayIsThis(moment(Session.get('time_now'))).subtract((12 - day_end), 'hours').toDate().getTime()))
+
     return 'ticked';
   else
     return '';
