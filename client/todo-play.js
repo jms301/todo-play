@@ -77,6 +77,17 @@ var whatDayIsThis = function (date) {
                     ).add(12, 'hours');
 };
 
+var isDailyTicked = function (daily) {
+  var user_config = UserConfig.findOne({userId: Meteor.userId()});
+  var day_end = 0;
+  if(user_config)
+    day_end = user_config.day_end;
+
+  return (daily.done && (daily.ticktime >
+    whatDayIsThis(moment(Session.get('time_now'))).subtract((12 - day_end), 'hours').toDate().getTime()))
+
+}
+
 // Initialize stats
 var setupDaysStats = function () {
   var date = whatDayIsThis(new Date());
@@ -620,14 +631,7 @@ Template.daily_item.goals = function (){
 };
 
 Template.daily_item.ticked_icon = function () {
-  var user_config = UserConfig.findOne({userId: Meteor.userId()});
-  var day_end = 0;
-  if(user_config)
-    day_end = user_config.day_end;
-
-  if (this.done && ( this.ticktime >
-    whatDayIsThis(moment(Session.get('time_now'))).subtract((12 - day_end), 'hours').toDate().getTime()))
-
+  if (isDailyTicked(this))
     return 'glyphicon glyphicon-ok';
   else
     return '';
@@ -635,14 +639,7 @@ Template.daily_item.ticked_icon = function () {
 
 Template.daily_item.ticked = function () {
 
-  var user_config = UserConfig.findOne({userId: Meteor.userId()});
-  var day_end = 0;
-  if(user_config)
-    day_end = user_config.day_end;
-
-  if (this.done && (this.ticktime >
-    whatDayIsThis(moment(Session.get('time_now'))).subtract((12 - day_end), 'hours').toDate().getTime()))
-
+  if (isDailyTicked(this))
     return 'ticked';
   else
     return '';
@@ -658,7 +655,7 @@ Template.daily_item.events({
     stopProp(evt);
   },
   'click .item-checkbox': function (evt) {
-    var is_ticked = (this.done && (this.ticktime > new Date(new Date(Session.get('time_now')).toDateString()).getTime()));
+    var is_ticked = isDailyTicked(this);
     Dailies.update(this._id, {$set: {done: !is_ticked, ticktime: (new Date()).getTime()}});
     updateStats('dailies', !is_ticked, this.ticktime);
     stopProp(evt);
