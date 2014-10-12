@@ -4,21 +4,28 @@
 </head>
 
 <body>
-  <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-    <div id="nav-bar" class="container-fluid">
+  <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container-fluid">
       <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapsed-target">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
         <a class="navbar-brand" href="#">Todo-Play</a>
       </div>
-      <div class="nav navbar-nav navbar-right">
-      {{#if currentUser}}
-      <ul class="nav navbar-nav">
-        <li> <a id="edit_config" href="#">config</a></li>
-      </ul>
-      {{/if}}
-      {{>loginButtons}}
+
+      <div class="collapse navbar-collapse" id="navbar-collapsed-target">
+        <ul class="nav navbar-nav navbar-right">
+          {{#if currentUser}}
+            <li> <a id="edit_config" href="#">config</a></li>
+          {{/if}}
+          {{>loginButtons}}
+        </ul>
       </div>
     </div>
-  </nav>
+  </div>
   {{#if session 'show_config'}}
     <div class="container-fluid">
       {{#with user_config}}
