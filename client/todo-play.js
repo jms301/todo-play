@@ -132,6 +132,18 @@ Tracker.autorun( function (comp) {
   }
 });
 
+Meteor.startup( function () {
+  if (document.location.hostname.search("callsar.com") !== -1) {
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-55690981-1', 'auto');
+    ga('send', 'pageview');
+ }
+});
+
 // update the day every min
 Meteor.setInterval(function () {
   Session.set('time_now', new Date().getTime());
