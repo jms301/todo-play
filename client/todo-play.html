@@ -70,7 +70,8 @@
     <div id="ticker" class="chart col-md-3"><strong>Done Ticker:</strong>
     <br/>
     <br/>
-    {{#with ticker}}
+    {{#each tickers}}
+    <div id="ticker-{{index}}" class="fader {{ticker_active index}}">
     <ul id="ticker-item" class="items-list">
     Done by {{display_name}} -
     <li class="item">
@@ -81,7 +82,8 @@
     </div></div>
     </li>
     </ul>
-    {{/with}}
+    </div>
+    {{/each}}
   </div>
 
 </template>
@@ -125,6 +127,8 @@
 	{{>todos}}
     </div>
     <div class="main col-md-1"></div>
+<div>
+</div>
 </template>
 
 <template name="goals">
