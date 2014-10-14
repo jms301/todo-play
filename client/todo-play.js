@@ -24,14 +24,12 @@ Session.setDefault('days_stats_before', null);
 
 Session.setDefault('active_goal', null);
 Session.setDefault('show_config', null);
-
 Session.setDefault('ticker_count', null);
 Session.setDefault('ticker_active', null);
 
 Session.setDefault('time_now', new Date().getTime());
+
 // Subscriptions
-
-
 var doneTickerHandle = Meteor.subscribe('done_ticker', function () {
 
 });
@@ -130,21 +128,6 @@ Tracker.autorun( function (comp) {
   {
     setupDaysStats();
   }
-});
-
-Meteor.startup( function () {
-$(document).ready(function() {
-  if (document.location.hostname.search("callsar.com") !== -1) {
-    console.log("GA tracking is happening");
-    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-      ga('create', 'UA-55690981-1', 'callsar.com');
-      ga('send', 'pageview');
-    }
-  });
 });
 
 // update the day every min
@@ -319,6 +302,10 @@ $(document).keyup(function(e) {
     }   // esc
 });
 
+Meteor.startup( function () {
+  GAnalytics.pageview(); // google analytics
+});
+
 //Body
 Template.body.events({
   'click a#edit_config' : function (evt) {
@@ -353,6 +340,8 @@ Template.body.user_config = function () {
   }
   return null
 }
+
+
 
 //Config
 Template.config.events({
