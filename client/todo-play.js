@@ -22,7 +22,7 @@ Session.setDefault('days_stats_today', null);
 Session.setDefault('days_stats_yesterday', null);
 Session.setDefault('days_stats_before', null);
 
-Session.setDefault('active_goal', null);
+Session.setDefault('active_project', null);
 Session.setDefault('show_config', null);
 Session.setDefault('ticker_count', null);
 Session.setDefault('ticker_active', null);
@@ -206,14 +206,13 @@ var cancelEdit = function (id, List) {
   if(id) {
     var title_input = $('#item-title-' + id);
     var notes_input = $('#item-notes-' + id);
-    var goal_input  = $('#item-goals-' + id);
+    var project_input  = $('#item-projects-' + id);
     var private_input = $('#item-private-' + id);
 
     var item = List.findOne({_id: id});
     title_input.val(item.text);
     notes_input.val(item.notes);
-    goal_input.val(item.goal);
-    goal_input.val(item.goal);
+    project_input.val(item.project);
     private_input.checked = item.private;
  }
 };
@@ -221,11 +220,11 @@ var cancelEdit = function (id, List) {
 var saveEdit = function (id, List) {
   var title_input = $('#item-title-' + id);
   var notes_input = $('#item-notes-' + id);
-  var goal_input  = $('#item-goals-' + id + ' option:selected');
+  var project_input  = $('#item-projects-' + id + ' option:selected');
   var private_input = $('#item-private-' + id);
 
   List.update(id, {$set: {notes: notes_input.val(), text: title_input.val(),
-                          goal: goal_input.val(),
+                          project: project_input.val(),
                           private: private_input.prop("checked")}});
 
 };
@@ -235,13 +234,13 @@ var cancelHabit = function (id, List) {
     var title_input = $('#item-title-' + id);
     var notes_input = $('#item-notes-' + id);
     var freq_input  = $('#habit-freq-' + id);
-    var goal_input  = $('#item-goals-' + id);
+    var project_input  = $('#item-projects-' + id);
 
     var item = List.findOne({_id: id});
     title_input.val(item.text);
     notes_input.val(item.notes);
     freq_input.val(item.freq);
-    goal_input.val(item.goal);
+    project_input.val(item.project);
   }
 };
 
@@ -249,10 +248,10 @@ var saveHabit = function (id, List) {
   var title_input = $('#item-title-' + id);
   var notes_input = $('#item-notes-' + id);
   var freq_input  = $('#habit-freq-' + id);
-  var goal_input  = $('#item-goals-' + id + ' option:selected');
+  var project_input  = $('#item-projects-' + id + ' option:selected');
 
   List.update(id, {$set: {notes: notes_input.val(), text: title_input.val(),
-                          freq: freq_input.val(), goal: goal_input.val()}});
+                          freq: freq_input.val(), project: project_input.val()}});
 };
 
 var stopProp = function (evt) {
@@ -455,18 +454,18 @@ Template.chart.todo_height = function () {
   }
 }
 
-//Goals
+//projects
 
-Template.goals.all_active = function () {
-  return (Session.get("active_goal") == null ? "active" : "");
+Template.projects.all_active = function () {
+  return (Session.get("active_project") == null ? "active" : "");
 };
 
-Template.goals.goals = function () {
+Template.projects.projects = function () {
   return Goals.find({userId: Meteor.userId()});
 };
 
-Template.goals.events(okCancelEvents(
-  '#add-goal',
+Template.projects.events(okCancelEvents(
+  '#add-project',
   {
     ok: function (text, evt) {
       Goals.insert({
@@ -481,19 +480,19 @@ Template.goals.events(okCancelEvents(
   })
 );
 
-Template.goal.is_active = function () {
-  return (Session.get("active_goal") == this._id ? "active" : "");
+Template.project.is_active = function () {
+  return (Session.get("active_project") == this._id ? "active" : "");
 };
 
-Template.goals.events({
- 'click li.all-goals': function (evt) {
-    Session.set("active_goal", null);
+Template.projects.events({
+ 'click li.all-projects': function (evt) {
+    Session.set("active_project", null);
   }
 });
 
-Template.goal.events({
- 'click li.goals': function (evt) {
-    Session.set("active_goal", this._id);
+Template.project.events({
+ 'click li.projects': function (evt) {
+    Session.set("active_project", this._id);
   }
 });
 
@@ -501,12 +500,12 @@ Template.goal.events({
 
 Template.habits.habits = function () {
   if(Meteor.userId())
-    if(Session.get('active_goal') == null)
+    if(Session.get('active_project') == null)
       return Habits.find({userId: Meteor.userId()},
                          {sort: ["timestamp", "desc"]});
     else
       return Habits.find({userId: Meteor.userId(),
-                                  goal: Session.get('active_goal')},
+                                  project: Session.get('active_project')},
                          {sort: ["timestamp", "desc"]});
     else
   return [];
@@ -522,7 +521,7 @@ Template.habits.events(okCancelEvents(
         text: text,
         done: false,
         notes: "",
-        goal: Session.get('active_goal'),
+        project: Session.get('active_project'),
         timestamp: (new Date()).getTime(),
         freq: 7 //default frequency is once per week
     });
@@ -535,10 +534,10 @@ Template.habits.events(okCancelEvents(
  }));
 
 Template.habit_item.is_selected = function (parentThis){
-  return (parentThis.goal == this._id ? "selected" : "");
+  return (parentThis.project == this._id ? "selected" : "");
 };
 
-Template.habit_item.goals = function (){
+Template.habit_item.projects = function (){
   return Goals.find({userId: Meteor.userId()});
 };
 
@@ -630,12 +629,12 @@ Template.habit_item.editing = function (evt) {
 
 Template.dailies.dailies = function () {
   if(Meteor.userId())
-    if(Session.get('active_goal') == null)
+    if(Session.get('active_project') == null)
       return Dailies.find({userId: Meteor.userId()},
                       {sort: ["timestamp", "desc"]});
     else
       return Dailies.find({userId: Meteor.userId(),
-                           goal: Session.get('active_goal')},
+                           project: Session.get('active_project')},
                           {sort: ["timestamp", "desc"]});
   return [];
 };
@@ -650,7 +649,7 @@ Template.dailies.events(okCancelEvents(
         done: false,
         private: null,
         notes: "",
-        goal: Session.get('active_goal'),
+        project: Session.get('active_project'),
         timestamp: (new Date()).getTime(),
         ticktime: (new Date(0))
     });
@@ -663,10 +662,10 @@ Template.dailies.events(okCancelEvents(
  }));
 
 Template.daily_item.is_selected = function (parentThis){
-  return (parentThis.goal == this._id ? "selected" : "");
+  return (parentThis.project == this._id ? "selected" : "");
 };
 
-Template.daily_item.goals = function (){
+Template.daily_item.projects = function (){
   return Goals.find({userId: Meteor.userId()});
 };
 
@@ -756,7 +755,7 @@ Template.daily_item.editing = function (evt) {
 Template.todos.todos = function () {
 
   if(Meteor.userId())
-    if(Session.get('active_goal') == null)
+    if(Session.get('active_project') == null)
     {
       var day_start =  moment().startOf('day').toDate();
       return Todos.find({userId: Meteor.userId(),
@@ -766,7 +765,7 @@ Template.todos.todos = function () {
                       {sort: [["done", "desc"], ["timestamp", "desc"] ]});
     } else {
       return Todos.find({userId: Meteor.userId(),
-                         goal: Session.get('active_goal'),
+                         project: Session.get('active_project'),
                          $or: [{done: true, ticktime: {$gt: day_start}},
                              {done: false}]
                        },
@@ -788,7 +787,7 @@ Template.todos.events(okCancelEvents(
     ok: function (text, evt) {
       Todos.insert({
         text: text,
-        goal: Session.get('active_goal'),
+        project: Session.get('active_project'),
         userId: Meteor.userId(),
         done: false,
         private: false,
@@ -805,10 +804,10 @@ Template.todos.events(okCancelEvents(
 ));
 
 Template.todo_item.is_selected = function (parentThis){
-  return (parentThis.goal == this._id ? "selected" : "");
+  return (parentThis.project == this._id ? "selected" : "");
 };
 
-Template.todo_item.goals = function (){
+Template.todo_item.projects = function (){
   return Goals.find({userId: Meteor.userId()});
 };
 

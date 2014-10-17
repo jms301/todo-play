@@ -111,8 +111,8 @@
 </template>
 
 <template name="todo_play">
-    <div class="col-md-2" id="goals">
-    {{>goals}}
+    <div class="col-md-2" id="projects">
+    {{>projects}}
     </div>
     <div class="main col-md-3" id="habits">
       <h1>Do <label class="glyphicon glyphicon-calendar"></label> Often:</h1>
@@ -129,20 +129,6 @@
     <div class="main col-md-1"></div>
 <div>
 </div>
-</template>
-
-<template name="goals">
-  <ul class="nav nav-tabs tabs-left" role="tablist">
-    <li class="{{all_active}} all-goals"><a href="#">All</a></li>
-    {{#each goals}}
-      {{>goal}}
-    {{/each}}
-    <li class="hide-on-small"><input id="add-goal" type="text" placeholder="New Project" class="add-goal"/></li>
-  </ul>
-</template>
-
-<template name="goal">
-  <li class="{{is_active}} goals"><a href="#">{{text}}</a></li>
 </template>
 
 <template name="habits">
@@ -198,10 +184,10 @@
       <input id="item-title-{{_id}}" value="{{text}}" class="item-edit-title"/>
       Notes: <br/>
       <textarea id="item-notes-{{_id}}" rows=3 cols=35 class="item-edit-notes">{{notes}}</textarea>
-      Goal: <br />
-      <select id="item-goals-{{_id}}">
+      Project: <br />
+      <select id="item-projects-{{_id}}">
       <option> </option>
-      {{#each goals}}
+      {{#each projects}}
       <option value="{{_id}}" {{is_selected ..}}>{{text}}</option>
       {{/each}}
       </select><br />
@@ -227,9 +213,9 @@
       Notes: <br/>
       <textarea id="item-notes-{{_id}}" rows=3 cols=35 class="item-edit-notes">{{notes}}</textarea>
       Project: <br />
-      <select id="item-goals-{{_id}}">
+      <select id="item-projects-{{_id}}">
       <option> </option>
-      {{#each goals}}
+      {{#each projects}}
       <option value="{{_id}}" {{is_selected ..}}>{{text}}</option>
       {{/each}}
       </select><br />
@@ -252,10 +238,10 @@
       Title: <input id="item-title-{{_id}}" value="{{text}}" class="item-edit-title"/>
       Notes: <br/>
       <textarea id="item-notes-{{_id}}" rows=3 cols=35 class="item-edit-notes">{{notes}}</textarea>
-      Goal: <br />
-      <select id="item-goals-{{_id}}">
+      Project: <br />
+      <select id="item-projects-{{_id}}">
       <option> </option>
-      {{#each goals}}
+      {{#each projects}}
       <option value="{{_id}}" {{is_selected ..}}>{{text}}</option>
       {{/each}}
       </select><br />
