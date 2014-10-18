@@ -1,6 +1,5 @@
 // Collections
 
-Goals = new Meteor.Collection("goals");
 Habits = new Meteor.Collection("habits");
 Dailies = new Meteor.Collection("dailies");
 Todos = new Meteor.Collection("todos");
@@ -22,7 +21,6 @@ Session.setDefault('days_stats_today', null);
 Session.setDefault('days_stats_yesterday', null);
 Session.setDefault('days_stats_before', null);
 
-Session.setDefault('active_project', null);
 Session.setDefault('show_config', null);
 Session.setDefault('ticker_count', null);
 Session.setDefault('ticker_active', null);
@@ -38,10 +36,6 @@ var daysStatsHandle = Meteor.subscribe('days_stats', function () {
 });
 
 var todoHandle = Meteor.subscribe('todos', function () {
-
-});
-
-var goalHandle = Meteor.subscribe('goals', function () {
 
 });
 
@@ -262,34 +256,6 @@ var stopProp = function (evt) {
   }
 };
 
-// Returns an event map that handles the "escape" and "return" keys and
-// "blur" events on a text input (given by selector) and interprets them
-// as "ok" or "cancel".
-var okCancelEvents = function (selector, callbacks) {
-  var ok = callbacks.ok || function () {};
-  var cancel = callbacks.cancel || function () {};
-  var events = {};
-  events['keyup '+selector+', keydown '+selector+', focusout '+selector] =
-    function (evt) {
-      if (evt.type === "keyup" && evt.which === 27) {
-        // escape = cancel
-        cancel.call(this, evt);
-
-      } else if (evt.type === "keyup" && evt.which === 13 ||
-                 evt.type === "focusout") {
-        // blur/return/enter = ok/submit if non-empty
-        var value = String(evt.target.value || "");
-        if (value)
-          ok.call(this, value, evt);
-        else
-          cancel.call(this, evt);
-      }
-    };
-
-  return events;
-};
-
-
 $(document).keyup(function(e) {
     if (e.keyCode == 27) {
       cancelEdit(Session.get('edit_todo'), Todos);
@@ -393,7 +359,7 @@ Template.days.ticker_active = function (index) {
   } else if (Session.get('ticker_active') == (-1 * index)) {
     return 'hiding';
   } else {
-    return 'hide';
+    return 'hidden';
   }
 };
 
@@ -454,48 +420,6 @@ Template.chart.todo_height = function () {
   }
 }
 
-//projects
-
-Template.projects.all_active = function () {
-  return (Session.get("active_project") == null ? "active" : "");
-};
-
-Template.projects.projects = function () {
-  return Goals.find({userId: Meteor.userId()});
-};
-
-Template.projects.events(okCancelEvents(
-  '#add-project',
-  {
-    ok: function (text, evt) {
-      Goals.insert({
-      userId: Meteor.userId(),
-      text: text
-      });
-      evt.target.value='';
-    },
-      cancel: function (evt) {
-        evt.target.value='';
-    }
-  })
-);
-
-Template.project.is_active = function () {
-  return (Session.get("active_project") == this._id ? "active" : "");
-};
-
-Template.projects.events({
- 'click li.all-projects': function (evt) {
-    Session.set("active_project", null);
-  }
-});
-
-Template.project.events({
- 'click li.projects': function (evt) {
-    Session.set("active_project", this._id);
-  }
-});
-
 //Habits
 
 Template.habits.habits = function () {
@@ -511,34 +435,44 @@ Template.habits.habits = function () {
   return [];
 };
 
-Template.habits.events(okCancelEvents(
-  '#add-habit',
-  {
-    ok: function (text, evt) {
-    var habit = Habits.insert({
-        ticktime: (new Date(0)),
-        userId: Meteor.userId(),
-        text: text,
-        done: false,
-        notes: "",
-        project: Session.get('active_project'),
-        timestamp: (new Date()).getTime(),
-        freq: 7 //default frequency is once per week
-    });
-    Session.set('edit_habit', habit);
-    evt.target.value='';
-  },
-    cancel: function (evt) {
+Template.habits.events({
+
+  'keydown #add-habit, keyup #add-habit, focusout #add-habit': function (evt) {
+    if(evt.type === 'keyup' && evt.which === 27) { //esc -> cancel
+      //cancel
       evt.target.value='';
     }
- }));
+    if(evt.type === 'keyup' && evt.which === 13 ||
+       evt.type === 'focusout') {
+      var value = String(evt.target.value || "");
+      if (value) {
+        //ok
+        var habit = Habits.insert({
+          ticktime: (new Date(0)),
+          userId: Meteor.userId(),
+          text: value,
+          done: false,
+          notes: "",
+          project: Session.get('active_project'),
+          timestamp: (new Date()).getTime(),
+          freq: 7 //default frequency is once per week
+        });
+        Session.set('edit_habit', habit);
+        evt.target.value='';
+      } else {
+        //cancel
+        evt.target.value='';
+      }
+    }
+    stopProp(evt);
+  },
+  'click .add-item-btn' : function(evt) {
+    stopProp(evt);
+  }
+});
 
 Template.habit_item.is_selected = function (parentThis){
   return (parentThis.project == this._id ? "selected" : "");
-};
-
-Template.habit_item.projects = function (){
-  return Goals.find({userId: Meteor.userId()});
 };
 
 Template.habit_item.events({
@@ -639,34 +573,44 @@ Template.dailies.dailies = function () {
   return [];
 };
 
-Template.dailies.events(okCancelEvents(
-  '#add-daily',
-  {
-    ok: function (text, evt) {
-      var daily = Dailies.insert({
-        userId: Meteor.userId(),
-        text: text,
-        done: false,
-        private: null,
-        notes: "",
-        project: Session.get('active_project'),
-        timestamp: (new Date()).getTime(),
-        ticktime: (new Date(0))
-    });
-    Session.set('edit_daily', daily);
-    evt.target.value='';
-  },
-    cancel: function (evt) {
+Template.dailies.events({
+
+  'keydown #add-daily, keyup #add-daily, focusout #add-daily': function (evt) {
+    if(evt.type === 'keyup' && evt.which === 27) { //esc -> cancel
+      //cancel
       evt.target.value='';
     }
- }));
+    if(evt.type === 'keyup' && evt.which === 13 ||
+       evt.type === 'focusout') {
+      var value = String(evt.target.value || "");
+      if (value) {
+        //ok
+        var daily = Dailies.insert({
+          userId: Meteor.userId(),
+          text: value,
+          done: false,
+          private: null,
+          notes: "",
+          project: Session.get('active_project'),
+          timestamp: (new Date()).getTime(),
+          ticktime: (new Date(0))
+        });
+        Session.set('edit_daily', daily);
+        evt.target.value='';
+      } else {
+        //cancel
+        evt.target.value='';
+      }
+    }
+    stopProp(evt);
+  },
+  'click .add-item-btn' : function(evt) {
+    stopProp(evt);
+  }
+});
 
 Template.daily_item.is_selected = function (parentThis){
   return (parentThis.project == this._id ? "selected" : "");
-};
-
-Template.daily_item.projects = function (){
-  return Goals.find({userId: Meteor.userId()});
 };
 
 Template.daily_item.ticked_icon = function () {
@@ -781,34 +725,39 @@ Template.todos.todos = function () {
       }];
 };
 
-Template.todos.events(okCancelEvents(
-  '.add-item-text',
-  {
-    ok: function (text, evt) {
-      Todos.insert({
-        text: text,
-        project: Session.get('active_project'),
-        userId: Meteor.userId(),
-        done: false,
-        private: false,
-        notes: "",
-        ticktime: (new Date(0)),
-        timestamp: (new Date()).getTime(),
-      });
+Template.todos.events({
+ 'keydown .add-item-text, keyup .add-item-text, focusout .add-item-text': function (evt) {
+    if(evt.type === 'keyup' && evt.which === 27) {
+      //cancel
       evt.target.value='';
-    },
-    cancel: function (evt) {
-      evt.target.value='';
+      console.log("huh");
+    } else if(evt.type === 'keyup' && evt.which === 13 ||
+       evt.type === 'focusout') {
+      var value = String(evt.target.value || "");
+      if (value) {
+        //ok
+        Todos.insert({
+          text: value,
+          project: Session.get('active_project'),
+          userId: Meteor.userId(),
+          done: false,
+          private: false,
+          notes: "",
+          ticktime: (new Date(0)),
+          timestamp: (new Date()).getTime(),
+        });
+        evt.target.value='';
+      } else {
+       //cancel
+        evt.target.value='';
+      }
     }
   }
-));
+});
+
 
 Template.todo_item.is_selected = function (parentThis){
   return (parentThis.project == this._id ? "selected" : "");
-};
-
-Template.todo_item.projects = function (){
-  return Goals.find({userId: Meteor.userId()});
 };
 
 Template.todo_item.ticked_icon = function () {

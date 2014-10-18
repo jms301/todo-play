@@ -1,14 +1,25 @@
 <template name="projects">
+  <ul class="nav nav-pills" style="margin-top: 20px; margin: 10px;">
+  <li class="dropdown active" style="width: 100%; ">
+    <a class="dropdown-toggle" data-toggle="dropdown" href='#'>{{active_project}}
+    <span class="caret"></span></a>
+  <ul id="project_list" class="dropdown-menu">
+    <li class="all-projects"><a href="#">All</a></li>
+      {{#each projects}}
+        {{>project}}
+      {{/each}}
+      <li><input id="add-project" type="text" placeholder="New Project" class="add-project"/></li>
+  </ul>
+  </li></ul>
+<!--
   <ul class="nav nav-tabs tabs-left" role="tablist">
     <li class="{{all_active}} all-projects"><a href="#">All</a></li>
     {{#each projects}}
       {{>project}}
     {{/each}}
     <li class="hide-on-small"><input id="add-project" type="text" placeholder="New Project" class="add-project"/></li>
-  </ul>
+  </ul> -->
 </template>
-
 <template name="project">
-  <li class="{{is_active}} projects"><a href="#">{{text}}</a></li>
+  <li class="projects"><a href="#">{{text}}</a></li>
 </template>
-
