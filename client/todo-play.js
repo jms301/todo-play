@@ -248,14 +248,6 @@ var saveHabit = function (id, List) {
                           freq: freq_input.val(), project: project_input.val()}});
 };
 
-var stopProp = function (evt) {
-  if (evt.stopPropagation) {
-    evt.stopPropagation();
-  } else {
-    evt.cancelBubble = true;
-  }
-};
-
 $(document).keyup(function(e) {
     if (e.keyCode == 27) {
       cancelEdit(Session.get('edit_todo'), Todos);

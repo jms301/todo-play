@@ -14,6 +14,8 @@ Template.registerHelper('projects', function(input) {
   return Goals.find({userId: Meteor.userId()});
 });
 
+
+// Projects functions helpers
 Template.projects.helpers({
   projects:  function () {
     return Goals.find({userId: Meteor.userId()});
@@ -21,8 +23,9 @@ Template.projects.helpers({
   active_project: function () {
     if(Session.get("active_project")) {
       return Goals.findOne({_id: Session.get("active_project")}).text;
-    } else 
+    } else {
       return "All Projects";
+    }
   },
 });
 
@@ -51,15 +54,23 @@ Template.projects.events({
   },
   'click li.all-projects': function (evt) {
     Session.set("active_project", null);
-  }, 
-});
-
-Template.project.helpers({ 
+  },
+  'click input#add-project': function (evt) {
+    stopProp(evt);
+  }
 });
 
 Template.project.events({
- 'click li.projects': function (evt) {
+  'click li.projects': function (evt) {
     Session.set("active_project", this._id);
+  },
+  'click span#remove' : function (evt) {
+    if(confirm("sure you want to delete " + this.text + "?")) {
+      Goals.remove(this._id);
+      if(Session.get("active_project", this._id) == this._id)
+        Session.set("active_project", null);
+    }
   }
+
 });
 
