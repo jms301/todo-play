@@ -1,5 +1,4 @@
 // Collections
-
 Habits = new Meteor.Collection("habits");
 Dailies = new Meteor.Collection("dailies");
 Todos = new Meteor.Collection("todos");
@@ -261,10 +260,22 @@ $(document).keyup(function(e) {
 
 Meteor.startup( function () {
   GAnalytics.pageview(); // google analytics
+  $('.datetimepicker').datetimepicker();
+  $('.datetimepicker').data("DateTimePicker").setMinDate(new Date());
+
 });
 
 //Body
 Template.body.events({
+  'click button.hide-until': function (evt) {
+
+    $("#until-modal").modal('hide');
+
+    Todos.update($('#hide-until-id').val(), {$set: { hide_until:
+      moment($('input.hide-until').val(), "YYYY/MM/DD HH:mm").toDate()
+      }});
+  },
+
   'click a#edit_config' : function (evt) {
     Session.set('show_config', true);
   },
@@ -468,7 +479,7 @@ Template.habit_item.is_selected = function (parentThis){
 };
 
 Template.habit_item.events({
- 'click .item-remove': function (evt) {
+ 'click .item-remove-x': function (evt) {
     if(confirm("sure you want to delete that?"))
       Habits.remove(this._id);
     stopProp(evt);
@@ -624,7 +635,7 @@ Template.daily_item.events({
   'click li': function (evt) {
     stopProp(evt);
   },
-  'click .item-remove': function (evt) {
+  'click .item-remove-x': function (evt) {
       if(confirm("sure you want to delete that?"))
         Dailies.remove(this._id);
     stopProp(evt);
@@ -695,15 +706,23 @@ Template.todos.todos = function () {
     {
       var day_start =  moment().startOf('day').toDate();
       return Todos.find({userId: Meteor.userId(),
-                         $or: [{done: true, ticktime: {$gt: day_start}},
-                               {done: false}]
+                         $and: [
+                         {$or: [{hide_until: null},
+                              {hide_until:  {$lt: new Date(Session.get("time_now"))}}]},
+                         {$or: [{done: true, ticktime: {$gt: day_start}},
+                               {done: false}]}
+                         ]
                         },
                       {sort: [["done", "desc"], ["timestamp", "desc"] ]});
     } else {
       return Todos.find({userId: Meteor.userId(),
                          project: Session.get('active_project'),
-                         $or: [{done: true, ticktime: {$gt: day_start}},
-                             {done: false}]
+                         $and: [
+                         {$or: [{hide_until: null},
+                              {hide_until:  {$lt: new Date(Session.get("time_now"))}}]},
+                         {$or: [{done: true, ticktime: {$gt: day_start}},
+                               {done: false}]}
+                         ]
                        },
                       {sort: [["done", "desc"], ["timestamp", "desc"] ]});
     }
@@ -722,7 +741,6 @@ Template.todos.events({
     if(evt.type === 'keyup' && evt.which === 27) {
       //cancel
       evt.target.value='';
-      console.log("huh");
     } else if(evt.type === 'keyup' && evt.which === 13 ||
        evt.type === 'focusout') {
       var value = String(evt.target.value || "");
@@ -799,8 +817,14 @@ Template.todo_item.color = function () {
   }
 };
 
+
 Template.todo_item.events({
-  'click .item-remove': function (evt) {
+  'click .hide-until.editing': function (evt) {
+    $("#hide-until-id").val(this._id);
+    $("#until-modal").modal('show');
+    stopProp(evt);
+  },
+  'click .item-remove-x': function (evt) {
     if(confirm("sure you want to delete that?"))
       Todos.remove(this._id);
     stopProp(evt);
@@ -857,11 +881,11 @@ Template.todo_item.events({
   }
 });
 
-Template.todo_item.not_editing = function (evt) {
-  return this._id == Session.get('edit_todo') ? "" : "editing";
-};
-
-Template.todo_item.editing = function (evt) {
-  return this._id == Session.get('edit_todo') ? "editing" : "";
-};
-
+Template.todo_item.helpers ({
+  not_editing: function (evt) {
+    return this._id == Session.get('edit_todo') ? "" : "editing";
+  },
+  editing: function (evt) {
+    return this._id == Session.get('edit_todo') ? "editing" : "";
+  }
+});

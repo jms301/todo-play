@@ -60,6 +60,7 @@ standard-app-packages@1.0.3
 stylus@1.0.5
 templating@1.0.8
 tracker@1.0.3
+tsega:bootstrap3-datetimepicker@0.4.0
 ui@1.0.4
 underscore@1.0.1
 url@1.0.1
