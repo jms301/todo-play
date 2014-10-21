@@ -13,6 +13,35 @@
 @pastel-pink: #F49AC2;
 @pastel-purple: #B39EB5;
 
+div.remove-list-item {
+  position: absolute;
+  right: -15px;
+  text-indent: 0px;
+  text-align: right;
+  width: 15px;
+  top: 0px;
+}
+
+div.checkbox-item{
+  position: relative;
+}
+
+div.checkbox-item>label {
+  display: block;
+  padding-left: 15px;
+  text-indent: -15px;
+}
+
+div.checkbox-item>label>input {
+  width: 13px;
+  height: 13px;
+  padding: 0;
+  margin:0;
+  vertical-align: bottom;
+  position: relative;
+  top: -1px;
+  *overflow: hidden;
+}
 
 div.fader {
   -webkit-transition: all 2s ease-in-out;
@@ -261,10 +290,10 @@ div.expand-edit {
   height: 30px;
 }
 
-div.hide-until { 
+div.hide-until {
   display: none;
   font-size: 1.4em;
-  position: absolute; 
+  position: absolute;
   right: -13px;
   width: 45px;
   top: 50px;

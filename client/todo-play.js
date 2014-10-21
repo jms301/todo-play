@@ -201,13 +201,20 @@ var cancelEdit = function (id, List) {
     var notes_input = $('#item-notes-' + id);
     var project_input  = $('#item-projects-' + id);
     var private_input = $('#item-private-' + id);
+    var check_list = $('.item-checklist-' + id).toArray();
+    
 
     var item = List.findOne({_id: id});
+
     title_input.val(item.text);
     notes_input.val(item.notes);
     project_input.val(item.project);
     private_input.checked = item.private;
- }
+
+    _.each(item.checklist, function (item, index) {
+      check_list[index].checked = item.done;
+    });
+  }
 };
 
 var saveEdit = function (id, List) {
@@ -215,9 +222,14 @@ var saveEdit = function (id, List) {
   var notes_input = $('#item-notes-' + id);
   var project_input  = $('#item-projects-' + id + ' option:selected');
   var private_input = $('#item-private-' + id);
+  var check_list = $('.item-checklist-' + id).toArray();
+
+  check_list = _.map(check_list, function (item, index) {
+    return {done: item.checked, item_text: item.value, index: index};
+  });
 
   List.update(id, {$set: {notes: notes_input.val(), text: title_input.val(),
-                          project: project_input.val(),
+                          project: project_input.val(), checklist: check_list,
                           private: private_input.prop("checked")}});
 
 };
@@ -255,7 +267,7 @@ $(document).keyup(function(e) {
       Session.set('edit_todo', null);
       Session.set('edit_daily', null);
       Session.set('edit_habit', null);
-    }   // esc
+    }   // esc -> cancel and close every thing
 });
 
 Meteor.startup( function () {
@@ -382,9 +394,6 @@ var findChartMax = function(type) {
   var today = DaysStats.findOne({_id: Session.get('days_stats_today')});
   var yesterday = DaysStats.findOne({_id: Session.get('days_stats_yesterday')});
   var before = DaysStats.findOne({_id: Session.get('days_stats_before')});
-  //console.log(today);
-  //console.log(yesterday);
-  //console.log(before);
   var max = 5; // if max is <5 we pretend it's 5 so 1 done item isn't a whole chart
   if ( today && max < today[type])
     max = today[type];
@@ -819,6 +828,49 @@ Template.todo_item.color = function () {
 
 
 Template.todo_item.events({
+  'click .remove-list-item': function (evt, template) {
+
+      var list = template.data.checklist
+      list.splice(evt.target.id.split('-')[0], 1);
+
+      // fix the hacky index (used to identify what gets removed)
+      list = _.map(list,
+                  function (item, index) {
+                         item.index = index;
+                         return item; });
+
+      Todos.update(template.data._id, {$set:
+                              {checklist: list }});
+      stopProp(evt);
+  },
+  'keydown input.checklist, keyup input.checklist, focusout input.checklist':
+  function (evt, template) {
+    if(evt.type === 'keyup' && evt.which === 27) { //esc -> cancel
+      //cancel
+      evt.target.value='';
+    }
+    if(evt.type === 'keyup' && evt.which === 13 ||
+       evt.type === 'focusout') {
+      var value = String(evt.target.value || "");
+      if (value) {
+        //ok
+        var list = this.checklist;
+        if(!list)
+          list = [];
+        list.push({done: false,
+                   item_text: template.$('input.checklist').val(),
+                   index: list.length});
+        Todos.update(this._id, {$set:
+                              {checklist: list}});
+        evt.target.value = '';
+
+      } else {
+        //cancel
+        evt.target.value='';
+      }
+    }
+    stopProp(evt);
+  },
   'click .hide-until.editing': function (evt) {
     $("#hide-until-id").val(this._id);
     $("#until-modal").modal('show');
@@ -882,10 +934,16 @@ Template.todo_item.events({
 });
 
 Template.todo_item.helpers ({
-  not_editing: function (evt) {
+  not_editing: function () {
     return this._id == Session.get('edit_todo') ? "" : "editing";
   },
-  editing: function (evt) {
+  editing: function () {
     return this._id == Session.get('edit_todo') ? "editing" : "";
+  },
+  checked: function (is_checked) {
+    return is_checked ? "checked" : "";
+  },
+  getid: function (item) {
+    return item._id;
   }
 });

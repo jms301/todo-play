@@ -206,9 +206,9 @@
       <div class="expand-edit {{not_editing}}"><label class="glyphicon glyphicon-collapse-down"></label></div>
       <div class="item-details {{editing}}">
       Title: <br />
-      <input id="item-title-{{_id}}" value="{{text}}" class="item-edit-title"/>
+      <input id="item-title-{{_id}}" value="{{text}}" class="item-edit-title form-control"/>
       Notes: <br/>
-      <textarea id="item-notes-{{_id}}" rows=3 cols=35 class="item-edit-notes">{{notes}}</textarea>
+      <textarea id="item-notes-{{_id}}" rows=3 cols=35 class="item-edit-notes form-control">{{notes}}</textarea>
       Project: <br />
       <select id="item-projects-{{_id}}">
       <option> </option>
@@ -235,9 +235,9 @@
     <div class="item-text"><span class="item-text"> {{text}}</span>
       <div class="expand-edit {{not_editing}}"><label class="glyphicon glyphicon-collapse-down"></label></div>
       <div class="item-details {{editing}}">
-      Title: <input id="item-title-{{_id}}" value="{{text}}" class="item-edit-title"/>
+      Title: <input id="item-title-{{_id}}" value="{{text}}" class="item-edit-title form-control"/>
       Notes: <br/>
-      <textarea id="item-notes-{{_id}}" rows=3 cols=35 class="item-edit-notes">{{notes}}</textarea>
+      <textarea id="item-notes-{{_id}}" rows=3 cols=35 class="item-edit-notes form-control">{{notes}}</textarea>
       Project: <br />
       <select id="item-projects-{{_id}}">
       <option> </option>
@@ -261,17 +261,37 @@
     <div class="item-text"><span class="item-text"> {{text}}</span>
       <div class="expand-edit {{not_editing}}"><label class="glyphicon glyphicon-collapse-down"></label></div>
      <div class="item-details {{editing}}">
-      Title: <input id="item-title-{{_id}}" value="{{text}}" class="item-edit-title"/>
-      Notes: <br/>
-      <textarea id="item-notes-{{_id}}" rows=3 cols=35 class="item-edit-notes">{{notes}}</textarea>
-      Project: <br />
+      <label for="item-title-{{_id}}">Title:</label> <input id="item-title-{{_id}}" value="{{text}}" class="item-edit-title form-control"/>
+      <label for="item-notes-{{_id}}">Notes:</label> <br/>
+      <textarea id="item-notes-{{_id}}" rows=3 cols=35 class="item-edit-notes form-control">{{notes}}</textarea>
+
+      <label>Checklist: </label><br />
+      {{#each checklist}}
+      <div class="checkbox-item" id="{{index}}-{{getid ..}}-checkbox-div">
+        <label>
+          <input type="checkbox" {{checked done}} class="item-checklist-{{getid ..}}" value="{{item_text}}"/> {{item_text}}
+        </label>
+        <div class="remove-list-item" id="{{index}}-{{getid ..}}-checkbox-remove">
+          <span class="glyphicon glyphicon-remove" id="{{index}}-{{getid ..}}-checkbox-remove-span"></span>
+        </div>
+      </div>
+      {{/each}}
+      <div class="input-group">
+        <input type="text" class="form-control checklist"/>
+        <span class="input-group-addon ">
+          <i class="glyphicon glyphicon-list"></i>
+        </span>
+      </div>
+      <label>Project: <br />
       <select id="item-projects-{{_id}}">
       <option> </option>
       {{#each projects}}
       <option value="{{_id}}" {{is_selected ..}}>{{text}}</option>
       {{/each}}
-      </select><br />
-      Private: <input type="checkbox" checked="{{private}}" id="item-private-{{_id}}" class="item-private"/>
+      </select></label><br />
+      <div class="checkbox_item">
+      <label>Private: <input type="checkbox" checked="{{private}}" id="item-private-{{_id}}" class="item-private"/></label>
+      </div>
       <div class="cancel-edit"><label class="glyphicon glyphicon-floppy-remove"></label></div>
       <div class="save-edit"><label class="glyphicon glyphicon-floppy-saved"></label></div>
       </div>
