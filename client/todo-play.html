@@ -192,6 +192,11 @@
  </span>
  <input type="button" value="+" class="add-item-btn"/>
  </div>
+<ul id="completed-todo-list" class="items-list">
+  {{#each done_todos}}
+    {{> todo_item}}
+  {{/each}}
+</ul>
 <ul id="todo-list" class="items-list">
   {{#each todos}}
     {{> todo_item}}

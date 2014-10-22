@@ -202,7 +202,7 @@ var cancelEdit = function (id, List) {
     var project_input  = $('#item-projects-' + id);
     var private_input = $('#item-private-' + id);
     var check_list = $('.item-checklist-' + id).toArray();
-    
+
 
     var item = List.findOne({_id: id});
 
@@ -216,6 +216,8 @@ var cancelEdit = function (id, List) {
     });
   }
 };
+
+
 
 var saveEdit = function (id, List) {
   var title_input = $('#item-title-' + id);
@@ -438,11 +440,11 @@ Template.habits.habits = function () {
   if(Meteor.userId())
     if(Session.get('active_project') == null)
       return Habits.find({userId: Meteor.userId()},
-                         {sort: ["timestamp", "desc"]});
+                         {sort: ["rank", "desc"]});
     else
       return Habits.find({userId: Meteor.userId(),
                                   project: Session.get('active_project')},
-                         {sort: ["timestamp", "desc"]});
+                         {sort: ["rank", "desc"]});
     else
   return [];
 };
@@ -459,6 +461,7 @@ Template.habits.events({
       var value = String(evt.target.value || "");
       if (value) {
         //ok
+        low_rank = Habits.findOne({sort:{rank: 1}});
         var habit = Habits.insert({
           ticktime: (new Date(0)),
           userId: Meteor.userId(),
@@ -467,7 +470,8 @@ Template.habits.events({
           notes: "",
           project: Session.get('active_project'),
           timestamp: (new Date()).getTime(),
-          freq: 7 //default frequency is once per week
+          freq: 7, //default frequency is once per week
+          rank: low_rank - 1
         });
         Session.set('edit_habit', habit);
         evt.target.value='';
@@ -482,6 +486,31 @@ Template.habits.events({
     stopProp(evt);
   }
 });
+
+Template.habits.rendered = function() {
+    this.$('#habit-list').sortable({
+        stop: function(e, ui) {
+          // get the dragged html element and the one before
+          //   and after it
+          el = ui.item.get(0)
+          before = ui.item.prev().get(0)
+          after = ui.item.next().get(0)
+
+          if(!before) {
+            newRank = Blaze.getData(after).rank - 1
+          } else if(!after) {
+            newRank = Blaze.getData(before).rank + 1
+          }
+          else
+            newRank = (Blaze.getData(after).rank +
+                       Blaze.getData(before).rank)/2
+
+          //update the dragged Item's rank
+          Habits.update({_id: Blaze.getData(el)._id}, {$set: {rank: newRank}})
+        }
+    })
+};
+
 
 Template.habit_item.is_selected = function (parentThis){
   return (parentThis.project == this._id ? "selected" : "");
@@ -577,11 +606,11 @@ Template.dailies.dailies = function () {
   if(Meteor.userId())
     if(Session.get('active_project') == null)
       return Dailies.find({userId: Meteor.userId()},
-                      {sort: ["timestamp", "desc"]});
+                      {sort: ["rank", "desc"]});
     else
       return Dailies.find({userId: Meteor.userId(),
                            project: Session.get('active_project')},
-                          {sort: ["timestamp", "desc"]});
+                          {sort: ["rank", "desc"]});
   return [];
 };
 
@@ -597,6 +626,7 @@ Template.dailies.events({
       var value = String(evt.target.value || "");
       if (value) {
         //ok
+        low_rank = Dailies.findOne({sort:{rank: 1}});
         var daily = Dailies.insert({
           userId: Meteor.userId(),
           text: value,
@@ -605,7 +635,8 @@ Template.dailies.events({
           notes: "",
           project: Session.get('active_project'),
           timestamp: (new Date()).getTime(),
-          ticktime: (new Date(0))
+          ticktime: (new Date(0)),
+          rank: low_rank - 1
         });
         Session.set('edit_daily', daily);
         evt.target.value='';
@@ -620,6 +651,31 @@ Template.dailies.events({
     stopProp(evt);
   }
 });
+
+Template.dailies.rendered = function() {
+    this.$('#daily-list').sortable({
+        stop: function(e, ui) {
+          // get the dragged html element and the one before
+          //   and after it
+          el = ui.item.get(0)
+          before = ui.item.prev().get(0)
+          after = ui.item.next().get(0)
+
+          if(!before) {
+            newRank = Blaze.getData(after).rank - 1
+          } else if(!after) {
+            newRank = Blaze.getData(before).rank + 1
+          }
+          else
+            newRank = (Blaze.getData(after).rank +
+                       Blaze.getData(before).rank)/2
+
+          //update the dragged Item's rank
+          Dailies.update({_id: Blaze.getData(el)._id}, {$set: {rank: newRank}})
+        }
+    })
+};
+
 
 Template.daily_item.is_selected = function (parentThis){
   return (parentThis.project == this._id ? "selected" : "");
@@ -708,33 +764,50 @@ Template.daily_item.editing = function (evt) {
 
 
 //Todos
-Template.todos.todos = function () {
-
-  if(Meteor.userId())
+Template.todos.done_todos = function () {
+  if(Meteor.userId()) {
+    var day_start =  moment().startOf('day').toDate();
     if(Session.get('active_project') == null)
     {
-      var day_start =  moment().startOf('day').toDate();
       return Todos.find({userId: Meteor.userId(),
-                         $and: [
-                         {$or: [{hide_until: null},
-                              {hide_until:  {$lt: new Date(Session.get("time_now"))}}]},
-                         {$or: [{done: true, ticktime: {$gt: day_start}},
-                               {done: false}]}
-                         ]
+                        done: true,
+                        ticktime: {$gt: day_start},
                         },
-                      {sort: [["done", "desc"], ["timestamp", "desc"] ]});
+                      {sort: ["rank", "desc"]});
     } else {
       return Todos.find({userId: Meteor.userId(),
                          project: Session.get('active_project'),
-                         $and: [
-                         {$or: [{hide_until: null},
-                              {hide_until:  {$lt: new Date(Session.get("time_now"))}}]},
-                         {$or: [{done: true, ticktime: {$gt: day_start}},
-                               {done: false}]}
-                         ]
-                       },
-                      {sort: [["done", "desc"], ["timestamp", "desc"] ]});
+                         done: true,
+                         ticktime: {$gt: day_start},
+                        },
+                      {sort: ["rank", "desc"]});
     }
+  }
+};
+
+Template.todos.todos = function () {
+
+  if(Meteor.userId()) {
+    if(Session.get('active_project') == null)
+    {
+      return Todos.find({userId: Meteor.userId(),
+                         done: false,
+                         $or: [{hide_until: null},
+                               {hide_until:
+                                {$lt: new Date(Session.get("time_now"))}}]
+                       },
+                      {sort: ["rank", "desc"]});
+    } else {
+      return Todos.find({userId: Meteor.userId(),
+                         project: Session.get('active_project'),
+                         done: false,
+                         $or: [{hide_until: null},
+                               {hide_until:
+                                {$lt: new Date(Session.get("time_now"))}}]
+                       },
+                      {sort: ["rank", "desc"]});
+    }
+  }
   return [{
         text: "Sign up for Todo:play",
         userId: null,
@@ -755,6 +828,8 @@ Template.todos.events({
       var value = String(evt.target.value || "");
       if (value) {
         //ok
+        low_rank = Todos.findOne({done:false},{sort:{rank: 1}});
+
         Todos.insert({
           text: value,
           project: Session.get('active_project'),
@@ -764,6 +839,7 @@ Template.todos.events({
           notes: "",
           ticktime: (new Date(0)),
           timestamp: (new Date()).getTime(),
+          rank: low_rank - 1
         });
         evt.target.value='';
       } else {
@@ -773,6 +849,30 @@ Template.todos.events({
     }
   }
 });
+
+Template.todos.rendered = function() {
+    this.$('#todo-list').sortable({
+        stop: function(e, ui) {
+          // get the dragged html element and the one before
+          //   and after it
+          el = ui.item.get(0)
+          before = ui.item.prev().get(0)
+          after = ui.item.next().get(0)
+
+          if(!before) {
+            newRank = Blaze.getData(after).rank - 1
+          } else if(!after) {
+            newRank = Blaze.getData(before).rank + 1
+          }
+          else
+            newRank = (Blaze.getData(after).rank +
+                       Blaze.getData(before).rank)/2
+
+          //update the dragged Item's rank
+          Todos.update({_id: Blaze.getData(el)._id}, {$set: {rank: newRank}})
+        }
+    })
+};
 
 
 Template.todo_item.is_selected = function (parentThis){
