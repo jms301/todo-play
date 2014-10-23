@@ -1,4 +1,4 @@
-Meteor.startup(function () { 
+Meteor.startup(function () {
   Meteor.users.find({}).forEach( function (usr) {
     Todos.find({UserId: usr.id, done: false}, 
                {sort: ['rank', "desc"]}).forEach(

@@ -20,7 +20,6 @@ Session.setDefault('days_stats_today', null);
 Session.setDefault('days_stats_yesterday', null);
 Session.setDefault('days_stats_before', null);
 
-Session.setDefault('show_config', null);
 Session.setDefault('ticker_count', null);
 Session.setDefault('ticker_active', null);
 
@@ -53,8 +52,12 @@ var configHandle = Meteor.subscribe('user_config', function () {
 
 // Hacks & Cludges:
 // bootstrap 3 navbar fix
+fix_top_padding = function () {
+
+  $('body').css({"padding-top": $(".navbar").height() + 30 + "px"});
+};
 $(window).on('load resize', function() {
-      $('body').css({"padding-top": $(".navbar").height() + 30 + "px"});
+  fix_top_padding();
 });
 
 
@@ -272,14 +275,18 @@ $(document).keyup(function(e) {
     }   // esc -> cancel and close every thing
 });
 
-Meteor.startup( function () {
-  GAnalytics.pageview(); // google analytics
-  $('.datetimepicker').datetimepicker();
-  $('.datetimepicker').data("DateTimePicker").setMinDate(new Date());
-
-});
 
 //Body
+Template.body.rendered = function () {
+  GAnalytics.pageview(); // google analytics
+
+};
+
+Template.ApplicationLayout.rendered = function () {
+  $('.datetimepicker').datetimepicker();
+  $('.datetimepicker').data("DateTimePicker").setMinDate(new Date());
+};
+
 Template.body.events({
   'click button.hide-until': function (evt) {
 
@@ -288,10 +295,6 @@ Template.body.events({
     Todos.update($('#hide-until-id').val(), {$set: { hide_until:
       moment($('input.hide-until').val(), "YYYY/MM/DD HH:mm").toDate()
       }});
-  },
-
-  'click a#edit_config' : function (evt) {
-    Session.set('show_config', true);
   },
   'click' : function (evt)  {
     if (Session.get('edit_todo'))
@@ -305,45 +308,53 @@ Template.body.events({
     Session.set('edit_habit', null);
   }});
 
-Template.body.user_config = function () {
-  // find or create a UserConfig
-  if(Meteor.userId) {
-    user_config = UserConfig.findOne({userId: Meteor.userId()});
-    if(user_config)
-      return user_config
-    else
-      user_config = UserConfig.insert({
-        userId: Meteor.userId(),
-        day_end: 0,
-        red_age: 30,
-        display_name: "Anon"
-      });
-    return UserConfig.findOne({_id: user_config});
-  }
-  return null
-}
 
 
 
 //Config
+DefaultUserConfig = {
+  userId: Meteor.userId(),
+  day_end: 0,
+  red_age: 30,
+  display_name: "Anon"
+};
+
 Template.config.events({
   'click button#cancel': function (evt, template) {
     template.$('#day_end').val(this.day_end);
     template.$('#display_name').val(this.display_name);
     template.$('#red_age').val(this.red_age);
-
-
-    Session.set('show_config', false);
+    Router.go('/');
   },
   'click button#save': function (evt, template) {
-    UserConfig.update(this._id, {$set: { red_age: template.$('#red_age').val(),
+    to_save = UserConfig.findOne({userId: Meteor.userId()});
+    if (to_save) {
+      UserConfig.update(to_save._id, {$set:
+                             { red_age: template.$('#red_age').val(),
                                day_end: template.$('#day_end').val(),
                                display_name: template.$('#display_name').val()}
+                          });
+
+
+    } else {
+      UserConfig.insert(
+
+                      {
+                        userId: Meteor.userId(),
+                        red_age: template.$('#red_age').val(),
+                        day_end: template.$('#day_end').val(),
+                        display_name: template.$('#display_name').val()
                       });
-    Session.set('show_config', false);
+
+    }
+
+    Router.go('/');
   }
 });
 
+Template.config.rendered = function () {
+  fix_top_padding();
+};
 //Days
 Template.days.today = function () {
   return moment().format('Do MMM YY');
