@@ -461,7 +461,9 @@ Template.habits.events({
       var value = String(evt.target.value || "");
       if (value) {
         //ok
-        low_rank = Habits.findOne({sort:{rank: 1}});
+        low_rank = Habits.findOne({},{sort:{rank: 1, reactive: false}});
+        low_rank = low_rank ? low_rank.rank : 1;
+
         var habit = Habits.insert({
           ticktime: (new Date(0)),
           userId: Meteor.userId(),
@@ -626,7 +628,9 @@ Template.dailies.events({
       var value = String(evt.target.value || "");
       if (value) {
         //ok
-        low_rank = Dailies.findOne({sort:{rank: 1}});
+        low_rank = Dailies.findOne({}, {sort:{rank: 1}, reactive: false});
+        low_rank = low_rank ? low_rank.rank : 1;
+
         var daily = Dailies.insert({
           userId: Meteor.userId(),
           text: value,
@@ -829,6 +833,7 @@ Template.todos.events({
       if (value) {
         //ok
         low_rank = Todos.findOne({done:false},{sort:{rank: 1}});
+        low_rank = low_rank ? low_rank.rank : 1;
 
         Todos.insert({
           text: value,
