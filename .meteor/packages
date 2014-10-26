@@ -13,4 +13,6 @@ datariot:ganalytics
 tsega:bootstrap3-datetimepicker
 mrt:jquery-ui
 iron:router@1.0.0-pre4
+projects
+userconfig
 

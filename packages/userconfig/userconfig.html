@@ -1,0 +1,19 @@
+<template name = "config">
+<div class="container-fluid">
+  <div class="col-md-2">
+  </div>
+  <div class="col-md-8" id="config">
+    <h1>User Config:</h1>
+    <div id="config-items">
+      <p><label>Display Name: </label> <input id="display_name" value="{{display_name}}"></p>
+      <p><label>Day Ends At (hours): </label> <input id="day_end" value="{{day_end}}"></p>
+      <p><label>Todo red by (days): </label> <input id="red_age" value="{{red_age}}"></p>
+      <p><button id='save' class="btn btn-primary">Save</button>
+      <button id='cancel' class="btn">Cancel</button></p>
+    </div>
+  </div>
+  <div class="col-md-2">
+  </div>
+</div>
+</template>
+

@@ -7,9 +7,6 @@ Todos = new Meteor.Collection("todos");
 DaysStats = new Meteor.Collection("days_stats");
 DoneTicker = new Meteor.Collection("done_ticker");
 
-//user config stuff
-UserConfig = new Meteor.Collection("user_config");
-
 // Sessions
 Session.setDefault('edit_todo', null);
 Session.setDefault('edit_daily', null);
@@ -45,17 +42,13 @@ var habitsHandle = Meteor.subscribe('habits', function () {
 
 });
 
-var configHandle = Meteor.subscribe('user_config', function () {
-
-});
-
-
 // Hacks & Cludges:
 // bootstrap 3 navbar fix
 fix_top_padding = function () {
 
   $('body').css({"padding-top": $(".navbar").height() + 30 + "px"});
 };
+
 $(window).on('load resize', function() {
   fix_top_padding();
 });
@@ -309,52 +302,6 @@ Template.body.events({
   }});
 
 
-
-
-//Config
-DefaultUserConfig = {
-  userId: Meteor.userId(),
-  day_end: 0,
-  red_age: 30,
-  display_name: "Anon"
-};
-
-Template.config.events({
-  'click button#cancel': function (evt, template) {
-    template.$('#day_end').val(this.day_end);
-    template.$('#display_name').val(this.display_name);
-    template.$('#red_age').val(this.red_age);
-    Router.go('/');
-  },
-  'click button#save': function (evt, template) {
-    to_save = UserConfig.findOne({userId: Meteor.userId()});
-    if (to_save) {
-      UserConfig.update(to_save._id, {$set:
-                             { red_age: template.$('#red_age').val(),
-                               day_end: template.$('#day_end').val(),
-                               display_name: template.$('#display_name').val()}
-                          });
-
-
-    } else {
-      UserConfig.insert(
-
-                      {
-                        userId: Meteor.userId(),
-                        red_age: template.$('#red_age').val(),
-                        day_end: template.$('#day_end').val(),
-                        display_name: template.$('#display_name').val()
-                      });
-
-    }
-
-    Router.go('/');
-  }
-});
-
-Template.config.rendered = function () {
-  fix_top_padding();
-};
 //Days
 Template.days.today = function () {
   return moment().format('Do MMM YY');

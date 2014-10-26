@@ -6,10 +6,6 @@ Todos = new Meteor.Collection("todos");
 DaysStats = new Meteor.Collection("days_stats");
 DoneTicker = new Meteor.Collection("done_ticker");
 
-//user config stuff
-UserConfig = new Meteor.Collection("user_config");
-
-
 Meteor.publish('done_ticker', function () {
   return DoneTicker.find({}, {});
 });
@@ -34,9 +30,6 @@ Meteor.publish('goals', function () {
   return Goals.find({userId: this.userId} , {});
 });
 
-Meteor.publish('user_config', function () {
-  return UserConfig.find({userId: this.userId} , {});
-});
 
 var default_allow = {
   insert: function (userId, doc) {
@@ -70,14 +63,13 @@ Habits.allow(default_allow);
 Dailies.allow(default_allow);
 Todos.allow(default_allow);
 
-UserConfig.allow(default_allow);
 DaysStats.allow(default_allow);
 
 Habits.deny(default_deny);
 Dailies.deny(default_deny);
 Todos.deny(default_deny);
 Goals.deny(default_deny);
-UserConfig.deny(default_deny);
+
 DaysStats.deny({
   update: function (userId, docs, fields, modifier) {
     // can't change userId

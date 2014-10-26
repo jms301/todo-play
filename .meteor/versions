@@ -53,6 +53,7 @@ nemo64:bootstrap@3.2.3
 npm-bcrypt@0.7.7
 observe-sequence@1.0.3
 ordered-dict@1.0.1
+projects@1.0.0
 random@1.0.1
 reactive-dict@1.0.4
 reactive-var@1.0.3
@@ -73,5 +74,6 @@ tsega:bootstrap3-datetimepicker@0.4.0
 ui@1.0.4
 underscore@1.0.1
 url@1.0.1
+userconfig@1.0.0
 webapp-hashing@1.0.1
 webapp@1.1.3
