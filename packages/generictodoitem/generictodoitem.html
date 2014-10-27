@@ -1,0 +1,22 @@
+<template name="trash_icon">
+    <div class="item-remove"><div class="item-remove-x">
+      <label class="glyphicon glyphicon-trash"></label>
+    </div></div>
+</template>
+
+<template name="save_or_cancel">
+      <div class="cancel-edit"><label class="glyphicon glyphicon-floppy-remove"></label></div>
+      <div class="save-edit"><label class="glyphicon glyphicon-floppy-saved"></label></div>
+</template>
+
+<template name="project_select">
+
+      <label>Project: <br />
+      <select id="item-projects-{{_id}}">
+      <option> </option>
+      {{#each projects}}
+      <option value="{{_id}}" {{is_selected ..}}>{{text}}</option>
+      {{/each}}
+      </select></label><br />
+
+<template>

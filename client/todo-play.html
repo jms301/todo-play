@@ -177,22 +177,16 @@
       <input id="item-title-{{_id}}" value="{{text}}" class="item-edit-title form-control"/>
       Notes: <br/>
       <textarea id="item-notes-{{_id}}" rows=3 cols=35 class="item-edit-notes form-control">{{notes}}</textarea>
-      Project: <br />
-      <select id="item-projects-{{_id}}">
-      <option> </option>
-      {{#each projects}}
-      <option value="{{_id}}" {{is_selected ..}}>{{text}}</option>
-      {{/each}}
-      </select><br />
+
+      {{project_select}}
+
       Frequency (days): <input type="number" id="habit-freq-{{_id}}" value="{{freq}}" class="item-edit-freq"/>
-      <div class="cancel-edit"><label class="glyphicon glyphicon-floppy-remove"></label></div>
-      <div class="save-edit"><label class="glyphicon glyphicon-floppy-saved"></label></div>
+      
+      {{save_or_cancel}}
       </div><!-- editing close div -->
     </div>
 
-    <div class="item-remove"><div class="item-remove-x">
-      <label class="glyphicon glyphicon-trash"></label>
-    </div></div>
+    {{trash_icon}}
   </li>
 </template>
 
@@ -206,20 +200,14 @@
       Title: <input id="item-title-{{_id}}" value="{{text}}" class="item-edit-title form-control"/>
       Notes: <br/>
       <textarea id="item-notes-{{_id}}" rows=3 cols=35 class="item-edit-notes form-control">{{notes}}</textarea>
-      Project: <br />
-      <select id="item-projects-{{_id}}">
-      <option> </option>
-      {{#each projects}}
-      <option value="{{_id}}" {{is_selected ..}}>{{text}}</option>
-      {{/each}}
-      </select><br />
-      <div class="cancel-edit"><label class="glyphicon glyphicon-floppy-remove"></label></div>
-      <div class="save-edit"><label class="glyphicon glyphicon-floppy-saved"></label></div>
+      {{project_select}}
+      {{save_or_cancel}}
+
       </div>
     </div>
-    <div class="item-remove"><div class="item-remove-x">
-      <label class="glyphicon glyphicon-trash"></label>
-    </div></div>
+
+    {{trash_icon}}
+
   </li>
 </template>
 
@@ -250,23 +238,17 @@
           <i class="glyphicon glyphicon-list"></i>
         </span>
       </div>
-      <label>Project: <br />
-      <select id="item-projects-{{_id}}">
-      <option> </option>
-      {{#each projects}}
-      <option value="{{_id}}" {{is_selected ..}}>{{text}}</option>
-      {{/each}}
-      </select></label><br />
+
+      {{project_select}}
+
       <div class="checkbox_item">
       <label>Private: <input type="checkbox" checked="{{private}}" id="item-private-{{_id}}" class="item-private"/></label>
       </div>
-      <div class="cancel-edit"><label class="glyphicon glyphicon-floppy-remove"></label></div>
-      <div class="save-edit"><label class="glyphicon glyphicon-floppy-saved"></label></div>
+      {{save_or_cancel}}
       </div>
-    </div>
-    <div class="item-remove"><div class="item-remove-x">
-      <label class="glyphicon glyphicon-trash"></label>
-    </div></div>
+    </Div>
+
+    {{trash_icon}}
 
     <div class="hide-until {{editing}}">
       <label class="glyphicon glyphicon-time"></label>
