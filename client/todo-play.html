@@ -83,24 +83,8 @@
           {{/with}}
       </div>
     </div>
-    <div id="ticker" class="chart col-md-3"><strong>Done Ticker:</strong>
-    <br/>
-    <br/>
-    {{#each tickers}}
-    <div id="ticker-{{index}}" class="fader {{ticker_active index}}">
-    <ul id="ticker-item" class="items-list">
-    Done by {{display_name}} -
-    <li class="item">
-    <div class="item-checkbox ticked"><label class="glyphicon glyphicon-ok"></label></div>
-    <div class="item-text"><span class="item-text">{{text}}</span></div>
-    <div class="item-remove"><div class="item-remove-x">
-      <label class="glyphicon glyphicon-trash"></label>
-    </div></div>
-    </li>
-    </ul>
-    </div>
-    {{/each}}
-  </div>
+
+    {{done_ticker}}
 
 </template>
 

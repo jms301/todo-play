@@ -5,7 +5,6 @@ Todos = new Meteor.Collection("todos");
 
 // Header stuff
 DaysStats = new Meteor.Collection("days_stats");
-DoneTicker = new Meteor.Collection("done_ticker");
 
 // Sessions
 Session.setDefault('edit_todo', null);
@@ -17,15 +16,9 @@ Session.setDefault('days_stats_today', null);
 Session.setDefault('days_stats_yesterday', null);
 Session.setDefault('days_stats_before', null);
 
-Session.setDefault('ticker_count', null);
-Session.setDefault('ticker_active', null);
-
 Session.setDefault('time_now', new Date().getTime());
 
 // Subscriptions
-var doneTickerHandle = Meteor.subscribe('done_ticker', function () {
-
-});
 var daysStatsHandle = Meteor.subscribe('days_stats', function () {
   setupDaysStats();
 });
@@ -125,21 +118,6 @@ Meteor.setInterval(function () {
   setupDaysStats();
 }, 60000);
 
-
-// update the done ticker every 10 seconds
-Meteor.setInterval(function () {
-  Session.set('ticker_active', (Session.get('ticker_active') * -1));
-  Meteor.setTimeout(function () {
-    next = Math.abs(Session.get('ticker_active')) + 1;
-    if( next >= Session.get('ticker_count'))
-      next = 1;
-    Session.set('ticker_active', (next * -1));
-
-    Meteor.setTimeout(function () {
-      Session.set('ticker_active', (Session.get('ticker_active') * -1));
-    }, 2000);
-  }, 2000);
-}, 10000);
 
 var findOrCreateTodaysStats = function () {
   var today_id = Session.get('days_stats_today');
@@ -328,26 +306,6 @@ Template.days.before_chart = function () {
     return {blank: 1};
 };
 
-Template.days.ticker_active = function (index) {
-  if (Session.get('ticker_active') == index ) {
-    return '';
-  } else if (Session.get('ticker_active') == (-1 * index)) {
-    return 'hiding';
-  } else {
-    return 'hidden';
-  }
-};
-
-Template.days.tickers = function () {
-  tickers = DoneTicker.find();
-  Session.set('ticker_count', tickers.count() + 1);
-  Session.set('ticker_active', 1);
-
-  return DoneTicker.find({}).map(function(doc, index) {
-                               doc.index = index + 1;
-                               return doc;
-                             });
-};
 
 //return the highest value of 'type' in today/yesterday/before stats
 var findChartMax = function(type) {
