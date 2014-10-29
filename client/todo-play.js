@@ -693,14 +693,14 @@ Template.todos.done_todos = function () {
                         done: true,
                         ticktime: {$gt: day_start},
                         },
-                      {sort: ["rank", "desc"]});
+                      {sort: ["ticktime", "desc"]});
     } else {
       return Todos.find({userId: Meteor.userId(),
                          project: Session.get('active_project'),
                          done: true,
                          ticktime: {$gt: day_start},
                         },
-                      {sort: ["rank", "desc"]});
+                      {sort: ["ticktime", "desc"]});
     }
   }
 };

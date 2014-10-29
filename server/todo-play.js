@@ -14,7 +14,15 @@ Meteor.publish('habits', function () {
 });
 
 Meteor.publish('todos', function () {
-  return Todos.find({userId: this.userId} , {});
+
+  return Todos.find({userId: this.userId,
+                      $or: [
+                        {done: false},
+                        {done: true, ticktime:
+                          {$gt: new Date(new Date() - 172800000)}
+                        }
+                      ]
+                    } , {});
 });
 
 Meteor.publish('dailies', function () {
