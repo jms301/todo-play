@@ -1,5 +1,3 @@
-
-
 Session.setDefault('active_project', null);
 
 Goals = new Meteor.Collection("goals");
@@ -23,8 +21,10 @@ Template.projects.helpers({
   active_project: function () {
     if(Session.get("active_project")) {
       return Goals.findOne({_id: Session.get("active_project")}).text;
-    } else {
+    } else if(Session.get("active_project")===false) {
       return "All Projects";
+    } else {
+      return "Without Project";
     }
   },
 });
@@ -53,6 +53,9 @@ Template.projects.events({
     stopProp(evt);
   },
   'click li.all-projects': function (evt) {
+    Session.set("active_project", false);
+  },
+  'click li.no-projects': function (evt) {
     Session.set("active_project", null);
   },
   'click input#add-project': function (evt) {

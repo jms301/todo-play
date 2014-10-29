@@ -354,15 +354,15 @@ Template.chart.todo_height = function () {
 
 Template.habits.habits = function () {
   if(Meteor.userId())
-    if(Session.get('active_project') == null)
+    if(Session.get('active_project') === false)
       return Habits.find({userId: Meteor.userId()},
                          {sort: ["rank", "desc"]});
     else
       return Habits.find({userId: Meteor.userId(),
                                   project: Session.get('active_project')},
                          {sort: ["rank", "desc"]});
-    else
-  return [];
+  else
+    return [];
 };
 
 Template.habits.events({
@@ -386,7 +386,7 @@ Template.habits.events({
           text: value,
           done: false,
           notes: "",
-          project: Session.get('active_project'),
+          project: (Session.get('active_project') || null),
           timestamp: (new Date()).getTime(),
           freq: 7, //default frequency is once per week
           rank: low_rank - 1
@@ -522,7 +522,7 @@ Template.habit_item.editing = function (evt) {
 
 Template.dailies.dailies = function () {
   if(Meteor.userId())
-    if(Session.get('active_project') == null)
+    if(Session.get('active_project') === false)
       return Dailies.find({userId: Meteor.userId()},
                       {sort: ["rank", "desc"]});
     else
@@ -553,7 +553,7 @@ Template.dailies.events({
           done: false,
           private: null,
           notes: "",
-          project: Session.get('active_project'),
+          project: (Session.get('active_project') || null),
           timestamp: (new Date()).getTime(),
           ticktime: (new Date(0)),
           rank: low_rank - 1
@@ -687,7 +687,7 @@ Template.daily_item.editing = function (evt) {
 Template.todos.done_todos = function () {
   if(Meteor.userId()) {
     var day_start =  moment().startOf('day').toDate();
-    if(Session.get('active_project') == null)
+    if(Session.get('active_project') === false)
     {
       return Todos.find({userId: Meteor.userId(),
                         done: true,
@@ -708,7 +708,7 @@ Template.todos.done_todos = function () {
 Template.todos.todos = function () {
 
   if(Meteor.userId()) {
-    if(Session.get('active_project') == null)
+    if(Session.get('active_project') === false)
     {
       return Todos.find({userId: Meteor.userId(),
                          done: false,
@@ -753,7 +753,7 @@ Template.todos.events({
 
         Todos.insert({
           text: value,
-          project: Session.get('active_project'),
+          project: (Session.get('active_project') || null),
           userId: Meteor.userId(),
           done: false,
           private: false,
