@@ -1,4 +1,4 @@
-Session.setDefault('active_project', null);
+Session.setDefault('active_project', false);
 
 Goals = new Meteor.Collection("goals");
 
@@ -6,12 +6,15 @@ var goalHandle = Meteor.subscribe('goals', function () {
 
 });
 
-//templates
-//Global project list for other templates
-Template.registerHelper('projects', function(input) {
-  return Goals.find({userId: Meteor.userId()});
+// template to provide select list for todolist items.
+Template.project_select.helpers({
+  is_selected: function (parentThis)  { 
+    return (parentThis.project == this._id ? "selected" : "");
+  },
+  projects:  function () {
+    return Goals.find({userId: Meteor.userId()});
+  }
 });
-
 
 // Projects functions helpers
 Template.projects.helpers({
@@ -26,7 +29,7 @@ Template.projects.helpers({
     } else {
       return "Without Project";
     }
-  },
+  }
 });
 
 Template.projects.events({

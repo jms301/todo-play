@@ -13,6 +13,19 @@
   </ul>
   </li></ul>
 </template>
+
 <template name="project">
   <li class="projects"><a href="#">{{text}}&nbsp;&nbsp;<span id="remove" class="glyphicon glyphicon-trash"></span></a></li>
 </template>
+
+<template name="project_select">
+  <label>Project: <br />
+  <select id="item-projects-{{_id}}">
+  <option> </option>
+  {{#each projects}}
+    <option value="{{_id}}" {{is_selected ..}}>{{text}}</option>
+  {{/each}}
+  </select>
+  </label><br />
+</template>
+

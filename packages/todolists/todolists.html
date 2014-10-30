@@ -1,0 +1,41 @@
+<!--
+ <div class="item-checkbox {{ticked}}" style="background-color: {{color}}">
+      <label class="{{ticked_icon}}"></label>
+    </div>
+    <div class="item-text"><span class="item-text"> {{text}}</span>
+      <div class="expand-edit {{not_editing}}">
+        <label class="glyphicon glyphicon-collapse-down"></label>
+      </div>
+      <div class="item-details {{editing}}">
+        <label>Title: <input id="item-title-{{_id}}" value="{{text}}" class="item-edit-title form-control"/></label>
+        <label >Notes:<br/>
+          <textarea id="item-notes-{{_id}}" rows=3 cols=35 class="item-edit-notes form-control">{{notes}}</textarea>
+        </label> 
+
+        <div class="cancel-edit">
+          <label class="glyphicon glyphicon-floppy-remove"></label>
+        </div>
+        <div class="save-edit">
+          <label class="glyphicon glyphicon-floppy-saved"></label>
+        </div>
+      </div>
+    </div>
+-->
+
+<template name="save_or_cancel">
+  <div class="cancel-edit">
+    <label class="glyphicon glyphicon-floppy-remove"></label>
+  </div>
+  <div class="save-edit">
+    <label class="glyphicon glyphicon-floppy-saved"></label>
+  </div>
+
+</template>
+
+<template name="trash_icon">
+  <div class="item-remove">
+    <div class="item-remove-x">
+      <label class="glyphicon glyphicon-trash"></label>
+    </div>
+  </div>
+</template>

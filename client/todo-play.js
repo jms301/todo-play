@@ -1,8 +1,3 @@
-// Collections
-Habits = new Meteor.Collection("habits");
-Dailies = new Meteor.Collection("dailies");
-Todos = new Meteor.Collection("todos");
-
 // Header stuff
 DaysStats = new Meteor.Collection("days_stats");
 
@@ -281,31 +276,32 @@ Template.body.events({
 
 
 //Days
-Template.days.today = function () {
-  return moment().format('Do MMM YY');
-};
+Template.days.helpers({
+  today: function () {
+    return moment().format('Do MMM YY');
+  },
 
-Template.days.today_chart = function () {
-  if(Session.get('days_stats_today'))
-    return DaysStats.findOne({_id: Session.get('days_stats_today')});
-  else
-    return {blank: 1};
-};
+  today_chart: function () {
+    if(Session.get('days_stats_today'))
+      return DaysStats.findOne({_id: Session.get('days_stats_today')});
+    else
+      return {blank: 1};
+  },
 
-Template.days.yesterday_chart = function () {
-  if(Session.get('days_stats_yesterday'))
-    return DaysStats.findOne({_id: Session.get('days_stats_yesterday')});
-  else
-    return {blank: 1};
-};
+  yesterday_chart: function () {
+    if(Session.get('days_stats_yesterday'))
+      return DaysStats.findOne({_id: Session.get('days_stats_yesterday')});
+    else
+      return {blank: 1};
+  },
 
-Template.days.before_chart = function () {
-  if(Session.get('days_stats_before') != null)
-    return DaysStats.findOne({_id: Session.get('days_stats_before')});
-  else
-    return {blank: 1};
-};
-
+  before_chart: function () {
+    if(Session.get('days_stats_before') != null)
+      return DaysStats.findOne({_id: Session.get('days_stats_before')});
+    else
+      return {blank: 1};
+  }
+});
 
 //return the highest value of 'type' in today/yesterday/before stats
 var findChartMax = function(type) {
@@ -323,47 +319,51 @@ var findChartMax = function(type) {
   return max;
 };
 
-Template.chart.habit_height = function () {
-  if(this.blank || this.habits == 0)
-    return "1px;";
-  else
-    var max = findChartMax('habits');
-    return ((this.habits / max) * 7) + "em;";
-};
+Template.chart.helpers({
+  habit_height: function () {
+    if(this.blank || this.habits == 0)
+      return "1px;";
+    else
+      var max = findChartMax('habits');
+      return ((this.habits / max) * 7) + "em;";
+  },
 
-Template.chart.daily_height = function () {
-  if(this.blank || this.dailies == 0)
-    return "1px;";
-  else {
-    // 7em max height;
-    var max = Dailies.find({}).count();
-    return ((this.dailies / max) * 7) + "em;";
-  }
-}
+  daily_height: function () {
+    if(this.blank || this.dailies == 0)
+      return "1px;";
+    else {
+      // 7em max height;
+      var max = Dailies.find({}).count();
+      return ((this.dailies / max) * 7) + "em;";
+    }
+  },
 
-Template.chart.todo_height = function () {
-  if(this.blank || this.todos == 0)
-    return "1px;";
-  else {
-    var max = findChartMax('todos');
-    return ((this.todos / max) * 7) + "em;";
+  todo_height: function () {
+    if(this.blank || this.todos == 0)
+      return "1px;";
+    else {
+      var max = findChartMax('todos');
+      return ((this.todos / max) * 7) + "em;";
+    }
   }
-}
+});
 
 //Habits
 
-Template.habits.habits = function () {
-  if(Meteor.userId())
-    if(Session.get('active_project') === false)
-      return Habits.find({userId: Meteor.userId()},
-                         {sort: ["rank", "desc"]});
+Template.habits.helpers({
+  habits: function () {
+    if(Meteor.userId())
+      if(Session.get('active_project') === false)
+        return Habits.find({userId: Meteor.userId()},
+                           {sort: ["rank", "desc"]});
+      else
+        return Habits.find({userId: Meteor.userId(),
+                                    project: Session.get('active_project')},
+                           {sort: ["rank", "desc"]});
     else
-      return Habits.find({userId: Meteor.userId(),
-                                  project: Session.get('active_project')},
-                         {sort: ["rank", "desc"]});
-  else
-    return [];
-};
+      return [];
+  }
+});
 
 Template.habits.events({
 
@@ -429,10 +429,30 @@ Template.habits.rendered = function() {
     })
 };
 
+Template.habit_item.helpers({
+  habit_status: function() {
+    //returns the urgency of this habit this.freq = ideal frequency in days.
+    // this.tickedtime = time of last completion.
+    var days = 86400000; //milliseconds in one day;
 
-Template.habit_item.is_selected = function (parentThis){
-  return (parentThis.project == this._id ? "selected" : "");
-};
+    var age = new Date() - this.ticktime;
+    if(age < (this.freq/2) * days)
+      return "habit-status-1";
+    else if(age < this.freq * days)
+      return "habit-status-2";
+    else
+      return "habit-status-3";
+  },
+
+  not_editing: function (evt) {
+    return this._id == Session.get('edit_habit') ? "" : "editing";
+  },
+
+  editing: function (evt) {
+    return this._id == Session.get('edit_habit') ? "editing" : "";
+  }
+});
+
 
 Template.habit_item.events({
  'click .item-remove-x': function (evt) {
@@ -458,21 +478,8 @@ Template.habit_item.events({
     updateStats('habits', true, null); // habits can only be incremented
     stopProp(evt);
   },
-  'click .expand-edit': function (evt) {
-    if(Session.get('edit_habit') == null) {
-      Session.set('edit_habit', this._id);
-    } else if(Session.get('edit_habit') != this._id) {
-      saveHabit(Session.get('edit_habit'),  Habits);
-      Session.set('edit_habit', this._id);
-    } else {
-      Session.set('edit_habit', null);
-      saveHabit(this._id, Habits);
-    }
 
-    stopProp(evt);
-  },
-
-  'dblclick .item-text': function (evt) {
+  'click .expand-edit, dblclick .item-text': function (evt) {
     if(Session.get('edit_habit') == null)
       Session.set('edit_habit', this._id);
     else if(Session.get('edit_habit') != this._id) {
@@ -496,41 +503,21 @@ Template.habit_item.events({
 
  });
 
-Template.habit_item.habit_status = function() {
-  //returns the urgency of this habit this.freq = ideal frequency in days.
-  // this.tickedtime = time of last completion.
-  var days = 86400000; //milliseconds in one day;
-
-  var age = new Date() - this.ticktime;
-  if(age < (this.freq/2) * days)
-    return "habit-status-1";
-  else if(age < this.freq * days)
-    return "habit-status-2";
-  else
-    return "habit-status-3";
-};
-
-Template.habit_item.not_editing = function (evt) {
-  return this._id == Session.get('edit_habit') ? "" : "editing";
-};
-
-Template.habit_item.editing = function (evt) {
-  return this._id == Session.get('edit_habit') ? "editing" : "";
-};
-
 //Dailies
 
-Template.dailies.dailies = function () {
-  if(Meteor.userId())
-    if(Session.get('active_project') === false)
-      return Dailies.find({userId: Meteor.userId()},
-                      {sort: ["rank", "desc"]});
-    else
-      return Dailies.find({userId: Meteor.userId(),
-                           project: Session.get('active_project')},
-                          {sort: ["rank", "desc"]});
-  return [];
-};
+Template.dailies.helpers({
+  dailies: function () {
+    if(Meteor.userId())
+      if(Session.get('active_project') === false)
+        return Dailies.find({userId: Meteor.userId()},
+                        {sort: ["rank", "desc"]});
+      else
+        return Dailies.find({userId: Meteor.userId(),
+                             project: Session.get('active_project')},
+                            {sort: ["rank", "desc"]});
+    return [];
+  }
+});
 
 Template.dailies.events({
 
@@ -597,24 +584,29 @@ Template.dailies.rendered = function() {
 };
 
 
-Template.daily_item.is_selected = function (parentThis){
-  return (parentThis.project == this._id ? "selected" : "");
-};
+Template.daily_item.helpers({
+  ticked_icon: function () {
+    if (isDailyTicked(this))
+      return 'glyphicon glyphicon-ok';
+    else
+      return '';
+  },
 
-Template.daily_item.ticked_icon = function () {
-  if (isDailyTicked(this))
-    return 'glyphicon glyphicon-ok';
-  else
-    return '';
-};
+  ticked: function () {
+    if (isDailyTicked(this))
+      return 'ticked';
+    else
+      return '';
+  },
 
-Template.daily_item.ticked = function () {
+  not_editing: function (evt) {
+    return this._id == Session.get('edit_daily') ? "" : "editing";
+  },
 
-  if (isDailyTicked(this))
-    return 'ticked';
-  else
-    return '';
-};
+  editing: function (evt) {
+    return this._id == Session.get('edit_daily') ? "editing" : "";
+  }
+});
 
 Template.daily_item.events({
   'click li': function (evt) {
@@ -641,21 +633,8 @@ Template.daily_item.events({
     Session.set('edit_daily', null);
     stopProp(evt);
   },
-  'click .expand-edit': function (evt) {
-    if(Session.get('edit_daily') == null) {
-      Session.set('edit_daily', this._id);
-    } else if(Session.get('edit_daily') != this._id) {
-      saveEdit(Session.get('edit_daily'),  Dailies);
-      Session.set('edit_daily', this._id);
-    } else {
-      Session.set('edit_daily', null);
-      saveEdit(this._id, Dailies);
-    }
 
-    stopProp(evt);
-  },
-
-  'dblclick .item-text': function (evt) {
+  'dblclick .item-text, click .expand-edit': function (evt) {
     if(Session.get('edit_daily') == null) {
       Session.set('edit_daily', this._id);
     } else if(Session.get('edit_daily') != this._id) {
@@ -674,70 +653,64 @@ Template.daily_item.events({
   }
 });
 
-Template.daily_item.not_editing = function (evt) {
-  return this._id == Session.get('edit_daily') ? "" : "editing";
-}
-
-Template.daily_item.editing = function (evt) {
-  return this._id == Session.get('edit_daily') ? "editing" : "";
-};
-
 
 //Todos
-Template.todos.done_todos = function () {
-  if(Meteor.userId()) {
-    var day_start =  moment().startOf('day').toDate();
-    if(Session.get('active_project') === false)
-    {
-      return Todos.find({userId: Meteor.userId(),
-                        done: true,
-                        ticktime: {$gt: day_start},
-                        },
-                      {sort: ["ticktime", "desc"]});
-    } else {
-      return Todos.find({userId: Meteor.userId(),
-                         project: Session.get('active_project'),
-                         done: true,
-                         ticktime: {$gt: day_start},
-                        },
-                      {sort: ["ticktime", "desc"]});
+Template.todos.helpers({
+  done_todos: function () {
+    if(Meteor.userId()) {
+      var day_start =  moment().startOf('day').toDate();
+      if(Session.get('active_project') === false)
+      {
+        return Todos.find({userId: Meteor.userId(),
+                          done: true,
+                          ticktime: {$gt: day_start},
+                          },
+                        {sort: ["ticktime", "desc"]});
+      } else {
+        return Todos.find({userId: Meteor.userId(),
+                           project: Session.get('active_project'),
+                           done: true,
+                           ticktime: {$gt: day_start},
+                          },
+                        {sort: ["ticktime", "desc"]});
+      }
     }
-  }
-};
+  },
 
-Template.todos.todos = function () {
+  todos: function () {
 
-  if(Meteor.userId()) {
-    if(Session.get('active_project') === false)
-    {
-      return Todos.find({userId: Meteor.userId(),
-                         done: false,
-                         $or: [{hide_until: null},
-                               {hide_until:
-                                {$lt: new Date(Session.get("time_now"))}}]
-                       },
-                      {sort: ["rank", "desc"]});
+    if(Meteor.userId()) {
+      if(Session.get('active_project') === false)
+      {
+        return Todos.find({userId: Meteor.userId(),
+                           done: false,
+                           $or: [{hide_until: null},
+                                 {hide_until:
+                                  {$lt: new Date(Session.get("time_now"))}}]
+                         },
+                        {sort: ["rank", "desc"]});
+      } else {
+        return Todos.find({userId: Meteor.userId(),
+                           project: Session.get('active_project'),
+                           done: false,
+                           $or: [{hide_until: null},
+                                 {hide_until:
+                                  {$lt: new Date(Session.get("time_now"))}}]
+                         },
+                        {sort: ["rank", "desc"]});
+      }
     } else {
-      return Todos.find({userId: Meteor.userId(),
-                         project: Session.get('active_project'),
-                         done: false,
-                         $or: [{hide_until: null},
-                               {hide_until:
-                                {$lt: new Date(Session.get("time_now"))}}]
-                       },
-                      {sort: ["rank", "desc"]});
-    }
-  }
-  return [{
-        text: "Sign up for Todo:play",
-        userId: null,
-        done: false,
-        notes: "",
-        timestamp: (new Date()).getTime(),
-        _id: "fake"
+      return [{
+          text: "Sign up for Todo:play",
+          userId: null,
+          done: false,
+          notes: "",
+          timestamp: (new Date()).getTime(),
+          _id: "fake"
       }];
-};
-
+    }
+  },
+});
 Template.todos.events({
  'keydown .add-item-text, keyup .add-item-text, focusout .add-item-text': function (evt) {
     if(evt.type === 'keyup' && evt.which === 27) {
@@ -795,58 +768,67 @@ Template.todos.rendered = function() {
     })
 };
 
+Template.todo_item.helpers({
 
-Template.todo_item.is_selected = function (parentThis){
-  return (parentThis.project == this._id ? "selected" : "");
-};
+  ticked_icon: function () {
+    return this.done ? 'glyphicon glyphicon-ok' : '';
+  },
 
-Template.todo_item.ticked_icon = function () {
-  return this.done ? 'glyphicon glyphicon-ok' : '';
-};
+  ticked: function () {
+    return this.done ? 'ticked' : '';
+  },
 
-Template.todo_item.ticked = function () {
-  return this.done ? 'ticked' : '';
-};
+  color: function () {
+    if(this.done){
+      return ""
+    } else {
+      var user_config = UserConfig.findOne({userId: Meteor.userId()});
+      if(!user_config || !user_config.red_age)
+        user_config = {red_age: 30}; // default red_age of 30 days
 
-Template.todo_item.color = function () {
-  if(this.done){
-    return ""
-  } else {
-    var user_config = UserConfig.findOne({userId: Meteor.userId()});
-    if(!user_config || !user_config.red_age)
-      user_config = {red_age: 30}; // default red_age of 30 days
+      //blue: #779ECB
+      //blue = rgb(119, 158, 203)
+      //red:  #FF7373
+      //red = rgb(255, 115, 115)
 
-    //blue: #779ECB
-    //blue = rgb(119, 158, 203)
-    //red:  #FF7373
-    //red = rgb(255, 115, 115)
+      var rblue = 119;
+      var gblue = 158;
+      var bblue = 203;
 
-    var rblue = 119;
-    var gblue = 158;
-    var bblue = 203;
+      var rdiff = -136;
+      var gdiff = 43;
+      var bdiff = 88;
 
-    var rdiff = -136;
-    var gdiff = 43;
-    var bdiff = 88;
+      var age = new Date() - new Date(this.timestamp);
+      var red_age = user_config.red_age * 24 * 60 * 60 * 1000;
 
-    var age = new Date() - new Date(this.timestamp);
-    var red_age = user_config.red_age * 24 * 60 * 60 * 1000;
+      if(age < 0)
+        return '#779ECB';
+      if(age > red_age)
+        age = red_age;
 
-    if(age < 0)
-      return '#779ECB';
-    if(age > red_age)
-      age = red_age;
+      age_frac = age / red_age;
 
-    age_frac = age / red_age;
+      var to_ret =  'rgb(' + Math.floor(rblue - (rdiff * age_frac)) + ',' +
+      Math.floor(gblue - (gdiff * age_frac)) + ',' +
+      Math.floor(bblue - (bdiff * age_frac)) + ')';
 
-    var to_ret =  'rgb(' + Math.floor(rblue - (rdiff * age_frac)) + ',' +
-    Math.floor(gblue - (gdiff * age_frac)) + ',' +
-    Math.floor(bblue - (bdiff * age_frac)) + ')';
-
-    return to_ret;
+      return to_ret;
+    }
+  },
+  not_editing: function () {
+    return this._id == Session.get('edit_todo') ? "" : "editing";
+  },
+  editing: function () {
+    return this._id == Session.get('edit_todo') ? "editing" : "";
+  },
+  checked: function (is_checked) {
+    return is_checked ? "checked" : "";
+  },
+  getid: function (item) {
+    return item._id;
   }
-};
-
+});
 
 Template.todo_item.events({
   'click .remove-list-item': function (evt, template) {
@@ -921,20 +903,7 @@ Template.todo_item.events({
     updateStats('todos', !this.done, this.ticktime);
     stopProp(evt);
   },
-  'click .expand-edit': function (evt) {
-    if(Session.get('edit_todo') == null) {
-      Session.set('edit_todo', this._id);
-    } else if(Session.get('edit_todo') != this._id) {
-      saveEdit(Session.get('edit_todo'),  Todos);
-      Session.set('edit_todo', this._id);
-    } else {
-      Session.set('edit_todo', null);
-      saveEdit(this._id, Todos);
-    }
-
-    stopProp(evt);
-  },
-  'dblclick .item-text': function (evt) {
+  'dblclick .item-text, click .expand-edit': function (evt) {
 
     if(Session.get('edit_todo') == null) {
       Session.set('edit_todo', this._id);
@@ -951,20 +920,5 @@ Template.todo_item.events({
   },
   'dblclick .item-edit-title, dblclick .item-edit-notes' : function(evt) {
     stopProp(evt);
-  }
-});
-
-Template.todo_item.helpers ({
-  not_editing: function () {
-    return this._id == Session.get('edit_todo') ? "" : "editing";
-  },
-  editing: function () {
-    return this._id == Session.get('edit_todo') ? "editing" : "";
-  },
-  checked: function (is_checked) {
-    return is_checked ? "checked" : "";
-  },
-  getid: function (item) {
-    return item._id;
   }
 });

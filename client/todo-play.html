@@ -178,15 +178,15 @@
       Notes: <br/>
       <textarea id="item-notes-{{_id}}" rows=3 cols=35 class="item-edit-notes form-control">{{notes}}</textarea>
 
-      {{project_select}}
+      {{> project_select}}
 
       Frequency (days): <input type="number" id="habit-freq-{{_id}}" value="{{freq}}" class="item-edit-freq"/>
       
-      {{save_or_cancel}}
+      {{> save_or_cancel}}
       </div><!-- editing close div -->
     </div>
 
-    {{trash_icon}}
+    {{> trash_icon}}
   </li>
 </template>
 
@@ -200,13 +200,13 @@
       Title: <input id="item-title-{{_id}}" value="{{text}}" class="item-edit-title form-control"/>
       Notes: <br/>
       <textarea id="item-notes-{{_id}}" rows=3 cols=35 class="item-edit-notes form-control">{{notes}}</textarea>
-      {{project_select}}
-      {{save_or_cancel}}
+      {{> project_select}}
+      {{> save_or_cancel}}
 
       </div>
     </div>
 
-    {{trash_icon}}
+    {{> trash_icon}}
 
   </li>
 </template>
@@ -239,16 +239,16 @@
         </span>
       </div>
 
-      {{project_select}}
+      {{> project_select}}
 
       <div class="checkbox_item">
       <label>Private: <input type="checkbox" checked="{{private}}" id="item-private-{{_id}}" class="item-private"/></label>
       </div>
-      {{save_or_cancel}}
+      {{> save_or_cancel}}
       </div>
     </Div>
 
-    {{trash_icon}}
+    {{> trash_icon}}
 
     <div class="hide-until {{editing}}">
       <label class="glyphicon glyphicon-time"></label>
