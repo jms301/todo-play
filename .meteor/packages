@@ -15,4 +15,5 @@ mrt:jquery-ui
 iron:router@1.0.0-pre4
 projects
 userconfig
+todolists
 
