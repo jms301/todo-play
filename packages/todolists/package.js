@@ -13,7 +13,7 @@ Package.onUse(function(api) {
   api.use('less');
   api.use('iron:router@1.0.0-pre4');
   api.use('projects');
-
+  api.use('stats');
 
   api.addFiles('setup.js'); // shared setup for collections
   api.addFiles('todolists.less', 'client');
@@ -24,6 +24,10 @@ Package.onUse(function(api) {
   api.export('Habits');
   api.export('Todos');
   api.export('Dailies');
+
+
+  api.export('saveEdit');
+  api.export('saveHabit');
 });
 
 Package.onTest(function(api) {

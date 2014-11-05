@@ -15,6 +15,7 @@ ctl@1.0.2
 datariot:ganalytics@0.2.0
 ddp@1.0.11
 deps@1.0.5
+doneticker@1.0.0
 ejson@1.0.4
 email@1.0.4
 fastclick@1.0.1
@@ -68,6 +69,7 @@ spacebars-compiler@1.0.3
 spacebars@1.0.3
 srp@1.0.1
 standard-app-packages@1.0.3
+stats@1.0.0
 stylus@1.0.5
 templating@1.0.9
 todolists@1.0.0

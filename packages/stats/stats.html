@@ -1,0 +1,37 @@
+
+<template name = "days">
+    <div class="chart col-md-2">
+        <strong>Day Before</strong>
+      <div class="central">
+          {{#with before_chart}}
+            {{>chart}}
+          {{/with}}
+      </div>
+    </div>
+    <div id="yesterday" class="chart col-md-3">
+      <strong>Yesterday</strong>
+      <div class="central">
+          {{#with yesterday_chart}}
+            {{>chart}}
+          {{/with}}
+      </div>
+    </div>
+    <div id="today" class="chart col-md-3">
+      <strong>Today ({{today}})</strong>
+      <div class="central">
+          {{#with today_chart}}
+            {{>chart}}
+          {{/with}}
+      </div>
+    </div>
+
+    {{>doneticker}}
+
+</template>
+
+<template name = "chart" >
+            <div class="bar habit-bar" style="height: {{habit_height}}"> </div>
+            <div class="bar daily-bar" style="height: {{daily_height}}"> </div>
+            <div class="bar todo-bar" style="height: {{todo_height}}"> </div>
+</template>
+

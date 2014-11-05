@@ -12,14 +12,6 @@
           <textarea id="item-notes-{{_id}}" rows=3 cols=35 class="item-edit-notes form-control">{{notes}}</textarea>
         </label> 
 
-        <div class="cancel-edit">
-          <label class="glyphicon glyphicon-floppy-remove"></label>
-        </div>
-        <div class="save-edit">
-          <label class="glyphicon glyphicon-floppy-saved"></label>
-        </div>
-      </div>
-    </div>
 -->
 
 <template name="save_or_cancel">
@@ -38,4 +30,174 @@
       <label class="glyphicon glyphicon-trash"></label>
     </div>
   </div>
+</template>
+<head>
+  <title>todo:play</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
+<body>
+</body>
+
+<template name="ItemLists">
+
+  <div id="charts" class="container-fluid">
+    {{>days}}
+  </div>
+  <div id="main-pane" class="container-fluid">
+    <div class="main col-md-2" id="projects">
+    {{>projects}}
+    </div>
+    <div class="main col-md-3" id="habits">
+      <h1>Do <label class="glyphicon glyphicon-calendar"></label> Often:</h1>
+	{{>habits}}
+    </div>
+    <div class="main col-md-3">
+      <h1>Do Daily:</h1>
+	{{>dailies}}
+    </div>
+    <div class="main col-md-3">
+      <h1>To Do:</h1>
+	{{>todos}}
+    </div>
+    <div class="main col-md-1"></div>
+  </div>
+</template>
+
+<template name="habits">
+ <div class="add-item-form">
+ <span class="add-item-field">
+ <input type="text"  placeholder="New Habit" id="add-habit" class="add-item-text"/>
+ </span>
+ <input type="submit" value="+" class="add-item-btn"/>
+ </div>
+<ul id="habit-list" class="items-list">
+  {{#each habits}}
+    {{> habit_item}}
+  {{/each}}
+</ul>
+</template>
+
+
+<template name="dailies">
+ <div class="add-item-form">
+ <span class="add-item-field">
+ <input type="text"  placeholder="New Daily" id="add-daily" class="add-item-text"/>
+ </span>
+ <input type="button" value="+" class="add-item-btn"/>
+ </div>
+<ul id="daily-list" class="items-list">
+  {{#each dailies}}
+    {{> daily_item}}
+  {{/each}}
+</ul>
+</template>
+
+<template name="todos">
+ <div class="add-item-form">
+ <span class="add-item-field">
+ <input type="text"  placeholder="New Todo" class="add-item-text"/>
+ </span>
+ <input type="button" value="+" class="add-item-btn"/>
+ </div>
+<ul id="completed-todo-list" class="items-list">
+  {{#each done_todos}}
+    {{> todo_item}}
+  {{/each}}
+</ul>
+<ul id="todo-list" class="items-list">
+  {{#each todos}}
+    {{> todo_item}}
+  {{/each}}
+</ul>
+</template>
+
+<template name="habit_item">
+  <li id="habit-{{_id}}" class="item">
+    <div class="item-checkbox {{habit_status}}"><label class="habit-plus">+</label></div>
+    <div class="item-text"><span class="item-text"> {{text}}</span>
+      <div class="expand-edit {{not_editing}}"><label class="glyphicon glyphicon-collapse-down"></label></div>
+      <div class="item-details {{editing}}">
+      Title: <br />
+      <input id="item-title-{{_id}}" value="{{text}}" class="item-edit-title form-control"/>
+      Notes: <br/>
+      <textarea id="item-notes-{{_id}}" rows=3 cols=35 class="item-edit-notes form-control">{{notes}}</textarea>
+
+      {{> project_select}}
+
+      Frequency (days): <input type="number" id="habit-freq-{{_id}}" value="{{freq}}" class="item-edit-freq"/>
+      
+      {{> save_or_cancel}}
+      </div><!-- editing close div -->
+    </div>
+
+    {{> trash_icon}}
+  </li>
+</template>
+
+
+<template name="daily_item">
+  <li id="daily-{{_id}}" class="item">
+    <div class="item-checkbox {{ticked}}"><label class="{{ticked_icon}}"></label></div>
+    <div class="item-text"><span class="item-text"> {{text}}</span>
+      <div class="expand-edit {{not_editing}}"><label class="glyphicon glyphicon-collapse-down"></label></div>
+      <div class="item-details {{editing}}">
+      Title: <input id="item-title-{{_id}}" value="{{text}}" class="item-edit-title form-control"/>
+      Notes: <br/>
+      <textarea id="item-notes-{{_id}}" rows=3 cols=35 class="item-edit-notes form-control">{{notes}}</textarea>
+      {{> project_select}}
+      {{> save_or_cancel}}
+
+      </div>
+    </div>
+
+    {{> trash_icon}}
+
+  </li>
+</template>
+
+<template name="todo_item">
+  <li id="todo-{{_id}}" class="item">
+    <div class="item-checkbox {{ticked}}" style="background-color: {{color}}"><label class="{{ticked_icon}}"></label></div>
+    <div class="item-text"><span class="item-text"> {{text}}</span>
+      <div class="expand-edit {{not_editing}}"><label class="glyphicon glyphicon-collapse-down"></label></div>
+     <div class="item-details {{editing}}">
+      <label for="item-title-{{_id}}">Title:</label> <input id="item-title-{{_id}}" value="{{text}}" class="item-edit-title form-control"/>
+      <label for="item-notes-{{_id}}">Notes:</label> <br/>
+      <textarea id="item-notes-{{_id}}" rows=3 cols=35 class="item-edit-notes form-control">{{notes}}</textarea>
+
+      <label>Checklist: </label><br />
+      {{#each checklist}}
+      <div class="checkbox-item" id="{{index}}-{{getid ..}}-checkbox-div">
+        <label>
+          <input type="checkbox" {{checked done}} class="item-checklist-{{getid ..}}" value="{{item_text}}"/> {{item_text}}
+        </label>
+        <div class="remove-list-item" id="{{index}}-{{getid ..}}-checkbox-remove">
+          <span class="glyphicon glyphicon-remove" id="{{index}}-{{getid ..}}-checkbox-remove-span"></span>
+        </div>
+      </div>
+      {{/each}}
+      <div class="input-group">
+        <input type="text" class="form-control checklist"/>
+        <span class="input-group-addon ">
+          <i class="glyphicon glyphicon-list"></i>
+        </span>
+      </div>
+
+      {{> project_select}}
+
+      <div class="checkbox_item">
+      <label>Private: <input type="checkbox" checked="{{private}}" id="item-private-{{_id}}" class="item-private"/></label>
+      </div>
+      {{> save_or_cancel}}
+      </div>
+    </Div>
+
+    {{> trash_icon}}
+
+    <div class="hide-until {{editing}}">
+      <label class="glyphicon glyphicon-time"></label>
+    </div>
+
+ </li>
 </template>

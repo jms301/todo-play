@@ -1,7 +1,5 @@
-Goals = new Meteor.Collection("goals");
-
-Meteor.publish('goals', function () {
-  return Goals.find({userId: this.userId} , {});
+Meteor.publish('days_stats', function () {
+    return DaysStats.find({userId: this.userId} , {});
 });
 
 
@@ -20,17 +18,15 @@ var default_allow = {
   }, fetch: ['userId']
 };
 
-var default_deny = {
+
+DaysStats.allow(default_allow);
+DaysStats.deny({
   update: function (userId, docs, fields, modifier) {
     // can't change userId
     return _.contains(fields, 'userId');
   },
-  //remove: function (userId, doc) {
-    // can't remove locked documents
-    //return doc.locked;
-  //},
+  remove: function (userId, doc) {
+    return true;
+  },
   fetch: [] // no need to fetch 'userId'
-};
-
-Goals.allow(default_allow);
-Goals.deny(default_deny);
+});
