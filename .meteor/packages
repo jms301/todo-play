@@ -10,12 +10,13 @@ nemo64:bootstrap
 less
 ian:accounts-ui-bootstrap-3
 datariot:ganalytics
-tsega:bootstrap3-datetimepicker
-mrt:jquery-ui
 iron:router@1.0.0-pre4
 projects
 userconfig
 todolists
 stats
 doneticker
+waitingon
+andruschka:jquery-ui-sortable
+rajit:bootstrap3-datepicker
 

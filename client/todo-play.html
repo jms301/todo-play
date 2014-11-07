@@ -20,6 +20,11 @@
       </div>
 
       <div class="collapse navbar-collapse" id="navbar-collapsed-target">
+        <ul class="nav navbar-nav">
+          {{#if currentUser}}
+          <li> <a id="waiting_on" href="{{pathFor route='waitingon'}}"><span class="glyphicon glyphicon-time"></span></a></li>
+          {{/if}}
+        </ul>
         <ul class="nav navbar-nav navbar-right">
           {{#if currentUser}}
             <li> <a id="edit_config" href="{{pathFor route='config'}}">config</a></li>
@@ -47,11 +52,10 @@
       </div>
       <div class="modal-body">
         <p>Pick a date/time to hide this todo until.</p>
-        <div class="input-group datetimepicker">
-          <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-          <input class="hide-until form-control" type="text" placeholder="YYYY/MM/DD HH:MM" data-date-format="YYYY/MM/DD HH:mm"/>
+        <div class="input-group date" id="datepickerdiv">
+          <input class="form-control hide-until" id="datepicker" type="text" placeholder="YYYY/MM/DD">
+          <span class="input-group-addon"><i class="glyphicon glyphicon-th"></i>          </span>
         </div>
-
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>

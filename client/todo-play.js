@@ -10,8 +10,13 @@ fix_top_padding = function () {
 
 //Body - body doesn't work veryw ell with iron router but layout does!
 Template.ApplicationLayout.rendered = function () {
-  $('.datetimepicker').datetimepicker();
-  $('.datetimepicker').data("DateTimePicker").setMinDate(new Date());
+  $('#datepickerdiv').datepicker({
+    format: "yyyy/mm/dd",
+    startDate: "new Date()",
+    todayBtn: true,
+    todayHighlight: true
+  });
+
   GAnalytics.pageview(); // google analytics
   fix_top_padding();
 };
@@ -22,7 +27,7 @@ Template.ApplicationLayout.events({
     $("#until-modal").modal('hide');
 
     Todos.update($('#hide-until-id').val(), {$set: { hide_until:
-      moment($('input.hide-until').val(), "YYYY/MM/DD HH:mm").toDate()
+      moment($('input#datepicker').val(), "YYYY/MM/DD").toDate()
       }});
   },
   'click' : function (evt)  {
