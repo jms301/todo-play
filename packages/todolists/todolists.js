@@ -4,7 +4,7 @@ Session.setDefault('edit_daily', null);
 Session.setDefault('edit_habit', null);
 
 
-//Collection handles 
+//Collection handles
 var todoHandle = Meteor.subscribe('todos', function () {
 
 });
@@ -17,7 +17,7 @@ var habitsHandle = Meteor.subscribe('habits', function () {
 
 });
 
-//DRY functions for habits/dailies/todos 
+//DRY functions for habits/dailies/todos
 
 cancelEdit = function (id, List) {
   if(id) {
@@ -657,6 +657,9 @@ Template.todo_item.events({
   },
   'click .hide-until.editing': function (evt) {
     $("#hide-until-id").val(this._id);
+    if(this.hide_until) {
+      $("#datepicker").val(moment(this.hide_until).format("YYYY/MM/DD"));
+    }
     $("#until-modal").modal('show');
     stopProp(evt);
   },

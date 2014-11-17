@@ -4,28 +4,24 @@
     </div>
     <div class="col-md-6">
       <h1>Waiting On:</h1>
+        <ul>
+      {{#each days}}
 
-      <table class="table">
-      <tr>
-        <th>Hidden Until</th>
-        <th>Title</th>
-        <th>Project</th>
-        <th></th>
-        <th></th>
-      </tr>
-      {{#each todos}}
-        <tr>
-          <td>{{pretty_date hide_until}}</td>
-          <td>{{text}}</td>
-          <td></td>
-          <td></td>
-          <td></td>
-        </tr>
-      {{/each}}  
-      </table>
+        {{>waiting_time}}
+
+        {{#each this}}
+          {{>todo_item}}
+        {{/each}}
+      {{/each}}
+        </ul>
     </div>
     <div class="col-md-3">
     </div>
   </div>
 
 </template>
+
+<template name="waiting_time">
+  <li> {{format_date}} </li>
+</template>
+
