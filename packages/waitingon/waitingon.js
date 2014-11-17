@@ -5,14 +5,12 @@ Template.waitingon.helpers({
       if(Session.get('active_project') === false)
       {
         todolist =  Todos.find({userId: Meteor.userId(),
-                           done: false,
                            hide_until: {$gt: new Date(Session.get("time_now"))}
                           },
                           {sort: ["hide_until", "desc"]}).fetch();
       } else {
         todolist = Todos.find({userId: Meteor.userId(),
                            project: Session.get('active_project'),
-                           done: false,
                            hide_until: {$gt: new Date(Session.get("time_now"))}
                           },
                           {sort: ["hide_until", "desc"]}).fetch();

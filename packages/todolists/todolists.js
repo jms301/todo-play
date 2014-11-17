@@ -167,7 +167,7 @@ Template.habits.events({
           text: value,
           done: false,
           notes: "",
-          project: (Session.get('active_project') || null),
+          project: (Session.get('active_project') || ""),
           timestamp: (new Date()).getTime(),
           freq: 7, //default frequency is once per week
           rank: low_rank - 1
@@ -321,7 +321,7 @@ Template.dailies.events({
           done: false,
           private: null,
           notes: "",
-          project: (Session.get('active_project') || null),
+          project: (Session.get('active_project') || ""),
           timestamp: (new Date()).getTime(),
           ticktime: (new Date(0)),
           rank: low_rank - 1
@@ -507,7 +507,7 @@ Template.todos.events({
 
         Todos.insert({
           text: value,
-          project: (Session.get('active_project') || null),
+          project: (Session.get('active_project') || ""),
           userId: Meteor.userId(),
           done: false,
           private: false,

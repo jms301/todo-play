@@ -21,7 +21,7 @@
 <template name="project_select">
   <label>Project: <br />
   <select id="item-projects-{{_id}}">
-  <option> </option>
+  <option value=""> </option>
   {{#each projects}}
     <option value="{{_id}}" {{is_selected ..}}>{{text}}</option>
   {{/each}}

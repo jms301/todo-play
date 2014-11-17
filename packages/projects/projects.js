@@ -59,7 +59,7 @@ Template.projects.events({
     Session.set("active_project", false);
   },
   'click li.no-projects': function (evt) {
-    Session.set("active_project", null);
+    Session.set("active_project", "");
   },
   'click input#add-project': function (evt) {
     stopProp(evt);

@@ -13,6 +13,7 @@ Package.onUse(function(api) {
   api.use('less');
   api.use('iron:router@1.0.0-pre4');
   api.use('mrt:moment');
+  api.use('projects');
   api.use('todolists');
   
   api.addFiles('setup.js', ['client','server']);
