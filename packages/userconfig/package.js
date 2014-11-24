@@ -11,8 +11,7 @@ Package.onUse(function(api) {
   api.use('standard-app-packages');
   api.use('nemo64:bootstrap');
   api.use('less');
-  api.use('iron:router');
-  api.use('todoplay-base');
+  api.use('iron:router@1.0.0-pre4');
   
   api.addFiles('setup.js', ['client','server']);
   api.addFiles('userconfig.less', 'client');
