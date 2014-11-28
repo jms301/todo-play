@@ -1,0 +1,11 @@
+<template name="tags">
+<div id="new-tag">
+<h3>Tags:</h3>
+<input class="form-control" type="text" id="new-tag" />
+</div>
+<div id="tag-list">
+{{#each tags}}
+  <span class="label label-info">{{name}} X</span>
+{{/each}}
+</div>
+</template>

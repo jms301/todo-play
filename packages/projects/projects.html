@@ -9,7 +9,7 @@
       {{#each projects}}
         {{>project}}
       {{/each}}
-      <li><input id="add-project" type="text" placeholder="New Project" class="add-project"/></li>
+      <li class="add-project"><input id="add-project" type="text" placeholder="New Project" class="form-control add-project"/></li>
   </ul>
   </li></ul>
 </template>
@@ -26,6 +26,6 @@
     <option value="{{_id}}" {{is_selected ..}}>{{text}}</option>
   {{/each}}
   </select>
-  </label><br />
+  </label>
 </template>
 

@@ -14,6 +14,7 @@ Package.onUse(function(api) {
   api.use('iron:router');
   api.use('projects');
   api.use('stats');
+  api.use('tags');
 
   api.addFiles('setup.js'); // shared setup for collections
   api.addFiles('todolists.less', 'client');
