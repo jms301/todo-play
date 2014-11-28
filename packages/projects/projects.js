@@ -25,9 +25,9 @@ Template.projects.helpers({
     if(Session.get("active_project")) {
       return Goals.findOne({_id: Session.get("active_project")}).text;
     } else if(Session.get("active_project")===false) {
-      return "All Projects";
+      return "All Goals";
     } else {
-      return "Without Project";
+      return "Without Goal";
     }
   }
 });
