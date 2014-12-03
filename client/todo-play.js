@@ -22,6 +22,12 @@ Template.ApplicationLayout.rendered = function () {
 };
 
 Template.ApplicationLayout.events({
+  'click li#login-dropdown-list>a' : function (evt) {
+      //auto focus the e-mail field when logging in.
+      setTimeout(function () {
+          $('#login-email').focus();
+      }, 1);
+    },
   'click button.hide-until': function (evt) {
 
     $("#until-modal").modal('hide');
