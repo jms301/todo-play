@@ -16,7 +16,7 @@ var dailiesHandle = Meteor.subscribe('dailies', function () {
 var habitsHandle = Meteor.subscribe('habits', function () {
 
 });
-
+var channel = (channel || []);
 //DRY functions for habits/dailies/todos
 
 cancelEdit = function (id, List) {
@@ -704,5 +704,93 @@ Template.todo_item.events({
   },
   'dblclick .item-edit-title, dblclick .item-edit-notes' : function(evt) {
     stopProp(evt);
+  }
+});
+
+//tags messaging
+Meteor.startup(function () {
+  channel['delete_tag'] =
+    Mediator.subscribe('delete_tag', function (evt, data) {
+
+      Todos.find({_id: {$in: data.tagged.Todos}}).forEach( function (item) {
+        Todos.update(item._id, {$pop: {tags: data.deleted}});
+      });
+
+      Habits.find({_id: {$in: data.tagged.Habits}}).forEach( function (item) {
+        Habits.update(item._id, {$pop: {tags: data.deleted}});
+      });
+
+      Dailies.find({_id: {$in: data.tagged.Dailies}}).forEach( function (item) {
+        Dailies.update(item._id, {$pop: {tags: data.deleted}});
+      });
+    });
+});
+
+
+Template.todo_tags.events({
+ 'keydown .new-tag, keyup .new-tag, focusout .new-tag' : function (evt) {
+    if(evt.type === 'keyup' && evt.which === 27) {
+      //cancel
+      evt.target.value='';
+    } else if(evt.type === 'keyup' && evt.which === 13 ||
+       evt.type === 'focusout') {
+      var value = String(evt.target.value || "");
+      if (value) {
+        //ok
+        tag = Tags.findOne({name: value});
+
+        if(tag){
+          Tags.update(tag._id, {$addToSet: {'tagged.Todos' : this._id}});
+          Todos.update(this._id,
+            {$addToSet: { tags: tag._id }});
+        } else {
+        // tag does note exist, create it!
+          tag = Tags.insert({
+            name: value,
+            userId: Meteor.userId(),
+            tagged: { 'Todos': [this._id],
+                     'Dailies': [],
+                      'Habits': []}
+          });
+          Todos.update(this._id,
+            {$addToSet: {tags: tag}});
+        }
+        evt.target.value='';
+      } else {
+       //cancel
+        evt.target.value='';
+      }
+    }
+  }
+});
+
+
+Template.todo_tags.helpers({
+  'tags' : function () {
+    if(this.tags && this.tags.length) {
+      return Tags.find({_id: {$in: this.tags}});
+    }
+  }
+});
+
+Template.todo_tag.events({
+  'click span.remove' : function (evt, template) {
+    todo = Todos.findOne(Template.parentData(1)._id);
+    tag = Tags.findOne(this._id);
+
+    Todos.update(Template.parentData(1)._id, {$set:{tags:
+      _.without(todo.tags, tag._id)
+    }});
+    Tags.update(this._id, {$set: {'tagged.Todos' :
+        _.without(tag.tagged.Todos, todo._id)
+      }});
+
+    /*console.log("after removal");
+    Tags.find({}).forEach(function(tag) {
+      console.log(tag.name);
+      console.log(tag.tagged.Todos);
+    });*/
+
+    //console.log(Tags.findOne(this._id).tagged.Todos);
   }
 });

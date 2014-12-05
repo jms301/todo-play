@@ -12,6 +12,7 @@ Package.onUse(function(api) {
   api.use('nemo64:bootstrap');
   api.use('less');
   api.use('iron:router');
+  api.use('mediator');
   api.use('projects');
   api.use('stats');
   api.use('tags');

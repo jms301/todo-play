@@ -13,12 +13,43 @@
 @pastel-pink: #F49AC2;
 @pastel-purple: #B39EB5;
 
+
+ul.tag-list {
+  list-style: none;
+  padding: 0;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 0;
+  width: 100%;
+  height: auto;
+  cursor: text;
+  line-height: 1.8;
+}
+
+li.tag {
+  display: inline;
+  cursor: default;
+}
+
+ul#tag-list {
+  margin: 20px 10px 10px;
+  width: 95%;
+}
+span.remove {
+  cursor: pointer;
+}
+input.new-tag {
+  background-color:transparent;
+  border:0px solid white;
+}
+
 //cludge for date picker zindex on chrome:
 .datepicker {
     z-index:2000 !important
 }
 
-div#new-tag { 
+div#new-tag {
   margin: 10px;
 }
 
@@ -65,6 +96,7 @@ div.fader {
 ul.projects {
   margin: 10px;
   margin-top: 20px;
+  width: 95%;
 }
 
 ul.projects>li {

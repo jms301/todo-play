@@ -1,11 +1,29 @@
 <template name="tags">
-<div id="new-tag">
-<h3>Tags:</h3>
-<input class="form-control" type="text" id="new-tag" />
-</div>
-<div id="tag-list">
+<ul id="tag-list" class="tag-list form-control">
 {{#each tags}}
-  <span class="label label-info">{{name}} X</span>
+  {{>tag}}
 {{/each}}
-</div>
+<li class="new-tag tag">
+<input class="new-tag"  placeholder="New Tag" type="text" id="new-tag" />
+</li>
+</ul>
+</template>
+
+<template name="tag">
+  <li class="label label-info tag">{{name}} <span class="remove">x</span></li>
+</template>
+
+<template name="todo_tags">
+<ul class="tag-list form-control">
+  {{#each tags}}
+    {{>todo_tag}}
+  {{/each}}
+  <li class="new-tag tag">
+    <input class="new-tag" placeholder="New Tag"  type="text" />
+  </li>
+</ul>
+</template>
+
+<template name="todo_tag">
+  <li class="label label-info tag">{{name}} <span class="remove">x</span></li>
 </template>

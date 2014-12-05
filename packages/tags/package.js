@@ -7,16 +7,20 @@ Package.describe({
 
 Package.onUse(function(api) {
   api.versionsFrom('0.9.4');
-  
+
   api.use('standard-app-packages');
   api.use('nemo64:bootstrap');
   api.use('less');
   api.use('iron:router');
+  api.use('mediator');
 
   api.addFiles('setup.js');
   api.addFiles('tags.html', 'client');
+
   api.addFiles('tags.js', 'client');
   api.addFiles('server.js', 'server');
+
+  api.export('Tags'); // export the collection so todos can read tags when inserting them into Todos
 });
 
 Package.onTest(function(api) {

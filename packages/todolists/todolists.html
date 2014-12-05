@@ -10,7 +10,7 @@
         <label>Title: <input id="item-title-{{_id}}" value="{{text}}" class="item-edit-title form-control"/></label>
         <label >Notes:<br/>
           <textarea id="item-notes-{{_id}}" rows=3 cols=35 class="item-edit-notes form-control">{{notes}}</textarea>
-        </label> 
+        </label>
 
 -->
 
@@ -127,7 +127,7 @@
       {{> project_select}}
 
       Frequency (days): <input type="number" id="habit-freq-{{_id}}" value="{{freq}}" class="item-edit-freq"/>
-      
+
       {{> save_or_cancel}}
       </div><!-- editing close div -->
     </div>
@@ -160,7 +160,7 @@
 <template name="todo_item">
   <li id="todo-{{_id}}" class="item">
     <div class="item-checkbox {{ticked}}" style="background-color: {{color}}"><label class="{{ticked_icon}}"></label></div>
-    <div class="item-text"><span class="item-text"> {{text}}</span>
+    <div class="item-text"><span class="item-text {{not_editing}}"> {{text}}</span>
       <div class="expand-edit {{not_editing}}"><label class="glyphicon glyphicon-collapse-down"></label></div>
      <div class="item-details {{editing}}">
       <label for="item-title-{{_id}}">Title:</label> <input id="item-title-{{_id}}" value="{{text}}" class="item-edit-title form-control"/>
@@ -190,6 +190,7 @@
       <div class="checkbox_item">
       <label>Private: <input type="checkbox" checked="{{private}}" id="item-private-{{_id}}" class="item-private"/></label>
       </div>
+      {{> todo_tags}}
       {{> save_or_cancel}}
       </div>
     </Div>

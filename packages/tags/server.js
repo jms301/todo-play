@@ -31,3 +31,6 @@ var default_deny = {
 
 Tags.allow(default_allow);
 Tags.deny(default_deny);
+
+Tags._ensureIndex({userId: 1, name: 1}, {unique: 1});
+
