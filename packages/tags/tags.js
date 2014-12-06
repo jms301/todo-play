@@ -73,6 +73,9 @@ Template.tag.events({
         tagged: this.tagged,
         deleted: this._id});
     Tags.remove(this._id);
+    Session.set("with_tags", _.without(Session.get("with_tags"), this._id));
+    Session.set("without_tags", 
+                  _.without(Session.get("without_tags"), this._id));
   }
 });
 
