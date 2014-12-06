@@ -1,3 +1,6 @@
+Session.setDefault('with_tags', []);
+Session.setDefault('without_tags', []);
+
 tagsHandle = Meteor.subscribe('tags', function () {});
 
 Template.tags.events({
@@ -35,9 +38,29 @@ Template.tags.helpers({
       return Tags.find({});
     }
   }
+
 });
 
 Template.tag.events({
+  "click li" : function (evt) {
+    var with_tags = Session.get("with_tags");
+    var without_tags = Session.get("without_tags");
+
+    /*console.log("with_tags:");
+    console.log(with_tags);
+    console.log("without_tags:");
+    console.log(without_tags); */
+
+    if(_.contains(with_tags, this._id)) {
+      Session.set("with_tags", _.without(with_tags, this._id));
+      Session.set("without_tags", without_tags.concat(this._id));
+    } else if (_.contains(without_tags, this._id)) {
+      Session.set("without_tags", _.without(without_tags, this._id));
+    } else {
+      Session.set("with_tags", with_tags.concat(this._id));
+    }
+  },
+
   "click span.remove" : function (evt) {
     if(this.tagged.Todos.length != 0 ||
        this.tagged.Dailies != 0 ||
@@ -54,7 +77,15 @@ Template.tag.events({
 });
 
 Template.tag.helpers({
-
+  filters: function () {
+    if (_.contains(Session.get("with_tags"), this._id)) {
+      return "label-success"
+    }
+    if (_.contains(Session.get("without_tags"), this._id)) {
+      return "label-danger"
+    }
+    return "label-info"
+  }
 });
 
 
