@@ -30,6 +30,11 @@ Template.tags.events({
     }
     stopProp(evt);
   },
+  'click ul.tag-list' : function(evt) {
+    setTimeout(function () {
+      $('input#new-tag').focus()
+    }, 1)
+  }
 });
 
 Template.tags.helpers({
@@ -59,6 +64,7 @@ Template.tag.events({
     } else {
       Session.set("with_tags", with_tags.concat(this._id));
     }
+    stopProp(evt);
   },
 
   "click span.remove" : function (evt) {
@@ -74,7 +80,7 @@ Template.tag.events({
         deleted: this._id});
     Tags.remove(this._id);
     Session.set("with_tags", _.without(Session.get("with_tags"), this._id));
-    Session.set("without_tags", 
+    Session.set("without_tags",
                   _.without(Session.get("without_tags"), this._id));
   }
 });

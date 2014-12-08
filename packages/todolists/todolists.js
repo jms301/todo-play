@@ -770,6 +770,12 @@ Template.todo_tags.events({
         evt.target.value='';
       }
     }
+  },
+  'click ul.tag-list' : function(evt, template) {
+    tmp = template;
+    setTimeout(function () {
+      tmp.$('input.new-tag').focus();
+    }, 1)
   }
 });
 
