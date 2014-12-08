@@ -438,48 +438,56 @@ Template.daily_item.events({
 //Todos
 Template.todos.helpers({
   done_todos: function () {
-    if(Meteor.userId()) {
-      var day_start =  moment().startOf('day').toDate();
-      if(Session.get('active_project') === false)
-      {
-        return Todos.find({userId: Meteor.userId(),
-                          done: true,
-                          ticktime: {$gt: day_start},
-                          },
-                        {sort: ["ticktime", "desc"]});
-      } else {
-        return Todos.find({userId: Meteor.userId(),
-                           project: Session.get('active_project'),
-                           done: true,
-                           ticktime: {$gt: day_start},
-                          },
-                        {sort: ["ticktime", "desc"]});
-      }
+  if(Meteor.userId()){
+    var day_start =  moment().startOf('day').toDate();
+
+    filter = {userId: Meteor.userId(),
+              done: true,
+              ticktime: {$gt: day_start}};
+
+    if(Session.get('active_project') !== false)
+      filter['project'] = Session.get('active_project');
+
+    var with_tags = Session.get("with_tags");
+    var without_tags = Session.get("without_tags");
+
+    if(with_tags.length != 0) {
+      filter['tags'] = {};
+      filter['tags']['$in'] = with_tags;
     }
+    if(without_tags.length != 0) {
+      filter['tags'] = (filter['tags'] || {});
+      filter['tags']['$nin'] = without_tags;
+    }
+
+    return Todos.find(filter, {sort: ["ticktime", "desc"]});
+  }
   },
 
   todos: function () {
 
     if(Meteor.userId()) {
-      if(Session.get('active_project') === false)
-      {
-        return Todos.find({userId: Meteor.userId(),
-                           done: false,
-                           $or: [{hide_until: null},
-                                 {hide_until:
-                                  {$lt: new Date(Session.get("time_now"))}}]
-                         },
-                        {sort: ["rank", "desc"]});
-      } else {
-        return Todos.find({userId: Meteor.userId(),
-                           project: Session.get('active_project'),
-                           done: false,
-                           $or: [{hide_until: null},
-                                 {hide_until:
-                                  {$lt: new Date(Session.get("time_now"))}}]
-                         },
-                        {sort: ["rank", "desc"]});
+      var with_tags = Session.get("with_tags");
+      var without_tags = Session.get("without_tags");
+      var filter = {userId: Meteor.userId(),
+                done: false,
+                $or: [{hide_until: null},
+                      {hide_until:
+                      {$lt: new Date(Session.get("time_now"))}}]};
+
+      if(with_tags.length != 0) {
+        filter['tags'] = {};
+        filter['tags']['$in'] = with_tags;
       }
+      if(without_tags.length != 0) {
+        filter['tags'] = (filter['tags'] || {});
+        filter['tags']['$nin'] = without_tags;
+      }
+
+      if(Session.get('active_project') !== false)
+        filter.project = Session.get('active_project');
+
+      return Todos.find(filter , {sort: ["rank", "desc"]});
     } else {
       return [{
           text: "Sign up for Todo:play",
@@ -490,8 +498,9 @@ Template.todos.helpers({
           _id: "fake"
       }];
     }
-  },
+  }
 });
+
 Template.todos.events({
  'keydown .add-item-text, keyup .add-item-text, focusout .add-item-text': function (evt) {
     if(evt.type === 'keyup' && evt.which === 27) {
