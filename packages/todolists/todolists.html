@@ -31,13 +31,6 @@
     </div>
   </div>
 </template>
-<head>
-  <title>todo:play</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-</head>
-
-<body>
-</body>
 
 <template name="ItemLists">
 
@@ -119,15 +112,15 @@
     <div class="item-text"><span class="item-text"> {{text}}</span>
       <div class="expand-edit {{not_editing}}"><label class="glyphicon glyphicon-collapse-down"></label></div>
       <div class="item-details {{editing}}">
-      Title: <br />
       <input id="item-title-{{_id}}" value="{{text}}" class="item-edit-title form-control"/>
-      Notes: <br/>
-      <textarea id="item-notes-{{_id}}" rows=3 cols=35 class="item-edit-notes form-control">{{notes}}</textarea>
-
+      <br/>
+      <textarea id="item-notes-{{_id}}" placeholder="Notes" rows=3 cols=35 class="item-edit-notes form-control">{{notes}}</textarea>
+      <br/>
       {{> project_select}}
-
+      <br/>
       Frequency (days): <input type="number" id="habit-freq-{{_id}}" value="{{freq}}" class="item-edit-freq"/>
 
+      <br/>
       {{> save_or_cancel}}
       </div><!-- editing close div -->
     </div>
@@ -143,9 +136,10 @@
     <div class="item-text"><span class="item-text"> {{text}}</span>
       <div class="expand-edit {{not_editing}}"><label class="glyphicon glyphicon-collapse-down"></label></div>
       <div class="item-details {{editing}}">
-      Title: <input id="item-title-{{_id}}" value="{{text}}" class="item-edit-title form-control"/>
-      Notes: <br/>
-      <textarea id="item-notes-{{_id}}" rows=3 cols=35 class="item-edit-notes form-control">{{notes}}</textarea>
+      <input id="item-title-{{_id}}" value="{{text}}" class="item-edit-title form-control"/>
+      <br/>
+      <textarea placeholder="Notes" id="item-notes-{{_id}}" rows=3 cols=35 class="item-edit-notes form-control">{{notes}}</textarea>
+      <br/>
       {{> project_select}}
       {{> save_or_cancel}}
 
@@ -163,11 +157,10 @@
     <div class="item-text"><span class="item-text {{not_editing}}"> {{text}}</span>
       <div class="expand-edit {{not_editing}}"><label class="glyphicon glyphicon-collapse-down"></label></div>
      <div class="item-details {{editing}}">
-      <label for="item-title-{{_id}}">Title:</label> <input id="item-title-{{_id}}" value="{{text}}" class="item-edit-title form-control"/>
-      <label for="item-notes-{{_id}}">Notes:</label> <br/>
-      <textarea id="item-notes-{{_id}}" rows=3 cols=35 class="item-edit-notes form-control">{{notes}}</textarea>
-
-      <label>Checklist: </label><br />
+      <input id="item-title-{{_id}}" name="text" value="{{text}}" class="item-edit-title form-control"/>
+      <br/>
+      <textarea placeholder="Notes" id="item-notes-{{_id}}" name="notes" rows=3 cols=35 class="item-edit-notes form-control">{{notes}}</textarea>
+      <br/>
       {{#each checklist}}
       <div class="checkbox-item" id="{{index}}-{{getid ..}}-checkbox-div">
         <label>
@@ -179,14 +172,15 @@
       </div>
       {{/each}}
       <div class="input-group">
-        <input type="text" class="form-control checklist"/>
+        <input type="text" class="form-control checklist" placeholder="New Checklist Item"/>
         <span class="input-group-addon ">
           <i class="glyphicon glyphicon-list"></i>
         </span>
       </div>
-
+      <br/>
       {{> project_select}}
 
+      <br/>
       <div class="checkbox_item">
       <label>Private: <input type="checkbox" checked="{{private}}" id="item-private-{{_id}}" class="item-private"/></label>
       </div>

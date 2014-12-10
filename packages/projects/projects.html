@@ -19,13 +19,11 @@
 </template>
 
 <template name="project_select">
-  <label>Goal: <br />
-  <select id="item-projects-{{_id}}">
-  <option value=""> </option>
+  <select name="Goals" id="item-projects-{{_id}}">
+  <option value=""><b>Goals:</b></option>
   {{#each projects}}
     <option value="{{_id}}" {{is_selected ..}}>{{text}}</option>
   {{/each}}
   </select>
-  </label>
 </template>
 
