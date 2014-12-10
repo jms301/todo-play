@@ -19,7 +19,9 @@
     {{>todo_tag}}
   {{/each}}
   <li class="new-tag tag">
-    <input class="new-tag" placeholder="New Tag"  type="text" />
+    <input class="typeahead new-tag" name="tags" placeholder="New Tag"
+           type="text" autocomplete="on" spellcheck="off"
+           data-source="autocomplete"/>
   </li>
 </ul>
 </template>

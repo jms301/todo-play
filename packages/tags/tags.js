@@ -97,4 +97,23 @@ Template.tag.helpers({
   }
 });
 
+Template.todo_tags.helpers({
+  autocomplete: function () {
+    return Tags.find().fetch().map(function(tag) { return tag.name; });
+  }
+});
 
+Template.todo_tags.rendered = function () {
+  var element = this.$('input.typeahead');
+  Meteor.typeahead(element);
+};
+
+Template.todo_tags.events({
+  'click ul.tag-list, dblclick ul.tag-list' : function (evt, tmp) {
+    setTimeout(function () {
+      tmp.$('input.new-tag').focus();
+    }, 1)
+
+    stopProp(evt);
+  }
+});
