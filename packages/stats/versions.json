@@ -166,11 +166,11 @@
     ],
     [
       "nemo64:bootstrap",
-      "3.2.3"
+      "3.3.0_1"
     ],
     [
       "nemo64:bootstrap-data",
-      "3.2.0-rc2"
+      "3.3.0_1"
     ],
     [
       "observe-sequence",
