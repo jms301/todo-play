@@ -32,4 +32,18 @@ var default_deny = {
 UserConfig.allow(default_allow);
 UserConfig.deny(default_deny);
 
+// tempory script to fix replicate userconfig into user.profile
 
+Meteor.startup(function () {
+  Meteor.users.find({}).forEach ( function(usr) {
+    conf = UserConfig.findOne({userId: usr._id});
+    if(conf) {
+      Meteor.users.update(usr._id, {$set:
+                          {profile: { display_name: conf.display_name,
+                                      day_end: conf.day_end,
+                                      red_age: conf.red_age}}
+                                  });
+      console.log(Meteor.users.findOne(usr._id).profile);
+    }
+  });
+});
