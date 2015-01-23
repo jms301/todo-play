@@ -37,13 +37,30 @@ UserConfig.deny(default_deny);
 Meteor.startup(function () {
   Meteor.users.find({}).forEach ( function(usr) {
     conf = UserConfig.findOne({userId: usr._id});
-    if(conf) {
-      Meteor.users.update(usr._id, {$set:
+    if(!conf) {
+      conf = {display_name: "Anon",
+      red_age: 30,
+      day_end:  0};
+    }
+
+    Meteor.users.update(usr._id, {$set:
                           {profile: { display_name: conf.display_name,
                                       day_end: conf.day_end,
                                       red_age: conf.red_age}}
                                   });
-      console.log(Meteor.users.findOne(usr._id).profile);
-    }
+    console.log(Meteor.users.findOne(usr._id).profile);
   });
+});
+
+
+//setup default profile settings
+Accounts.onCreateUser(function(options, user) {
+  if(options.profile)
+    user.profile = options.profile;
+
+  user.profile.display_name = "Anon";
+  user.profile.red_age = 30;
+  user.profile.day_end =  0;
+
+  return user;
 });

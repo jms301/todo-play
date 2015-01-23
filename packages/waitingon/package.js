@@ -7,7 +7,7 @@ Package.describe({
 
 Package.onUse(function(api) {
   api.versionsFrom('0.9.4');
-  
+
   api.use('standard-app-packages');
   api.use('nemo64:bootstrap');
   api.use('less');
@@ -15,15 +15,13 @@ Package.onUse(function(api) {
   api.use('mrt:moment');
   api.use('projects');
   api.use('todolists');
-  
+
   api.addFiles('setup.js', ['client','server']);
   api.addFiles('waitingon.less', 'client');
   api.addFiles('waitingon.html', 'client');
   api.addFiles('waitingon.js', 'client');
   api.addFiles('server.js', 'server');
 
- // api.export('DefaultUserConfig'); // object containing a default user config
-  //api.export('UserConfig'); // meteor collection 
 
 });
 

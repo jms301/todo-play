@@ -11,10 +11,11 @@ var daysStatsHandle = Meteor.subscribe('days_stats', function () {
 // the day_end setting so if it is 02:00 on the 9th and their day end is 3am it
 // returns 12:00 on the 8th
 var whatDayIsThis = function (date) {
-  var day_end = 0;
-  user_config = UserConfig.findOne({userId: Meteor.userId()});
-  if (user_config)
-    day_end = user_config.day_end;
+  if (Meteor.user()) {
+    var day_end = (Meteor.user().profile.day_end || 0);
+  } else {
+    var day_end = 0;
+  }
 
   return moment(date).subtract(day_end, 'hours').startOf('day'
                     ).add(12, 'hours');
@@ -59,13 +60,13 @@ Tracker.autorun( function (comp) {
   if(Meteor.userId())
   {
     setupDaysStats();
-  }else { 
+  }else {
     // no user so re-set the Sessions to blank.
     Session.set('today', null);
     Session.set('days_stats_today', null);
     Session.set('days_stats_yesterday', null);
     Session.set('days_stats_before', null);
-  } 
+  }
 });
 
 // update the day every min

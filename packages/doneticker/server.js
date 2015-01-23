@@ -3,7 +3,7 @@ Meteor.publish('done_ticker', function () {
 });
 
 
-//No allow / deny since only the server is allowed to edit. 
+//No allow / deny since only the server is allowed to edit.
 
 // Code to select todos done for the ticker.
 
@@ -12,10 +12,10 @@ Meteor.setInterval( function () {
   DoneTicker.remove({});
 
   candidates.forEach(function (todo) {
-    userCfg = UserConfig.findOne({userId: todo.userId});
-    if(!userCfg || !userCfg.display_name)
+    userCfg = Meteor.users.findOne(todo.userId);
+    if(!userCfg || !userCfg.profile ||!userCfg.profile.display_name)
       userCfg = {display_name: "anon"};
-    DoneTicker.insert({text: todo.text, display_name: userCfg.display_name});
+    DoneTicker.insert({text: todo.text, display_name: userCfg.profile.display_name});
   });
 }, 60*5*1000 );
 

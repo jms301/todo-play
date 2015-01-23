@@ -110,20 +110,19 @@ var clearSelect = function() {
 // the day_end setting so if it is 02:00 on the 9th and their day end is 3am it
 // returns 12:00 on the 8th
 var whatDayIsThis = function (date) {
+
   var day_end = 0;
-  user_config = UserConfig.findOne({userId: Meteor.userId()});
-  if (user_config)
-    day_end = user_config.day_end;
+  if(Meteor.user())
+    day_end = Meteor.user().profile.day_end;
     return moment(date).subtract(day_end, 'hours').startOf('day'
               ).add(12, 'hours');
 };
 
 
 var isDailyTicked = function (daily) {
-  var user_config = UserConfig.findOne({userId: Meteor.userId()});
   var day_end = 0;
-  if(user_config)
-    day_end = user_config.day_end;
+  if(Meteor.user())
+    day_end = Meteor.user().profile.day_end;
 
     return (daily.done && (daily.ticktime >
       whatDayIsThis(moment(Session.get('time_now'))).subtract((12 - day_end), 'hours').toDate().getTime()))
@@ -572,9 +571,9 @@ Template.todo_item.helpers({
     if(this.done){
       return ""
     } else {
-      var user_config = UserConfig.findOne({userId: Meteor.userId()});
-      if(!user_config || !user_config.red_age)
-        user_config = {red_age: 30}; // default red_age of 30 days
+      if(Meteor.user())
+        red_age = Meteor.user().profile.red_age;
+      red_age = (red_age||30);
 
       //blue: #779ECB
       //blue = rgb(119, 158, 203)
@@ -590,7 +589,7 @@ Template.todo_item.helpers({
       var bdiff = 88;
 
       var age = new Date() - new Date(this.timestamp);
-      var red_age = user_config.red_age * 24 * 60 * 60 * 1000;
+      var red_age = red_age * 24 * 60 * 60 * 1000;
 
       if(age < 0)
         return '#779ECB';

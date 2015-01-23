@@ -7,20 +7,18 @@ Package.describe({
 
 Package.onUse(function(api) {
   api.versionsFrom('0.9.4');
-  
+
   api.use('standard-app-packages');
+  api.use('accounts-password');
   api.use('nemo64:bootstrap');
   api.use('less');
   api.use('iron:router');
-  
+
   api.addFiles('setup.js', ['client','server']);
   api.addFiles('userconfig.less', 'client');
   api.addFiles('userconfig.html', 'client');
   api.addFiles('userconfig.js', 'client');
   api.addFiles('server.js', 'server');
-
-  api.export('DefaultUserConfig'); // object containing a default user config
-  api.export('UserConfig'); // meteor collection 
 
 });
 
