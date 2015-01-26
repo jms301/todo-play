@@ -1,0 +1,46 @@
+<template name="admin">
+<div class="container-fluid">
+  <div class="col-md-2">
+  </div>
+  <div class="col-md-8" id="config">
+    <h1> Administration </h1>
+    <div>
+      <h3> Users: </h3>
+      <table class="table table-bordered">
+      <thead>
+      <tr>
+        <th>email</th>
+        <th>todo count</th>
+        <th>daily count</th>
+        <th>habit count</th>
+        <th>undone</th>
+        <th>private</th>
+        <th>last login</th>
+      </tr>
+      </thead>
+      <tbody>
+      {{#each users}}
+        {{> user }}
+      {{/each}}
+      </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="col-md-2">
+  </div>
+</div>
+</template>
+
+
+<template name="user">
+  <tr>
+    <td>{{email}}</td>
+    <td>{{todo}}</td>
+    <td>{{daily}}</td>
+    <td>{{habit}}</td>
+    <td>{{undone_count}}</td>
+    <td>{{private_count}}</td>
+    <td>{{last_login}}</td>
+
+  </tr>
+</template>
