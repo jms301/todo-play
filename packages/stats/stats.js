@@ -3,6 +3,12 @@ Session.setDefault('days_stats_today', null);
 Session.setDefault('days_stats_yesterday', null);
 Session.setDefault('days_stats_before', null);
 
+
+if (Meteor.isCordova) {
+  Ground.Collection(DaysStats);
+}
+
+
 var daysStatsHandle = Meteor.subscribe('days_stats', function () {
     setupDaysStats();
 });

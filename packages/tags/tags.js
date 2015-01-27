@@ -3,6 +3,12 @@ Session.setDefault('without_tags', []);
 
 tagsHandle = Meteor.subscribe('tags', function () {});
 
+
+if (Meteor.isCordova) {
+  Ground.Collection(Tags);
+}
+
+
 Template.tags.events({
   'keydown #new-tag, keyup #new-tag, focusout #new-tag': function (evt) {
     if(evt.type === 'keyup' && evt.which === 27) { //esc -> cancel

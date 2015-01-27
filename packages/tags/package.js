@@ -10,6 +10,7 @@ Package.onUse(function(api) {
 
   api.use('standard-app-packages');
   api.use('nemo64:bootstrap');
+  api.use('ground:db', 'web.cordova');
   api.use('less');
   api.use('iron:router');
   api.use('sergeyt:typeahead');
