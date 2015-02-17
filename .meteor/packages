@@ -6,7 +6,6 @@
 standard-app-packages
 accounts-password
 mrt:moment
-nemo64:bootstrap
 less
 ian:accounts-ui-bootstrap-3
 datariot:ganalytics
@@ -22,3 +21,4 @@ rajit:bootstrap3-datepicker
 underscore
 sergeyt:typeahead
 admin
+twbs:bootstrap

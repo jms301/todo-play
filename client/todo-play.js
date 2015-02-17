@@ -5,7 +5,7 @@ Session.setDefault('time_now', new Date().getTime());
 // bootstrap 3 navbar fix
 fix_top_padding = function () {
 
-  $('body').css({"padding-top": $(".navbar").height() + 30 + "px"});
+  //$('body').css({"padding-top": $(".navbar").height() + 30 + "px"});
 };
 
 //Body - body doesn't work veryw ell with iron router but layout does!

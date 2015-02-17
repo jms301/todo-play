@@ -57,8 +57,6 @@ minimongo@1.0.6
 mobile-status-bar@1.0.2
 mongo@1.0.11
 mrt:moment@2.8.1
-nemo64:bootstrap@3.3.1_1
-nemo64:bootstrap-data@3.3.1_1
 npm-bcrypt@0.7.7
 observe-sequence@1.0.4
 ordered-dict@1.0.2
@@ -87,6 +85,7 @@ tags@1.0.0
 templating@1.0.11
 todolists@1.0.0
 tracker@1.0.5
+twbs:bootstrap@3.3.2
 ui@1.0.5
 underscore@1.0.2
 url@1.0.3

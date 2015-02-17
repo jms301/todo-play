@@ -9,7 +9,7 @@ Package.onUse(function(api) {
   api.versionsFrom('0.9.4');
 
   api.use('standard-app-packages');
-  api.use('nemo64:bootstrap');
+  api.use('twbs:bootstrap');
   api.use('less');
   api.use('iron:router');
   api.use('mrt:moment');
