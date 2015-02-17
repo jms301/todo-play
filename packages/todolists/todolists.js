@@ -195,6 +195,7 @@ Template.habits.events({
 
 Template.habits.rendered = function() {
     this.$('#habit-list').sortable({
+        delay: 150,
         stop: function(e, ui) {
           // get the dragged html element and the one before
           //   and after it
@@ -349,6 +350,7 @@ Template.dailies.events({
 
 Template.dailies.rendered = function() {
     this.$('#daily-list').sortable({
+        delay: 150,
         stop: function(e, ui) {
           // get the dragged html element and the one before
           //   and after it
@@ -543,6 +545,7 @@ Template.todos.events({
 
 Template.todos.rendered = function() {
     this.$('#todo-list').sortable({
+        delay: 150,
         stop: function(e, ui) {
           // get the dragged html element and the one before
           //   and after it
