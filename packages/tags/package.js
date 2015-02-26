@@ -18,6 +18,7 @@ Package.onUse(function(api) {
 
   api.addFiles('setup.js');
   api.addFiles('tags.html', 'client');
+  api.addFiles('tags.less', 'client');
 
   api.addFiles('tags.js', 'client');
   api.addFiles('server.js', 'server');

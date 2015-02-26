@@ -16,8 +16,9 @@ Template.project_select.helpers({
   }
 });
 
+
 // Projects functions helpers
-Template.projects.helpers({
+proj_helpers = { 
   projects:  function () {
     return Goals.find({userId: Meteor.userId()});
   },
@@ -30,9 +31,12 @@ Template.projects.helpers({
       return "Without Goal";
     }
   }
-});
+};
 
-Template.projects.events({
+Template.projects.helpers(proj_helpers);
+Template.projectsNav.helpers(proj_helpers);
+
+proj_events = {  
  'keydown #add-project, keyup #add-project, focusout #add-project': function (evt) {
     if(evt.type === 'keyup' && evt.which === 27) { //esc -> cancel
       //cancel
@@ -64,7 +68,10 @@ Template.projects.events({
   'click input#add-project': function (evt) {
     stopProp(evt);
   }
-});
+};
+
+Template.projects.events( proj_events);
+Template.projectsNav.events( proj_events);
 
 Template.project.events({
   'click li.projects': function (evt) {

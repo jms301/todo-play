@@ -34,83 +34,99 @@
 
 <template name="ItemLists">
 
-  <div id="charts" class="container-fluid">
-    {{>days}}
+  <div id="main-pane" class="container-fluid">
+    <div class="main col-md-3">
+    </div>
+    <div class="main col-md-3">
+      <div class="tdp_list-h1 tdp_tablet-hide">
+      <h1 >todo:</h1>
+      </div>
+    </div>
+    <div class="main col-md-3">
+      <div class="tdp_list-h1 tdp_tablet-hide">
+      <h1>daily:<span class="glyphicon"></span></h1>
+      </div>
+    </div>
+    <div class="main col-md-3">
+      <div class="tdp_list-h1 tdp_tablet-hide">
+      <h1><span class="glyphicon glyphicon-calendar" style="height: 40px;"></span> often:</h1>
+      </div>
+    </div>
   </div>
   <div id="main-pane" class="container-fluid">
-    <div class="main col-md-2" id="left">
+    <div class="main col-md-3" id="left">
     {{>projects}}
     {{>tags}}
     </div>
-    <div class="main col-md-3" id="habits">
-      <h1>Do <label class="glyphicon glyphicon-calendar"></label> Often:</h1>
-	{{>habits}}
-    </div>
-    <div class="main col-md-3">
-      <h1>Do Daily:</h1>
-	{{>dailies}}
-    </div>
-    <div class="main col-md-3">
-      <h1>To Do:</h1>
+    <div class="tdp_item-list col-md-3">
 	{{>todos}}
     </div>
-    <div class="main col-md-1"></div>
+    <div class="tdp_item-list col-md-3">
+	{{>dailies}}
+    </div>
+    <div class="tdp_item-list col-md-3">
+	{{>habits}}
+    </div>
   </div>
 </template>
 
 <template name="habits">
- <div class="add-item-form">
- <span class="add-item-field">
- <input type="text"  placeholder="New Habit" id="add-habit" class="add-item-text"/>
- </span>
- <input type="submit" value="+" class="add-item-btn"/>
- </div>
-<ul id="habit-list" class="items-list">
+<div class="tdp_add-item">
+ <input type="text"  placeholder="New Habit"/>
+</div>
+<ul>
   {{#each habits}}
-    {{> habit_item}}
+    {{> item}}
   {{/each}}
 </ul>
 </template>
 
 
 <template name="dailies">
- <div class="add-item-form">
- <span class="add-item-field">
- <input type="text"  placeholder="New Daily" id="add-daily" class="add-item-text"/>
- </span>
- <input type="button" value="+" class="add-item-btn"/>
- </div>
-<ul id="daily-list" class="items-list">
+<div class="tdp_add-item">
+ <input type="text"  placeholder="New Daily"/>
+</div>
+<ul>
   {{#each dailies}}
-    {{> daily_item}}
+    {{> item}}
   {{/each}}
 </ul>
 </template>
 
 <template name="todos">
- <div class="add-item-form">
- <span class="add-item-field">
- <input type="text"  placeholder="New Todo" class="add-item-text"/>
- </span>
- <input type="button" value="+" class="add-item-btn"/>
- </div>
-<ul id="completed-todo-list" class="items-list">
+<div class="tdp_add-item">
+ <input type="text"  placeholder="New Todo"/>
+</div>
+<ul id="tdp_completed-todo-list">
   {{#each done_todos}}
-    {{> todo_item}}
+    {{> item}}
   {{/each}}
 </ul>
-<ul id="todo-list" class="items-list">
+<ul id="todo-list">
   {{#each todos}}
-    {{> todo_item}}
+    {{> item}}
   {{/each}}
 </ul>
+</template>
+
+<template name="item">
+  <li class="tdp_item">
+    <div class="tdp_item-checkbox ">
+    </div>
+    <div class="tdp_item-text">
+      {{text}}
+    </div>
+    <div class="tdp_edit-item">
+      <span class="glyphicon glyphicon-menu-hamburger"></span>
+    </div>
+  </li> 
 </template>
 
 <template name="habit_item">
   <li id="habit-{{_id}}" class="item">
     <div class="item-checkbox {{habit_status}}"><label class="habit-plus">+</label></div>
     <div class="item-text"><span class="item-text"> {{text}}</span>
-      <div class="expand-edit {{not_editing}}"><label class="glyphicon glyphicon-collapse-down"></label></div>
+      <div class="expand-edit {{not_editing}}"><label class="glyphicon glyphicon-menu-hamburger"></label></div>
       <div class="item-details {{editing}}">
       <input id="item-title-{{_id}}" value="{{text}}" class="item-edit-title form-control"/>
       <br/>
@@ -124,8 +140,6 @@
       {{> save_or_cancel}}
       </div><!-- editing close div -->
     </div>
-
-    {{> trash_icon}}
   </li>
 </template>
 
@@ -134,7 +148,7 @@
   <li id="daily-{{_id}}" class="item">
     <div class="item-checkbox {{ticked}}"><label class="{{ticked_icon}}"></label></div>
     <div class="item-text"><span class="item-text"> {{text}}</span>
-      <div class="expand-edit {{not_editing}}"><label class="glyphicon glyphicon-collapse-down"></label></div>
+      <div class="expand-edit {{not_editing}}"><span class="glyphicon glyphicon-menu-down"></span></div>
       <div class="item-details {{editing}}">
       <input id="item-title-{{_id}}" value="{{text}}" class="item-edit-title form-control"/>
       <br/>
@@ -146,7 +160,6 @@
       </div>
     </div>
 
-    {{> trash_icon}}
 
   </li>
 </template>
@@ -155,7 +168,7 @@
   <li id="todo-{{_id}}" class="item">
     <div class="item-checkbox {{ticked}}" style="background-color: {{color}}"><label class="{{ticked_icon}}"></label></div>
     <div class="item-text"><span class="item-text {{not_editing}}"> {{text}}</span>
-      <div class="expand-edit {{not_editing}}"><label class="glyphicon glyphicon-collapse-down"></label></div>
+      <div class="expand-edit {{not_editing}}"><span class="glyphicon glyphicon-menu-hamburger"></span></div>
      <div class="item-details {{editing}}">
       <input id="item-title-{{_id}}" name="text" value="{{text}}" class="item-edit-title form-control"/>
       <br/>
@@ -189,7 +202,6 @@
       </div>
     </Div>
 
-    {{> trash_icon}}
 
     <div class="hide-until {{editing}}">
       <label class="glyphicon glyphicon-time"></label>

@@ -268,7 +268,7 @@ Template.habit_item.events({
     stopProp(evt);
   },
 
-  'click .expand-edit, dblclick .item-text': function (evt) {
+  'click .expand-edit, contextmenu .item-text': function (evt) {
     if(Session.get('edit_habit') == null)
       Session.set('edit_habit', this._id);
     else if(Session.get('edit_habit') != this._id) {

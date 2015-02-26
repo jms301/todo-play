@@ -22,7 +22,7 @@
       <div class="collapse navbar-collapse" id="navbar-collapsed-target">
         <ul class="nav navbar-nav">
           {{#if currentUser}}
-          <li> <a id="waiting_on" href="{{pathFor route='waitingon'}}"><span class="glyphicon glyphicon-time"></span></a></li>
+          <li> <a id="waiting_on" href="{{pathFor route='waitingon'}}">Waiting On</a></li>
           {{/if}}
         </ul>
         <ul class="nav navbar-nav navbar-right">
@@ -30,6 +30,8 @@
             <li> <a id="edit_config" href="{{pathFor route='config'}}">config</a></li>
           {{/if}}
           {{>loginButtons}}
+          {{>projectsNav}}
+          {{>tagsNav}}
         </ul>
       </div>
     </div>

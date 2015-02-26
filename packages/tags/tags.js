@@ -9,7 +9,8 @@ if (Meteor.isCordova) {
 }
 
 
-Template.tags.events({
+
+tags_events = {
   'keydown #new-tag, keyup #new-tag, focusout #new-tag': function (evt) {
     if(evt.type === 'keyup' && evt.which === 27) { //esc -> cancel
       //cancel
@@ -36,21 +37,26 @@ Template.tags.events({
     }
     stopProp(evt);
   },
-  'click ul.tag-list' : function(evt) {
+  'click .tag-list' : function(evt) {
     setTimeout(function () {
       $('input#new-tag').focus()
     }, 1)
   }
-});
+};
 
-Template.tags.helpers({
+Template.tags.events(tags_events);
+Template.tagsNav.events(tags_events);
+
+tags_helpers = { 
   tags: function () {
     if(Meteor.userId()) {
       return Tags.find({});
     }
   }
+};
 
-});
+Template.tags.helpers(tags_helpers);
+Template.tagsNav.helpers(tags_helpers);
 
 Template.tag.events({
   "click li" : function (evt) {
