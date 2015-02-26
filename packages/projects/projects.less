@@ -1,0 +1,65 @@
+@import "client/todo-play.import.less";
+
+
+ul.projects { 
+  @media (max-width: @screen-sm-min) {
+    display: none;
+  }
+  margin: 0px 0px 10px;
+  width: 100%;
+
+  & > li { 
+    width: 100%;
+    & > ul { 
+      width: 100%;
+      & > li { 
+        width: 100%;
+      }
+    }
+  }
+} 
+
+ul.projects-nav { 
+  @media (min-width: @screen-sm-min) {
+    display: none;
+  }
+
+
+  padding: 0px 10px 0px 10px;
+  width: 100%;
+  input { 
+    background: @nav-back;
+    color: @nav-color;
+  
+  } 
+
+  & > li { 
+    width: 100%;
+    & > ul { 
+      width: 100%;
+      & > li { 
+        width: 100%;
+      }
+    }
+  }
+} 
+
+
+
+ul.projects > li.active > a, 
+ul.projects > li.active > a:hover, 
+ul.projects > li.active > a:focus {
+  color: #333;
+  background-color: #FFF;
+  border: 1px solid @pastel-blue;
+}
+
+ul.projects-nav > li.active > a, 
+ul.projects-nav > li.active > a:hover, 
+ul.projects-nav > li.active > a:focus {
+  color: @nav-color;
+  background-color: @nav-back; 
+  border: 1px solid @pastel-blue;
+}
+
+

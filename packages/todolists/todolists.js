@@ -195,6 +195,7 @@ Template.habits.events({
 
 Template.habits.rendered = function() {
     this.$('#habit-list').sortable({
+        delay: 150,
         stop: function(e, ui) {
           // get the dragged html element and the one before
           //   and after it
@@ -267,7 +268,7 @@ Template.habit_item.events({
     stopProp(evt);
   },
 
-  'click .expand-edit, dblclick .item-text': function (evt) {
+  'click .expand-edit, contextmenu .item-text': function (evt) {
     if(Session.get('edit_habit') == null)
       Session.set('edit_habit', this._id);
     else if(Session.get('edit_habit') != this._id) {
@@ -349,6 +350,7 @@ Template.dailies.events({
 
 Template.dailies.rendered = function() {
     this.$('#daily-list').sortable({
+        delay: 150,
         stop: function(e, ui) {
           // get the dragged html element and the one before
           //   and after it
@@ -543,6 +545,7 @@ Template.todos.events({
 
 Template.todos.rendered = function() {
     this.$('#todo-list').sortable({
+        delay: 150,
         stop: function(e, ui) {
           // get the dragged html element and the one before
           //   and after it

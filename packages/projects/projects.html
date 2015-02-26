@@ -27,3 +27,20 @@
   </select>
 </template>
 
+<template name="projectsNav">
+  <ul class="nav nav-pills projects-nav">
+  <li class="dropdown active">
+    <a class="dropdown-toggle" data-toggle="dropdown" href='#'>{{active_project}}
+    <span class="caret"></span></a>
+  <ul id="project_list" class="dropdown-menu">
+    <li class="all-projects"><a href="#">&lsaquo;All&rsaquo;</a></li>
+    <li class="no-projects"><a href="#">&lsaquo;None&rsaquo;</a></li>
+      {{#each projects}}
+        {{>project}}
+      {{/each}}
+      <li class="add-project"><input id="add-project" type="text" placeholder="New Goal" class="form-control add-project"/></li>
+  </ul>
+  </li></ul>
+</template>
+
+

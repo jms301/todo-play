@@ -14,7 +14,7 @@ Meteor.setInterval( function () {
   candidates.forEach(function (todo) {
     userCfg = Meteor.users.findOne(todo.userId);
     if(!userCfg || !userCfg.profile ||!userCfg.profile.display_name)
-      userCfg = {display_name: "anon"};
+      userCfg = {profile:{display_name: "anon"}};
     DoneTicker.insert({text: todo.text, display_name: userCfg.profile.display_name});
   });
 }, 60*5*1000 );

@@ -9,7 +9,7 @@ Package.onUse(function(api) {
   api.versionsFrom('0.9.4');
 
   api.use('standard-app-packages');
-  api.use('nemo64:bootstrap');
+  api.use('twbs:bootstrap');
   api.use('ground:db', 'web.cordova');
   api.use('less');
   api.use('iron:router');
@@ -18,6 +18,7 @@ Package.onUse(function(api) {
 
   api.addFiles('setup.js');
   api.addFiles('tags.html', 'client');
+  api.addFiles('tags.less', 'client');
 
   api.addFiles('tags.js', 'client');
   api.addFiles('server.js', 'server');

@@ -10,7 +10,7 @@ Package.onUse(function(api) {
 
   api.use('standard-app-packages');
   api.use('accounts-password');
-  api.use('nemo64:bootstrap');
+  api.use('twbs:bootstrap');
   api.use('less');
   api.use('iron:router');
 

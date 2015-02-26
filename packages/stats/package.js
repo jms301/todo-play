@@ -10,7 +10,7 @@ Package.onUse(function(api) {
   api.versionsFrom('1.0');
 
   api.use('standard-app-packages');
-  api.use('nemo64:bootstrap');
+  api.use('twbs:bootstrap');
   api.use('less');
   api.use('ground:db', 'web.cordova');
   api.use('iron:router');

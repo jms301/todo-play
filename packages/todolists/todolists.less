@@ -1,0 +1,87 @@
+@import "client/todo-play.import.less";
+
+div.tdp_items { 
+  margin-bototm: 10px; 
+  & > ul { 
+    list-style-type: none;
+    list-style-position: outside;
+    padding: 0px;
+    margin-bottom: 0px;
+  }
+}
+
+div.tdp_add-item {
+  width: 100%;
+  & > input { 
+    width: 100%;
+    margin: 0px;
+    padding: 2px 5px;
+    height: 3em; 
+    border: 1px solid #555;  
+  
+  // Overlap the first item with inputs border, put the input to the front. 
+    margin-bottom: -1px;
+    position: relative;
+    z-index: 10;
+  }
+}
+
+li.tdp_item { 
+  z-index: 0;
+  height: 3em; 
+  border: 1px solid #999; 
+  border-left: 1px solid @pastel-blue;
+  margin-bottom: -1px;
+  position: relative;
+  padding-left: 10px;
+  padding-right: 20px;
+  background-color: white;
+  overflow: hidden; 
+  width: 100%;
+  cursor: move;
+  &:hover { 
+    background-color: #DDD;
+    background: linear-gradient(176deg, #EEEEEE, #FFF, #CECECE); 
+    border-top: 1px solid #555; 
+    border-bottom: 1px solid #555; 
+    border-right: 1px solid #555;
+    z-index: 10;
+    position: relative;
+  }
+}
+ 
+
+li > div.tdp_item-text { 
+  height: 3em;
+  display: table-cell; 
+  vertical-align: middle;
+}
+
+li > div.tdp_item-checkbox { 
+  position: absolute; 
+  left:0px; 
+  width: 5px; 
+  height: 100%;
+  background-color: @pastel-blue;
+} 
+
+li > div.tdp_edit-item {
+  cursor: default;
+  position: absolute; 
+  right: 5px;
+  top: 0.9em;
+  height: 1em;
+} 
+
+div.tdp_list-h1 { 
+  text-align: center;
+  & > h1 { 
+    height: 40px;
+    margin-left: auto;
+    margin-right: auto;
+    & > span { 
+      font-size: 0.7em;
+    } 
+  }
+}
+

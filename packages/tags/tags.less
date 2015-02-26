@@ -1,0 +1,60 @@
+@import "client/todo-play.import.less";
+
+ul.tdp_tag-list {
+
+  cursor: text;
+  height: auto;
+  list-style: outside none none;
+  padding: 0px 5px 4px;
+  line-height: 1.8;
+  margin: 20px 0px 10px; 
+
+  @media (max-width: @screen-sm-min) {
+    display: none;
+  }
+
+  & > li { 
+    display: inline;
+    cursor: default;  
+    & > span { 
+      cursor: pointer;
+    } 
+    & > input { 
+      background-color: transparent; 
+      border: 0px solid;
+    } 
+  }
+}
+
+div.tdp_tag-list-nav { 
+
+  padding: 10px;
+
+  @media (min-width: @screen-sm-min) {
+    display: none;
+  }
+
+  & > ul {
+    cursor: text;
+    height: auto;
+    list-style: outside none none;
+    padding: 0px 5px 4px;
+    line-height: 1.8;
+    width: 100%;
+  
+    background-color: @nav-back;
+    color: @nav-color;
+  
+    & > li { 
+      display: inline;
+      cursor: default;  
+      & > span { 
+        cursor: pointer;
+      } 
+      & > input { 
+        background-color: transparent; 
+        border: 0px solid;
+      } 
+    }
+  }
+}
