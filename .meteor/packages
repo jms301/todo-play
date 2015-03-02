@@ -7,6 +7,7 @@ standard-app-packages
 accounts-password
 mrt:moment
 less
+ian:accounts-ui-bootstrap-3
 datariot:ganalytics
 iron:router@1.0.0-pre4
 projects
