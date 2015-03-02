@@ -102,7 +102,7 @@
     {{> item}}
   {{/each}}
 </ul>
-<ul id="todo-list">
+<ul id="tdp_todo-list">
   {{#each todos}}
     {{> item}}
   {{/each}}
@@ -111,101 +111,17 @@
 
 <template name="item">
   <li class="tdp_item">
-    <div class="tdp_item-checkbox ">
+    <div class="tdp_item-checkbox {{age}}">
     </div>
-    <div class="tdp_item-text">
+    <div class="tdp_item-text {{status}}">
       {{text}}
     </div>
     <div class="tdp_edit-item">
       <span class="glyphicon glyphicon-menu-hamburger"></span>
     </div>
-  </li> 
-</template>
-
-<template name="habit_item">
-  <li id="habit-{{_id}}" class="item">
-    <div class="item-checkbox {{habit_status}}"><label class="habit-plus">+</label></div>
-    <div class="item-text"><span class="item-text"> {{text}}</span>
-      <div class="expand-edit {{not_editing}}"><label class="glyphicon glyphicon-menu-hamburger"></label></div>
-      <div class="item-details {{editing}}">
-      <input id="item-title-{{_id}}" value="{{text}}" class="item-edit-title form-control"/>
-      <br/>
-      <textarea id="item-notes-{{_id}}" placeholder="Notes" rows=3 cols=35 class="item-edit-notes form-control">{{notes}}</textarea>
-      <br/>
-      {{> project_select}}
-      <br/>
-      Frequency (days): <input type="number" id="habit-freq-{{_id}}" value="{{freq}}" class="item-edit-freq"/>
-
-      <br/>
-      {{> save_or_cancel}}
-      </div><!-- editing close div -->
-    </div>
   </li>
 </template>
 
+<template name="tdp_edit-todo">
 
-<template name="daily_item">
-  <li id="daily-{{_id}}" class="item">
-    <div class="item-checkbox {{ticked}}"><label class="{{ticked_icon}}"></label></div>
-    <div class="item-text"><span class="item-text"> {{text}}</span>
-      <div class="expand-edit {{not_editing}}"><span class="glyphicon glyphicon-menu-down"></span></div>
-      <div class="item-details {{editing}}">
-      <input id="item-title-{{_id}}" value="{{text}}" class="item-edit-title form-control"/>
-      <br/>
-      <textarea placeholder="Notes" id="item-notes-{{_id}}" rows=3 cols=35 class="item-edit-notes form-control">{{notes}}</textarea>
-      <br/>
-      {{> project_select}}
-      {{> save_or_cancel}}
-
-      </div>
-    </div>
-
-
-  </li>
-</template>
-
-<template name="todo_item">
-  <li id="todo-{{_id}}" class="item">
-    <div class="item-checkbox {{ticked}}" style="background-color: {{color}}"><label class="{{ticked_icon}}"></label></div>
-    <div class="item-text"><span class="item-text {{not_editing}}"> {{text}}</span>
-      <div class="expand-edit {{not_editing}}"><span class="glyphicon glyphicon-menu-hamburger"></span></div>
-     <div class="item-details {{editing}}">
-      <input id="item-title-{{_id}}" name="text" value="{{text}}" class="item-edit-title form-control"/>
-      <br/>
-      <textarea placeholder="Notes" id="item-notes-{{_id}}" name="notes" rows=3 cols=35 class="item-edit-notes form-control">{{notes}}</textarea>
-      <br/>
-      {{#each checklist}}
-      <div class="checkbox-item" id="{{index}}-{{getid ..}}-checkbox-div">
-        <label>
-          <input type="checkbox" {{checked done}} class="item-checklist-{{getid ..}}" value="{{item_text}}"/> {{item_text}}
-        </label>
-        <div class="remove-list-item" id="{{index}}-{{getid ..}}-checkbox-remove">
-          <span class="glyphicon glyphicon-remove" id="{{index}}-{{getid ..}}-checkbox-remove-span"></span>
-        </div>
-      </div>
-      {{/each}}
-      <div class="input-group">
-        <input type="text" class="form-control checklist" placeholder="New Checklist Item"/>
-        <span class="input-group-addon ">
-          <i class="glyphicon glyphicon-list"></i>
-        </span>
-      </div>
-      <br/>
-      {{> project_select}}
-
-      <br/>
-      <div class="checkbox_item">
-      <label>Private: <input type="checkbox" checked="{{private}}" id="item-private-{{_id}}" class="item-private"/></label>
-      </div>
-      {{> todo_tags}}
-      {{> save_or_cancel}}
-      </div>
-    </Div>
-
-
-    <div class="hide-until {{editing}}">
-      <label class="glyphicon glyphicon-time"></label>
-    </div>
-
- </li>
 </template>

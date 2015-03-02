@@ -155,7 +155,7 @@ Template.habits.helpers({
 
 Template.habits.events({
 
-  'keydown #add-habit, keyup #add-habit, focusout #add-habit': function (evt) {
+  'keydown div.tdp_add-item>input, keyup div.tdp_add-item>input, focusout div.tdp_add-item>input': function (evt) {
     if(evt.type === 'keyup' && evt.which === 27) { //esc -> cancel
       //cancel
       evt.target.value='';
@@ -194,7 +194,7 @@ Template.habits.events({
 });
 
 Template.habits.rendered = function() {
-    this.$('#habit-list').sortable({
+    this.$('ul').sortable({
         delay: 150,
         stop: function(e, ui) {
           // get the dragged html element and the one before
@@ -218,7 +218,7 @@ Template.habits.rendered = function() {
     })
 };
 
-Template.habit_item.helpers({
+Template.item.helpers({
   habit_status: function() {
     //returns the urgency of this habit this.freq = ideal frequency in days.
     // this.tickedtime = time of last completion.
@@ -243,7 +243,7 @@ Template.habit_item.helpers({
 });
 
 
-Template.habit_item.events({
+Template.item.events({
  'click .item-remove-x': function (evt) {
     if(confirm("sure you want to delete that?"))
       Habits.remove(this._id);
@@ -310,7 +310,7 @@ Template.dailies.helpers({
 
 Template.dailies.events({
 
-  'keydown #add-daily, keyup #add-daily, focusout #add-daily': function (evt) {
+  'keydown div.tdp_add-item>input, keyup div.tdp_add-item>input, focusout div.tdp_add-item>input': function (evt) {
     if(evt.type === 'keyup' && evt.which === 27) { //esc -> cancel
       //cancel
       evt.target.value='';
@@ -349,7 +349,7 @@ Template.dailies.events({
 });
 
 Template.dailies.rendered = function() {
-    this.$('#daily-list').sortable({
+    this.$('ul').sortable({
         delay: 150,
         stop: function(e, ui) {
           // get the dragged html element and the one before
@@ -374,7 +374,7 @@ Template.dailies.rendered = function() {
 };
 
 
-Template.daily_item.helpers({
+/*Template.daily_item.helpers({
   ticked_icon: function () {
     if (isDailyTicked(this))
       return 'glyphicon glyphicon-ok';
@@ -442,7 +442,7 @@ Template.daily_item.events({
     stopProp(evt);
   }
 });
-
+*/
 
 //Todos
 Template.todos.helpers({
@@ -511,7 +511,7 @@ Template.todos.helpers({
 });
 
 Template.todos.events({
- 'keydown .add-item-text, keyup .add-item-text, focusout .add-item-text': function (evt) {
+  'keydown div.tdp_add-item>input, keyup div.tdp_add-item>input, focusout div.tdp_add-item>input': function (evt) {
     if(evt.type === 'keyup' && evt.which === 27) {
       //cancel
       evt.target.value='';
@@ -544,7 +544,7 @@ Template.todos.events({
 });
 
 Template.todos.rendered = function() {
-    this.$('#todo-list').sortable({
+    this.$('#tdp_todo-list').sortable({
         delay: 150,
         stop: function(e, ui) {
           // get the dragged html element and the one before
@@ -567,7 +567,7 @@ Template.todos.rendered = function() {
         }
     })
 };
-
+/*
 Template.todo_item.helpers({
 
   ticked_icon: function () {
@@ -725,6 +725,7 @@ Template.todo_item.events({
     stopProp(evt);
   }
 });
+*/
 
 //tags messaging
 Meteor.startup(function () {
