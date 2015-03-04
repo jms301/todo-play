@@ -22,7 +22,3 @@ Template.config.events({
   }
 });
 
-Template.config.rendered = function () {
-   $('body').css({"padding-top": $(".navbar").height() + 30 + "px"});
-};
-

@@ -47,7 +47,7 @@ tags_events = {
 Template.tags.events(tags_events);
 Template.tagsNav.events(tags_events);
 
-tags_helpers = { 
+tags_helpers = {
   tags: function () {
     if(Meteor.userId()) {
       return Tags.find({});
@@ -84,6 +84,7 @@ Template.tag.events({
        this.tagged.Dailies != 0 ||
        this.tagged.Habits != 0) {
       if(!confirm("The tag " + this.name + " is in use! Are you sure you want to delete it? (Tagged items we be de-tagged)")) {
+        stopProp(evt);
         return;
       }
     }
@@ -94,6 +95,8 @@ Template.tag.events({
     Session.set("with_tags", _.without(Session.get("with_tags"), this._id));
     Session.set("without_tags",
                   _.without(Session.get("without_tags"), this._id));
+
+    stopProp(evt);
   }
 });
 
@@ -111,6 +114,7 @@ Template.tag.helpers({
 
 Template.todo_tags.helpers({
   autocomplete: function () {
+    //console.log(this);
     return Tags.find().fetch().map(function(tag) { return tag.name; });
   }
 });
@@ -121,11 +125,13 @@ Template.todo_tags.rendered = function () {
 };
 
 Template.todo_tags.events({
-  'click ul.tag-list, dblclick ul.tag-list' : function (evt, tmp) {
+  'click ul.tdp_tag-list-todo' : function (evt, tmp) {
     setTimeout(function () {
       tmp.$('input.new-tag').focus();
     }, 1)
 
     stopProp(evt);
-  }
+
+
+  },
 });

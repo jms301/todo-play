@@ -18,7 +18,7 @@
   {{>tag}}
 {{/each}}
 <li>
-  <input placeholder="New Tag" type="text" id="new-tag" />
+  <input placeholder="New Tag" type="text" class="new-tag" id="new-tag" />
 </li>
 </ul>
 </template>
@@ -28,7 +28,7 @@
 </template>
 
 <template name="todo_tags">
-<ul class="tdp_tag-list form-control">
+<ul class="tdp_tag-list-todo form-control">
   {{#each tags}}
     {{>todo_tag}}
   {{/each}}

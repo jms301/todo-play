@@ -19,7 +19,7 @@
 </template>
 
 <template name="project_select">
-  <select name="Goals" id="item-projects-{{_id}}">
+  <select name="Goals" id="item-projects-{{_id}}" class="form-control">
   <option value=""><b>Goals:</b></option>
   {{#each projects}}
     <option value="{{_id}}" {{is_selected ..}}>{{text}}</option>

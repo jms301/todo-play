@@ -1,5 +1,60 @@
 @import "client/todo-play.import.less";
 
+
+ul.tag-list {
+    list-style: none;
+      padding: 0;
+        padding-bottom: 4px;
+          padding-left: 5px;
+            padding-right: 5px;
+              margin: 0;
+                width: 100%;
+                  height: auto;
+                    cursor: text;
+                      line-height: 1.8;
+}
+
+li.tag {
+    display: inline;
+      cursor: default;
+}
+
+//input.new-tag {
+    //background-color:transparent;
+      //border:0px solid white;
+//}
+
+//cludge for date picker zindex on chrome:
+.datepicker {
+      z-index:2000 !important
+}
+
+div#new-tag {
+    margin: 10px;
+}
+
+ul.tdp_tag-list-todo {
+
+  cursor: text;
+  height: auto;
+  list-style: outside none none;
+  padding: 0px 5px 4px;
+  line-height: 1.8;
+  margin: 20px 0px 10px;
+
+  & > li {
+    display: inline;
+    cursor: default;
+    & > span {
+      cursor: pointer;
+      & > input {
+        background-color: transparent;
+        border:0px solid white;
+      }
+    }
+  }
+}
+
 ul.tdp_tag-list {
 
   cursor: text;
@@ -7,26 +62,27 @@ ul.tdp_tag-list {
   list-style: outside none none;
   padding: 0px 5px 4px;
   line-height: 1.8;
-  margin: 20px 0px 10px; 
+  margin: 20px 0px 10px;
 
   @media (max-width: @screen-sm-min) {
     display: none;
   }
 
-  & > li { 
+  & > li {
     display: inline;
-    cursor: default;  
-    & > span { 
+    cursor: default;
+    & > span {
       cursor: pointer;
-    } 
-    & > input { 
-      background-color: transparent; 
-      border: 0px solid;
-    } 
+    }
+    & > input {
+      background-color: transparent;
+      border:0px solid white;
+    }
   }
 }
 
-div.tdp_tag-list-nav { 
+
+div.tdp_tag-list-nav {
 
   padding: 10px;
 
@@ -41,20 +97,20 @@ div.tdp_tag-list-nav {
     padding: 0px 5px 4px;
     line-height: 1.8;
     width: 100%;
-  
+
     background-color: @nav-back;
     color: @nav-color;
-  
-    & > li { 
+
+    & > li {
       display: inline;
-      cursor: default;  
-      & > span { 
+      cursor: default;
+      & > span {
         cursor: pointer;
-      } 
-      & > input { 
-        background-color: transparent; 
+      }
+      & > input {
+        background-color: transparent;
         border: 0px solid;
-      } 
+      }
     }
   }
 }

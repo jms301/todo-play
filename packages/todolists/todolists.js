@@ -1,9 +1,3 @@
-//Session setup
-Session.setDefault('edit_todo', null);
-Session.setDefault('edit_daily', null);
-Session.setDefault('edit_habit', null);
-
-
 //Collection handles
 var todoHandle = Meteor.subscribe('todos', function () {
 
@@ -213,25 +207,93 @@ Template.habits.rendered = function() {
                        Blaze.getData(before).rank)/2
 
           //update the dragged Item's rank
-          Habits.update({_id: Blaze.getData(el)._id}, {$set: {rank: newRank}})
+          Habits.update({_id: Blaze.getData(el)._id}, {$set: {rank: newRank}});
+          $(e.originalEvent.target).one('click', function(e){
+            e.stopImmediatePropagation();
+          });
         }
     })
 };
 
 Template.item.helpers({
+
+  status:  function () {
+    if(this.type == "todo") {
+      if(this.data.done)
+        return "tdp_ticked";
+      else
+        return "";
+    } else if (this.type == "daily") {
+
+    } else if (this.type == "habit") {
+        return "";
+    }
+  },
+
+  color: function () {
+    if (this.type == "todo") {
+      if(this.data.done){
+        return ""
+      } else {
+        if(Meteor.user())
+          red_age = Meteor.user().profile.red_age;
+
+        red_age = (red_age||30);
+
+        //blue: #779ECB
+        //blue = rgb(119, 158, 203)
+        //red:  #FF7373
+        //red = rgb(255, 115, 115)
+
+        var rblue = 119;
+        var gblue = 158;
+        var bblue = 203;
+
+        var rdiff = -136;
+        var gdiff = 43;
+        var bdiff = 88;
+
+        var age = new Date() - new Date(this.data.timestamp);
+        var red_age = red_age * 24 * 60 * 60 * 1000;
+
+        if(age < 0)
+          return 'background-color: #779ECB;';
+        if(age > red_age)
+          age = red_age;
+
+        age_frac = age / red_age;
+
+        var to_ret =  'background-color: rgb(' + Math.floor(rblue - (rdiff * age_frac)) + ',' +
+        Math.floor(gblue - (gdiff * age_frac)) + ',' +
+        Math.floor(bblue - (bdiff * age_frac)) + ');';
+
+        return to_ret;
+      }
+    } else if (this.type == "daily") {
+      if(isDailyTicked(this.data))
+        return 'background-color: #77DD77;';
+      else
+        return 'background-color: #779ECB;';
+
+    } else if (this.type == "habit") {
+
+      var days = 86400000; //milliseconds in one day;
+      var age = new Date() - this.data.ticktime;
+
+      if(age < (this.data.freq/2) * days)
+        return 'background-color: #77DD77;';
+      else if(age < this.data.freq * days)
+        return 'background-color: #779ECB;';
+      else
+        return 'background-color: #FF7373;';
+    }
+
+  },
+
   habit_status: function() {
     //returns the urgency of this habit this.freq = ideal frequency in days.
     // this.tickedtime = time of last completion.
-    var days = 86400000; //milliseconds in one day;
-
-    var age = new Date() - this.ticktime;
-    if(age < (this.freq/2) * days)
-      return "habit-status-1";
-    else if(age < this.freq * days)
-      return "habit-status-2";
-    else
-      return "habit-status-3";
-  },
+    },
 
   not_editing: function (evt) {
     return this._id == Session.get('edit_habit') ? "" : "editing";
@@ -244,50 +306,44 @@ Template.item.helpers({
 
 
 Template.item.events({
- 'click .item-remove-x': function (evt) {
-    if(confirm("sure you want to delete that?"))
-      Habits.remove(this._id);
-    stopProp(evt);
-  },
-  'click li': function (evt) {
-    stopProp(evt);
-  },
-  'click .save-edit': function (evt) {
-    saveHabit(this._id, Habits);
-    Session.set('edit_habit', null);
-    stopProp(evt);
-  },
-  'click .cancel-edit': function (evt) {
-    cancelHabit(this._id, Habits);
-    Session.set('edit_habit', null);
-    stopProp(evt);
-  },
-  'click .item-checkbox': function (evt) {
-    Habits.update(this._id, {$set: {ticktime: (new Date()).getTime()}});
-    updateStats('habits', true, null); // habits can only be incremented
-    stopProp(evt);
-  },
+  'click .tdp_item': function (evt) {
+    if(this.type == "todo") {
+      Todos.update(this.data._id, {$set:
+                              {done: !this.data.done, ticktime: (new Date())}});
+      updateStats('todos', !this.data.done, this.data.ticktime);
 
-  'click .expand-edit, contextmenu .item-text': function (evt) {
-    if(Session.get('edit_habit') == null)
-      Session.set('edit_habit', this._id);
-    else if(Session.get('edit_habit') != this._id) {
-      saveHabit(Session.get('edit_habit'),  Habits);
-      Session.set('edit_habit', this._id);
-    } else {
-      Session.set('edit_habit', null);
-      saveHabit(this._id, Habits);
+    } else if (this.type == "daily") {
+      var is_ticked = isDailyTicked(this.data);
+      Dailies.update(this.data._id, {$set:
+                      {done: !is_ticked, ticktime: (new Date()).getTime()}});
+      updateStats('dailies', !is_ticked, this.data.ticktime);
+
+    } else if (this.type == "habit") {
+      Habits.update(this.data._id, {$set: {ticktime: (new Date()).getTime()}});
+      updateStats('habits', true, null); // habits can only be incremented
+      stopProp(evt);
     }
 
+/*
 
 
-    clearSelect();
+    */
+    stopProp(evt);
+  },
+
+  'click div.tdp_edit-item, contextmenu .tdp_item': function (evt, template) {
+
+    Session.set('modal_template', 'edit_' + this.type);
+    Session.set('modal_data', this.data);
+
+    $('#site-modal').modal('toggle');
+
+    //if(Session.get('edit_habit') == null)
+      //Session.set('edit_habit', this._id);
+
     stopProp(evt);
   },
   // prevent double click selection from closing the edit box
-  'dblclick .item-edit-title, dblclick .item-edit-notes, dblclick .item-edit-freq ' : function(evt) {
-    stopProp(evt);
-  }
 
 
  });
@@ -368,7 +424,10 @@ Template.dailies.rendered = function() {
                        Blaze.getData(before).rank)/2
 
           //update the dragged Item's rank
-          Dailies.update({_id: Blaze.getData(el)._id}, {$set: {rank: newRank}})
+          Dailies.update({_id: Blaze.getData(el)._id}, {$set: {rank: newRank}});
+          $(e.originalEvent.target).one('click', function(e){
+            e.stopImmediatePropagation();
+          });
         }
     })
 };
@@ -563,7 +622,10 @@ Template.todos.rendered = function() {
                        Blaze.getData(before).rank)/2
 
           //update the dragged Item's rank
-          Todos.update({_id: Blaze.getData(el)._id}, {$set: {rank: newRank}})
+          Todos.update({_id: Blaze.getData(el)._id}, {$set: {rank: newRank}});
+          $(e.originalEvent.target).one('click', function(e){
+            e.stopImmediatePropagation();
+          });
         }
     })
 };
@@ -572,10 +634,6 @@ Template.todo_item.helpers({
 
   ticked_icon: function () {
     return this.done ? 'glyphicon glyphicon-ok' : '';
-  },
-
-  ticked: function () {
-    return this.done ? 'ticked' : '';
   },
 
   color: function () {
@@ -795,15 +853,17 @@ Template.todo_tags.helpers({
 
 Template.todo_tag.events({
   'click span.remove' : function (evt, template) {
+    console.log(Template.parentData(1));
     todo = Todos.findOne(Template.parentData(1)._id);
     tag = Tags.findOne(this._id);
 
+    Template.parentData(1).tags = _.without(todo.tags, tag._id);
     Todos.update(Template.parentData(1)._id, {$set:{tags:
       _.without(todo.tags, tag._id)
     }});
     Tags.update(this._id, {$set: {'tagged.Todos' :
         _.without(tag.tagged.Todos, todo._id)
-      }});
+    }});
 
     /*console.log("after removal");
     Tags.find({}).forEach(function(tag) {
@@ -812,5 +872,40 @@ Template.todo_tag.events({
     });*/
 
     //console.log(Tags.findOne(this._id).tagged.Todos);
+  }
+});
+
+Template.edit_todo.events({
+  'input p.tdp_edit-text>input' : function(evt, template) {
+    if(template.$('input').val().length < 30)
+      template.$('p.tdp_edit-text>input').css('font-size', '2em');
+    else if(template.$('input').val().length < 45)
+      template.$('p.tdp_edit-text>input').css('font-size', '1.5em');
+    else
+      template.$('p.tdp_edit-text>input').css('font-size', '1em');
+
+
+  },
+  'typeahead:selected' : function (evt, tmp) {
+    value = tmp.$('input.new-tag').val();
+    var tag = Tags.findOne({name: value});
+
+
+    if(tag){
+      Tags.update(tag._id, {$addToSet: {'tagged.Todos' : this._id}});
+      Todos.update(this._id, {$addToSet: { tags: tag._id }});
+    } else {
+      // tag does note exist, create it!
+      tag = Tags.insert({
+        name: value,
+        userId: Meteor.userId(),
+        tagged: { 'Todos': [this._id],
+                 'Dailies': [],
+                 'Habits': []}
+      });
+      Todos.update(this._id, {$addToSet: {tags: tag}});
+    }
+    tmp.$('input.new-tag').val("");
+    console.log(tmp.$('input.new-tag').val());
   }
 });

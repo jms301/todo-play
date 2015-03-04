@@ -1,6 +1,20 @@
 //sessions
 Session.setDefault('time_now', new Date().getTime());
 
+Session.setDefault("modal_template", 'blank');
+Session.setDefault("modal_data", {});
+
+Template.modal.helpers({
+  modalTemplate: function () {
+    return Session.get('modal_template');
+  },
+  modalData: function () {
+    return Session.get('modal_data');
+  }
+});
+
+
+
 // Hacks & Cludges:
 // bootstrap 3 navbar fix
 fix_top_padding = function () {

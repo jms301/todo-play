@@ -28,3 +28,24 @@
   <li> {{format_date}} </li>
 </template>
 
+
+<template name="waiting_modal">
+
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+    <h4 class="modal-title">Hide Todo Until...</h4>
+  </div>
+  <div class="modal-body">
+    <p>Pick a date/time to hide this todo until.</p>
+    <div class="input-group date" id="datepickerdiv">
+      <input class="form-control hide-until" id="datepicker" type="text" placeholder="YYYY/MM/DD">
+      <span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-default" data-dismiss="modal"
+       >Cancel</button>
+    <button type="button" class="btn btn-primary hide-until" >Hide</button>
+  </div>
+
+</template>
