@@ -114,7 +114,6 @@ Template.tag.helpers({
 
 Template.todo_tags.helpers({
   autocomplete: function () {
-    //console.log(this);
     return Tags.find().fetch().map(function(tag) { return tag.name; });
   }
 });

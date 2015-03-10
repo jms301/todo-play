@@ -92,16 +92,48 @@
   <div class="modal-body">
     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 
-    <p class="tdp_edit-text"><input type="text" class="form-control" autocomplete="off" value="{{text}}"></p>
-    <p class="tdp_edit-description"><textarea class="form-control" placeholder="notes">{{description}}</textarea></p>
+    <p class="tdp_edit-text"><input id="tdp_edit-title" type="text" class="form-control" autocomplete="off" value="{{text}}"></p>
+    <p class="tdp_edit-notes"><textarea class="form-control" placeholder="notes">{{notes}}</textarea></p>
     <p class="tdp_edit-goals">{{>project_select}}</p>
     <p class="tdp_edit-tags">{{>todo_tags}}</p>
-    <label class="tdp_edit-private">Private: <input id="private" type="checkbox"></label>
+    <label class="tdp_edit-private">Private: <input id="private" type="checkbox"
+    {{is_private}}></label>
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-    <button type="button" class="btn btn-danger" data-dismiss="modal">Delete</button>
-    <button type="button" class="btn btn-warning" data-dismiss="modal">Later</button>
-    <button type="button" class="btn btn-success">Save</button>
+    <button type="button" id="cancel" class="btn btn-default">Cancel</button>
+    <button type="button" id="delete" class="btn btn-danger">Delete</button>
+    <button type="button" id="later" class="btn btn-warning">Later</button>
+    <button type="button" id="save" class="btn btn-success">Save</button>
+  </div>
+</template>
+
+
+<template name="edit_daily">
+  <div class="modal-body">
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+
+    <p class="tdp_edit-text"><input id="tdp_edit-title" type="text" class="form-control" autocomplete="off" value="{{text}}"></p>
+    <p class="tdp_edit-notes"><textarea class="form-control" placeholder="notes">{{notes}}</textarea></p>
+    <p class="tdp_edit-goals">{{>project_select}}</p>
+  </div>
+  <div class="modal-footer">
+    <button type="button" id="cancel" class="btn btn-default">Cancel</button>
+    <button type="button" id="delete" class="btn btn-danger">Delete</button>
+    <button type="button" id="save" class="btn btn-success">Save</button>
+  </div>
+</template>
+
+<template name="edit_habit">
+  <div class="modal-body">
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+
+    <p class="tdp_edit-text"><input id="tdp_edit-title" type="text" class="form-control" autocomplete="off" value="{{text}}"></p>
+    <p class="tdp_edit-notes"><textarea class="form-control" placeholder="notes">{{notes}}</textarea></p>
+    <p class="tdp_edit-goals">{{>project_select}}</p>
+  </div>
+  <div class="modal-footer">
+    <button type="button" id="cancel" class="btn btn-default">Cancel</button>
+    <button type="button" id="delete" class="btn btn-danger">Delete</button>
+    <button type="button" id="save" class="btn btn-success">Save</button>
   </div>
 </template>

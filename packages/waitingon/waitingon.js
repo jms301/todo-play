@@ -42,3 +42,22 @@ Template.waiting_time.helpers({
     return moment(this[0].hide_until).format("YYYY/MM/DD");
   }
 });
+
+Template.waiting_modal.events({
+  'click button.hide-until': function (evt) {
+    $("#site-modal").modal('hide');
+    Todos.update(this._id, {$set: { hide_until:
+      moment($('input#datepicker').val(), "YYYY/MM/DD").toDate()
+    }});
+  }
+});
+
+
+Template.waiting_modal.rendered = function () {
+  $('#datepickerdiv').datepicker({
+    format: "yyyy/mm/dd",
+    startDate: "new Date()",
+    todayBtn: true,
+    todayHighlight: true
+  });
+};

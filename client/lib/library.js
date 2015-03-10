@@ -5,4 +5,3 @@ stopProp = function (evt) {
     evt.cancelBubble = true;
   }
 };
-

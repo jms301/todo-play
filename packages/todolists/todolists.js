@@ -330,21 +330,21 @@ Template.item.events({
     */
     stopProp(evt);
   },
-
   'click div.tdp_edit-item, contextmenu .tdp_item': function (evt, template) {
 
-    Session.set('modal_template', 'edit_' + this.type);
     Session.set('modal_data', this.data);
+    Session.set('modal_template', 'edit_' + this.type);
 
     $('#site-modal').modal('toggle');
 
-    //if(Session.get('edit_habit') == null)
-      //Session.set('edit_habit', this._id);
+    setTimeout(function () {
+      $('#tdp_edit-title').focus();
+      len = $('#tdp_edit-title').val().length * 2;
+      $('#tdp_edit-title')[0].setSelectionRange(len,len);
+    }, 900);
 
     stopProp(evt);
   },
-  // prevent double click selection from closing the edit box
-
 
  });
 
@@ -629,161 +629,6 @@ Template.todos.rendered = function() {
         }
     })
 };
-/*
-Template.todo_item.helpers({
-
-  ticked_icon: function () {
-    return this.done ? 'glyphicon glyphicon-ok' : '';
-  },
-
-  color: function () {
-    if(this.done){
-      return ""
-    } else {
-      if(Meteor.user())
-        red_age = Meteor.user().profile.red_age;
-      red_age = (red_age||30);
-
-      //blue: #779ECB
-      //blue = rgb(119, 158, 203)
-      //red:  #FF7373
-      //red = rgb(255, 115, 115)
-
-      var rblue = 119;
-      var gblue = 158;
-      var bblue = 203;
-
-      var rdiff = -136;
-      var gdiff = 43;
-      var bdiff = 88;
-
-      var age = new Date() - new Date(this.timestamp);
-      var red_age = red_age * 24 * 60 * 60 * 1000;
-
-      if(age < 0)
-        return '#779ECB';
-      if(age > red_age)
-        age = red_age;
-
-      age_frac = age / red_age;
-
-      var to_ret =  'rgb(' + Math.floor(rblue - (rdiff * age_frac)) + ',' +
-      Math.floor(gblue - (gdiff * age_frac)) + ',' +
-      Math.floor(bblue - (bdiff * age_frac)) + ')';
-
-      return to_ret;
-    }
-  },
-  not_editing: function () {
-    return this._id == Session.get('edit_todo') ? "" : "editing";
-  },
-  editing: function () {
-    return this._id == Session.get('edit_todo') ? "editing" : "";
-  },
-  checked: function (is_checked) {
-    return is_checked ? "checked" : "";
-  },
-  getid: function (item) {
-    return item._id;
-  }
-});
-
-Template.todo_item.events({
-  'click .remove-list-item': function (evt, template) {
-
-      var list = template.data.checklist
-      list.splice(evt.target.id.split('-')[0], 1);
-
-      // fix the hacky index (used to identify what gets removed)
-      list = _.map(list,
-                  function (item, index) {
-                         item.index = index;
-                         return item; });
-
-      Todos.update(template.data._id, {$set:
-                              {checklist: list }});
-      stopProp(evt);
-  },
-  'keydown input.checklist, keyup input.checklist, focusout input.checklist':
-  function (evt, template) {
-    if(evt.type === 'keyup' && evt.which === 27) { //esc -> cancel
-      //cancel
-      evt.target.value='';
-    }
-    if(evt.type === 'keyup' && evt.which === 13 ||
-       evt.type === 'focusout') {
-      var value = String(evt.target.value || "");
-      if (value) {
-        //ok
-        var list = this.checklist;
-        if(!list)
-          list = [];
-        list.push({done: false,
-                   item_text: template.$('input.checklist').val(),
-                   index: list.length});
-        Todos.update(this._id, {$set:
-                              {checklist: list}});
-        evt.target.value = '';
-
-      } else {
-        //cancel
-        evt.target.value='';
-      }
-    }
-    stopProp(evt);
-  },
-  'click .hide-until.editing': function (evt) {
-    $("#hide-until-id").val(this._id);
-    if(this.hide_until) {
-      $("#datepicker").val(moment(this.hide_until).format("YYYY/MM/DD"));
-    }
-    $("#until-modal").modal('show');
-    stopProp(evt);
-  },
-  'click .item-remove-x': function (evt) {
-    if(confirm("sure you want to delete that?"))
-      Todos.remove(this._id);
-    stopProp(evt);
-  },
-  'click li': function (evt) {
-    stopProp(evt);
-  },
-  'click .save-edit': function (evt) {
-    saveEdit(this._id, Todos);
-    Session.set('edit_todo', null);
-    stopProp(evt);
-  },
-  'click .cancel-edit': function (evt) {
-    cancelEdit(this._id, Todos);
-    Session.set('edit_todo', null);
-    stopProp(evt);
-  },
-  'click .item-checkbox': function (evt) {
-    Todos.update(this._id, {$set:
-                              {done: !this.done, ticktime: (new Date())}});
-    updateStats('todos', !this.done, this.ticktime);
-    stopProp(evt);
-  },
-  'dblclick .item-text, click .expand-edit': function (evt) {
-
-    if(Session.get('edit_todo') == null) {
-      Session.set('edit_todo', this._id);
-    } else if(Session.get('edit_todo') != this._id) {
-      saveEdit(Session.get('edit_todo'),  Todos);
-      Session.set('edit_todo', this._id);
-    } else {
-      Session.set('edit_todo', null);
-      saveEdit(this._id, Todos);
-    }
-
-    clearSelect();
-    stopProp(evt);
-  },
-  'dblclick .item-edit-title, dblclick .item-edit-notes' : function(evt) {
-    stopProp(evt);
-  }
-});
-*/
 
 //tags messaging
 Meteor.startup(function () {
@@ -806,6 +651,7 @@ Meteor.startup(function () {
 
 
 Template.todo_tags.events({
+  //fires on pressing enter or focusing out of the new tag box.
  'keydown .new-tag, keyup .new-tag, focusout .new-tag' : function (evt) {
     if(evt.type === 'keyup' && evt.which === 27) {
       //cancel
@@ -818,11 +664,10 @@ Template.todo_tags.events({
         tag = Tags.findOne({name: value});
 
         if(tag){
-          Tags.update(tag._id, {$addToSet: {'tagged.Todos' : this._id}});
-          Todos.update(this._id,
-            {$addToSet: { tags: tag._id }});
+          tag = tag._id;
+          Tags.update(tag, {$addToSet: {'tagged.Todos' : this._id}});
         } else {
-        // tag does note exist, create it!
+          // tag does note exist, create it!
           tag = Tags.insert({
             name: value,
             userId: Meteor.userId(),
@@ -830,9 +675,15 @@ Template.todo_tags.events({
                      'Dailies': [],
                       'Habits': []}
           });
-          Todos.update(this._id,
-            {$addToSet: {tags: tag}});
         }
+
+        Todos.update(this._id, {$addToSet: { tags: tag}});
+
+        //this is a hack since we are using dynamic template + data for the
+        //editing modal. :(
+        this.tags = this.tags.concat(tag);
+        Session.set('modal_data', this);
+
         evt.target.value='';
       } else {
        //cancel
@@ -853,17 +704,20 @@ Template.todo_tags.helpers({
 
 Template.todo_tag.events({
   'click span.remove' : function (evt, template) {
-    console.log(Template.parentData(1));
-    todo = Todos.findOne(Template.parentData(1)._id);
+    todo = Template.parentData(1);
     tag = Tags.findOne(this._id);
 
-    Template.parentData(1).tags = _.without(todo.tags, tag._id);
     Todos.update(Template.parentData(1)._id, {$set:{tags:
       _.without(todo.tags, tag._id)
     }});
     Tags.update(this._id, {$set: {'tagged.Todos' :
         _.without(tag.tagged.Todos, todo._id)
     }});
+
+    todo.tags = _.without(todo.tags, tag._id);
+    setTimeout(function () {
+      Session.set('modal_data', todo);
+    }, 100);
 
     /*console.log("after removal");
     Tags.find({}).forEach(function(tag) {
@@ -886,6 +740,26 @@ Template.edit_todo.events({
 
 
   },
+  'keyup p.tdp_edit-text>input' : function(evt, temp) {
+    if(evt.type === 'keyup' && evt.which === 13 ) {
+      var value = String(evt.target.value || "");
+      if (value) {
+        var title_input = temp.$('p.tdp_edit-text>input');
+        var notes_input = temp.$('p.tdp_edit-notes>textarea');
+        var project_input = temp.$('p.tdp_edit-goals>select>option:selected');
+        var private_input = temp.$('label.tdp_edit-private>input');
+
+        Todos.update(this._id, {$set: {notes: notes_input.val(),
+                          text: title_input.val(),
+                          project: project_input.val(),
+                          private: private_input.prop("checked")}});
+
+        $('#site-modal').modal('toggle');
+      }
+    }
+    stopProp(evt);
+
+  },
   'typeahead:selected' : function (evt, tmp) {
     value = tmp.$('input.new-tag').val();
     var tag = Tags.findOne({name: value});
@@ -906,6 +780,48 @@ Template.edit_todo.events({
       Todos.update(this._id, {$addToSet: {tags: tag}});
     }
     tmp.$('input.new-tag').val("");
-    console.log(tmp.$('input.new-tag').val());
+  },
+  'click button#save ' : function (evt, temp) {
+    var title_input = temp.$('p.tdp_edit-text>input');
+    var notes_input = temp.$('p.tdp_edit-notes>textarea');
+    var project_input = temp.$('p.tdp_edit-goals>select>option:selected');
+    var private_input = temp.$('label.tdp_edit-private>input');
+
+    Todos.update(this._id, {$set: {notes: notes_input.val(),
+                          text: title_input.val(),
+                          project: project_input.val(),
+                          private: private_input.prop("checked")}});
+
+    $('#site-modal').modal('toggle');
+
+  },
+  'click button#delete' : function () {
+    if(confirm("sure you want to delete this?"))
+      Todos.remove(this._id);
+
+    $('#site-modal').modal('toggle');
+
+  },
+  'click button#later' : function () {
+    Session.set('modal_template', 'waiting_modal');
+    Session.set('modal_data', this);
+  },
+  'click button#cancel' : function (evt, temp) {
+    temp.$('p.tdp_edit-text>input').val(this.text);
+    temp.$('p.tdp_edit-notes>textarea').val(this.notes);
+    temp.$('p.tdp_edit-goals>select').val(this.project);
+    temp.$('label.tdp_edit-private>input')[0].checked = this.private;
+
+    $('#site-modal').modal('toggle');
+  }
+});
+
+Template.edit_todo.helpers({
+  is_private: function () {
+    if(this.private)  {
+      return "checked";
+    } else {
+      return null;
+    }
   }
 });
