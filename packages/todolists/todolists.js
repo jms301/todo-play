@@ -725,12 +725,11 @@ Template.todo_tag.events({
       console.log(tag.name);
       console.log(tag.tagged.Todos);
     });*/
-
     //console.log(Tags.findOne(this._id).tagged.Todos);
   }
 });
 
-Template.edit_todo.events({
+var edit_common = {
   'input p.tdp_edit-text>input' : function(evt, template) {
     if(template.$('input').val().length < 30)
       template.$('p.tdp_edit-text>input').css('font-size', '2em');
@@ -738,10 +737,13 @@ Template.edit_todo.events({
       template.$('p.tdp_edit-text>input').css('font-size', '1.5em');
     else
       template.$('p.tdp_edit-text>input').css('font-size', '1em');
-
-
   },
-  'keyup p.tdp_edit-text>input' : function(evt, temp) {
+};
+
+Template.edit_todo.events(edit_common);
+Template.edit_todo.events({
+  //enter saves & closes
+ 'keyup p.tdp_edit-text>input' : function(evt, temp) {
     if(evt.type === 'keyup' && evt.which === 13 ) {
       var value = String(evt.target.value || "");
       if (value) {
@@ -807,6 +809,12 @@ Template.edit_todo.events({
     Session.set('modal_template', 'waiting_modal');
     Session.set('modal_data', this);
   },
+  'click button#donow' : function (evt, temp) {
+
+    Todos.update(this._id, {$set: {hide_until: null}});
+    $('#site-modal').modal('toggle');
+
+  },
   'click button#cancel' : function (evt, temp) {
     temp.$('p.tdp_edit-text>input').val(this.text);
     temp.$('p.tdp_edit-notes>textarea').val(this.notes);
@@ -818,11 +826,120 @@ Template.edit_todo.events({
 });
 
 Template.edit_todo.helpers({
+  waiting_on: function () {
+    // it has a hide_until & that value is in the future
+    if ( this.hide_until && this.hide_until.getTime() > new Date().getTime()) {
+      return true;
+    }
+    return false;
+  },
   is_private: function () {
     if(this.private)  {
       return "checked";
     } else {
       return null;
     }
+  }
+});
+
+Template.edit_daily.events(edit_common);
+Template.edit_daily.events({
+  //enter saves & closes
+ 'keyup p.tdp_edit-text>input' : function(evt, temp) {
+    if(evt.type === 'keyup' && evt.which === 13 ) {
+      var value = String(evt.target.value || "");
+      if (value) {
+        var title_input = temp.$('p.tdp_edit-text>input');
+        var notes_input = temp.$('p.tdp_edit-notes>textarea');
+        var project_input = temp.$('p.tdp_edit-goals>select>option:selected');
+
+        Dailies.update(this._id, {$set: {notes: notes_input.val(),
+                          text: title_input.val(),
+                          project: project_input.val()}});
+
+        $('#site-modal').modal('toggle');
+      }
+    }
+    stopProp(evt);
+
+  },
+  'click button#save ' : function (evt, temp) {
+    var title_input = temp.$('p.tdp_edit-text>input');
+    var notes_input = temp.$('p.tdp_edit-notes>textarea');
+    var project_input = temp.$('p.tdp_edit-goals>select>option:selected');
+
+    Dailies.update(this._id, {$set: {notes: notes_input.val(),
+                          text: title_input.val(),
+                          project: project_input.val()}});
+
+    $('#site-modal').modal('toggle');
+
+  },
+  'click button#delete' : function () {
+    if(confirm("sure you want to delete this?"))
+      Dailies.remove(this._id);
+
+    $('#site-modal').modal('toggle');
+
+  },
+  'click button#cancel' : function (evt, temp) {
+    temp.$('p.tdp_edit-text>input').val(this.text);
+    temp.$('p.tdp_edit-notes>textarea').val(this.notes);
+    temp.$('p.tdp_edit-goals>select').val(this.project);
+
+    $('#site-modal').modal('toggle');
+  }
+});
+
+Template.edit_habit.events(edit_common);
+Template.edit_habit.events({
+  //enter saves & closes
+ 'keyup p.tdp_edit-text>input' : function(evt, temp) {
+    if(evt.type === 'keyup' && evt.which === 13 ) {
+      var value = String(evt.target.value || "");
+      if (value) {
+        var title_input = temp.$('p.tdp_edit-text>input');
+        var notes_input = temp.$('p.tdp_edit-notes>textarea');
+        var project_input = temp.$('p.tdp_edit-goals>select>option:selected');
+        var freq_input = temp.$('p.tdp_edit-freq>input');
+
+        Habits.update(this._id, {$set: {notes: notes_input.val(),
+                          text: title_input.val(),
+                          freq: freq_input.val(),
+                          project: project_input.val()}});
+
+        $('#site-modal').modal('toggle');
+      }
+    }
+    stopProp(evt);
+
+  },
+  'click button#save ' : function (evt, temp) {
+    var title_input = temp.$('p.tdp_edit-text>input');
+    var notes_input = temp.$('p.tdp_edit-notes>textarea');
+    var project_input = temp.$('p.tdp_edit-goals>select>option:selected');
+    var freq_input = temp.$('p.tdp_edit-freq>input');
+
+    Habits.update(this._id, {$set: {notes: notes_input.val(),
+                          text: title_input.val(),
+                          freq: freq_input.val(),
+                          project: project_input.val()}});
+
+    $('#site-modal').modal('toggle');
+
+  },
+  'click button#delete' : function () {
+    if(confirm("sure you want to delete this?"))
+      Habits.remove(this._id);
+
+    $('#site-modal').modal('toggle');
+
+  },
+  'click button#cancel' : function (evt, temp) {
+    temp.$('p.tdp_edit-text>input').val(this.text);
+    temp.$('p.tdp_edit-notes>textarea').val(this.notes);
+    temp.$('p.tdp_edit-goals>select').val(this.project);
+    temp.$('p.tdp_edit-freq>input').val(this.freq);
+    $('#site-modal').modal('toggle');
   }
 });

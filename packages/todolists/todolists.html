@@ -100,10 +100,14 @@
     {{is_private}}></label>
   </div>
   <div class="modal-footer">
-    <button type="button" id="cancel" class="btn btn-default">Cancel</button>
-    <button type="button" id="delete" class="btn btn-danger">Delete</button>
-    <button type="button" id="later" class="btn btn-warning">Later</button>
     <button type="button" id="save" class="btn btn-success">Save</button>
+    <button type="button" id="delete" class="btn btn-danger">Delete</button>
+    {{#if waiting_on}}
+    <button type="button" id="donow" class="btn btn-warning">Do Now</button>
+    {{else}}
+    <button type="button" id="later" class="btn btn-warning">Later</button>
+    {{/if}}
+    <button type="button" id="cancel" class="btn btn-default">Cancel</button>
   </div>
 </template>
 
@@ -117,9 +121,9 @@
     <p class="tdp_edit-goals">{{>project_select}}</p>
   </div>
   <div class="modal-footer">
-    <button type="button" id="cancel" class="btn btn-default">Cancel</button>
-    <button type="button" id="delete" class="btn btn-danger">Delete</button>
     <button type="button" id="save" class="btn btn-success">Save</button>
+    <button type="button" id="delete" class="btn btn-danger">Delete</button>
+    <button type="button" id="cancel" class="btn btn-default">Cancel</button>
   </div>
 </template>
 
@@ -129,11 +133,12 @@
 
     <p class="tdp_edit-text"><input id="tdp_edit-title" type="text" class="form-control" autocomplete="off" value="{{text}}"></p>
     <p class="tdp_edit-notes"><textarea class="form-control" placeholder="notes">{{notes}}</textarea></p>
+    <p class="tdp_edit-freq"><input type="number" class="form-control" min="1" autocomplete="off" value="{{freq}}" placeholder=7> (days)</p>
     <p class="tdp_edit-goals">{{>project_select}}</p>
   </div>
   <div class="modal-footer">
-    <button type="button" id="cancel" class="btn btn-default">Cancel</button>
-    <button type="button" id="delete" class="btn btn-danger">Delete</button>
     <button type="button" id="save" class="btn btn-success">Save</button>
+    <button type="button" id="delete" class="btn btn-danger">Delete</button>
+    <button type="button" id="cancel" class="btn btn-default">Cancel</button>
   </div>
 </template>
