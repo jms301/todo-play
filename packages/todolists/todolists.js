@@ -198,16 +198,16 @@ Template.habits.rendered = function() {
           after = ui.item.next().get(0)
 
           if(!before) {
-            newRank = Blaze.getData(after).rank - 1
+            newRank = Blaze.getData(after).data.rank - 1
           } else if(!after) {
-            newRank = Blaze.getData(before).rank + 1
+            newRank = Blaze.getData(before).data.rank + 1
           }
           else
-            newRank = (Blaze.getData(after).rank +
-                       Blaze.getData(before).rank)/2
+            newRank = (Blaze.getData(after).data.rank +
+                       Blaze.getData(before).data.rank)/2
 
           //update the dragged Item's rank
-          Habits.update({_id: Blaze.getData(el)._id}, {$set: {rank: newRank}});
+          Habits.update({_id: Blaze.getData(el).data._id}, {$set: {rank: newRank}});
           $(e.originalEvent.target).one('click', function(e){
             e.stopImmediatePropagation();
           });
@@ -415,16 +415,16 @@ Template.dailies.rendered = function() {
           after = ui.item.next().get(0)
 
           if(!before) {
-            newRank = Blaze.getData(after).rank - 1
+            newRank = Blaze.getData(after).data.rank - 1
           } else if(!after) {
-            newRank = Blaze.getData(before).rank + 1
+            newRank = Blaze.getData(before).data.rank + 1
           }
           else
-            newRank = (Blaze.getData(after).rank +
-                       Blaze.getData(before).rank)/2
+            newRank = (Blaze.getData(after).data.rank +
+                       Blaze.getData(before).data.rank)/2
 
           //update the dragged Item's rank
-          Dailies.update({_id: Blaze.getData(el)._id}, {$set: {rank: newRank}});
+          Dailies.update({_id: Blaze.getData(el).data._id}, {$set: {rank: newRank}});
           $(e.originalEvent.target).one('click', function(e){
             e.stopImmediatePropagation();
           });
@@ -608,21 +608,22 @@ Template.todos.rendered = function() {
         stop: function(e, ui) {
           // get the dragged html element and the one before
           //   and after it
-          el = ui.item.get(0)
-          before = ui.item.prev().get(0)
-          after = ui.item.next().get(0)
+          el = ui.item.get(0);
+          before = ui.item.prev().get(0);
+          after = ui.item.next().get(0);
 
           if(!before) {
-            newRank = Blaze.getData(after).rank - 1
+            newRank = Blaze.getData(after).data.rank - 1;
           } else if(!after) {
-            newRank = Blaze.getData(before).rank + 1
+            newRank = Blaze.getData(before).data.rank + 1;
+          } else {
+            newRank = (Blaze.getData(after).data.rank +
+                       Blaze.getData(before).data.rank)/2;
           }
-          else
-            newRank = (Blaze.getData(after).rank +
-                       Blaze.getData(before).rank)/2
 
           //update the dragged Item's rank
-          Todos.update({_id: Blaze.getData(el)._id}, {$set: {rank: newRank}});
+          Todos.update({_id: Blaze.getData(el).data._id}, {$set: {rank: newRank}});
+
           $(e.originalEvent.target).one('click', function(e){
             e.stopImmediatePropagation();
           });
