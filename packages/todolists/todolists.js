@@ -337,6 +337,7 @@ Template.item.events({
 
     $('#site-modal').modal('toggle');
 
+    $('#tdp_edit-title').focus();
     setTimeout(function () {
       $('#tdp_edit-title').focus();
       len = $('#tdp_edit-title').val().length * 2;

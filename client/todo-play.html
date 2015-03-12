@@ -43,14 +43,16 @@
 </template>
 
 <template name="modal">
-<div id="site-modal" class="modal fade">
+  <div id="site-modal" class = "modal
+{{#unless Meteor.isCordova}}
+fade
+{{/unless}}">
   <div class="modal-dialog">
     <div class="modal-content">
       {{> Template.dynamic template = modalTemplate data = modalData}}
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
-
 </template>
 
 <template name="blank">
