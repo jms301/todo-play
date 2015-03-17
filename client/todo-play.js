@@ -13,7 +13,14 @@ Template.modal.helpers({
   }
 });
 
+Template.modal.rendered = function () {
+  $('#site-modal').on('hidden.bs.modal', function (e) {
+    Session.set("modal_template", 'blank');
+    Session.set("modal_data", {});
 
+  });
+
+};
 
 // Hacks & Cludges:
 

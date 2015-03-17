@@ -18,95 +18,8 @@ if (Meteor.isCordova) {
   Ground.Collection(Habits);
 }
 
+// Messaging channels
 var channel = (channel || []);
-//DRY functions for habits/dailies/todos
-
-cancelEdit = function (id, List) {
-  if(id) {
-    var title_input = $('#item-title-' + id);
-    var notes_input = $('#item-notes-' + id);
-    var project_input  = $('#item-projects-' + id);
-    var private_input = $('#item-private-' + id);
-    var check_list = $('.item-checklist-' + id).toArray();
-
-
-    var item = List.findOne({_id: id});
-
-    title_input.val(item.text);
-    notes_input.val(item.notes);
-    project_input.val(item.project);
-    private_input.checked = item.private;
-
-    _.each(item.checklist, function (item, index) {
-      check_list[index].checked = item.done;
-    });
-  }
-};
-
-saveEdit = function (id, List) {
-  var title_input = $('#item-title-' + id);
-  var notes_input = $('#item-notes-' + id);
-  var project_input  = $('#item-projects-' + id + ' option:selected');
-  var private_input = $('#item-private-' + id);
-  var check_list = $('.item-checklist-' + id).toArray();
-
-  check_list = _.map(check_list, function (item, index) {
-    return {done: item.checked, item_text: item.value, index: index};
-  });
-
-  List.update(id, {$set: {notes: notes_input.val(), text: title_input.val(),
-                          project: project_input.val(), checklist: check_list,
-                          private: private_input.prop("checked")}});
-
-};
-
-cancelHabit = function (id, List) {
-  if(id) {
-    var title_input = $('#item-title-' + id);
-    var notes_input = $('#item-notes-' + id);
-    var freq_input  = $('#habit-freq-' + id);
-    var project_input  = $('#item-projects-' + id);
-
-    var item = List.findOne({_id: id});
-    title_input.val(item.text);
-    notes_input.val(item.notes);
-    freq_input.val(item.freq);
-    project_input.val(item.project);
-  }
-};
-
-saveHabit = function (id, List) {
-  var title_input = $('#item-title-' + id);
-  var notes_input = $('#item-notes-' + id);
-  var freq_input  = $('#habit-freq-' + id);
-  var project_input  = $('#item-projects-' + id + ' option:selected');
-
-  List.update(id, {$set: {notes: notes_input.val(), text: title_input.val(),
-                        freq: freq_input.val(), project: project_input.val()}});
-};
-
-$(document).keyup(function(e) {
-    if (e.keyCode == 27) {
-      cancelEdit(Session.get('edit_todo'), Todos);
-      cancelEdit(Session.get('edit_daily'), Dailies);
-      cancelHabit(Session.get('edit_habit'), Habits);
-      Session.set('edit_todo', null);
-      Session.set('edit_daily', null);
-      Session.set('edit_habit', null);
-    }   // esc -> cancel and close every thing
-});
-
-var clearSelect = function() {
-  if (window.getSelection) {
-    if (window.getSelection().empty) {  // Chrome
-      window.getSelection().empty();
-    } else if (window.getSelection().removeAllRanges) {  // Firefox
-      window.getSelection().removeAllRanges();
-    }
-  } else if (document.selection) {  // IE?
-    document.selection.empty();
-  }
-};
 
 //returns mid day of the 'day' the user is currently in this is configured by
 // the day_end setting so if it is 02:00 on the 9th and their day end is 3am it
@@ -173,7 +86,6 @@ Template.habits.events({
           freq: 7, //default frequency is once per week
           rank: low_rank - 1
         });
-        Session.set('edit_habit', habit);
         evt.target.value='';
       } else {
         //cancel
@@ -289,19 +201,6 @@ Template.item.helpers({
     }
 
   },
-
-  habit_status: function() {
-    //returns the urgency of this habit this.freq = ideal frequency in days.
-    // this.tickedtime = time of last completion.
-    },
-
-  not_editing: function (evt) {
-    return this._id == Session.get('edit_habit') ? "" : "editing";
-  },
-
-  editing: function (evt) {
-    return this._id == Session.get('edit_habit') ? "editing" : "";
-  }
 });
 
 
@@ -324,10 +223,6 @@ Template.item.events({
       stopProp(evt);
     }
 
-/*
-
-
-    */
     stopProp(evt);
   },
   'click div.tdp_edit-item, contextmenu .tdp_item': function (evt, template) {
@@ -335,7 +230,7 @@ Template.item.events({
     Session.set('modal_data', this.data);
     Session.set('modal_template', 'edit_' + this.type);
 
-    $('#site-modal').modal('toggle');
+    $('#site-modal').modal('show');
 
     $('#tdp_edit-title').focus();
     setTimeout(function () {
@@ -391,7 +286,6 @@ Template.dailies.events({
           ticktime: (new Date(0)),
           rank: low_rank - 1
         });
-        Session.set('edit_daily', daily);
         evt.target.value='';
       } else {
         //cancel
@@ -433,76 +327,6 @@ Template.dailies.rendered = function() {
     })
 };
 
-
-/*Template.daily_item.helpers({
-  ticked_icon: function () {
-    if (isDailyTicked(this))
-      return 'glyphicon glyphicon-ok';
-    else
-      return '';
-  },
-
-  ticked: function () {
-    if (isDailyTicked(this))
-      return 'ticked';
-    else
-      return '';
-  },
-
-  not_editing: function (evt) {
-    return this._id == Session.get('edit_daily') ? "" : "editing";
-  },
-
-  editing: function (evt) {
-    return this._id == Session.get('edit_daily') ? "editing" : "";
-  }
-});
-
-Template.daily_item.events({
-  'click li': function (evt) {
-    stopProp(evt);
-  },
-  'click .item-remove-x': function (evt) {
-      if(confirm("sure you want to delete that?"))
-        Dailies.remove(this._id);
-    stopProp(evt);
-  },
-  'click .item-checkbox': function (evt) {
-    var is_ticked = isDailyTicked(this);
-    Dailies.update(this._id, {$set: {done: !is_ticked, ticktime: (new Date()).getTime()}});
-    updateStats('dailies', !is_ticked, this.ticktime);
-    stopProp(evt);
-  },
-  'click .save-edit': function (evt) {
-    saveEdit(this._id, Dailies);
-    Session.set('edit_daily', null);
-    stopProp(evt);
-  },
-  'click .cancel-edit': function (evt) {
-    cancelEdit(this._id, Dailies);
-    Session.set('edit_daily', null);
-    stopProp(evt);
-  },
-
-  'dblclick .item-text, click .expand-edit': function (evt) {
-    if(Session.get('edit_daily') == null) {
-      Session.set('edit_daily', this._id);
-    } else if(Session.get('edit_daily') != this._id) {
-      saveEdit(Session.get('edit_daily'), Dailies);
-      Session.set('edit_daily', this._id);
-    } else {
-      Session.set('edit_daily', null);
-      saveEdit(this._id, Dailies);
-    }
-
-    clearSelect();
-    stopProp(evt);
-  },
-  'dblclick .item-edit-title, dblclick .item-edit-notes' : function(evt) {
-    stopProp(evt);
-  }
-});
-*/
 
 //Todos
 Template.todos.helpers({
@@ -758,7 +582,7 @@ Template.edit_todo.events({
                           project: project_input.val(),
                           private: private_input.prop("checked")}});
 
-        $('#site-modal').modal('toggle');
+        $('#site-modal').modal('hide');
       }
     }
     stopProp(evt);
@@ -796,15 +620,14 @@ Template.edit_todo.events({
                           project: project_input.val(),
                           private: private_input.prop("checked")}});
 
-    $('#site-modal').modal('toggle');
 
+    $('#site-modal').modal('hide');
   },
   'click button#delete' : function () {
     if(confirm("sure you want to delete this?"))
       Todos.remove(this._id);
 
-    $('#site-modal').modal('toggle');
-
+    $('#site-modal').modal('hide');
   },
   'click button#later' : function () {
     Session.set('modal_template', 'waiting_modal');
@@ -813,20 +636,21 @@ Template.edit_todo.events({
   'click button#donow' : function (evt, temp) {
 
     Todos.update(this._id, {$set: {hide_until: null}});
-    $('#site-modal').modal('toggle');
 
+    $('#site-modal').modal('hide');
   },
   'click button#cancel' : function (evt, temp) {
-    temp.$('p.tdp_edit-text>input').val(this.text);
-    temp.$('p.tdp_edit-notes>textarea').val(this.notes);
-    temp.$('p.tdp_edit-goals>select').val(this.project);
-    temp.$('label.tdp_edit-private>input')[0].checked = this.private;
 
-    $('#site-modal').modal('toggle');
+    $('#site-modal').modal('hide');
   }
 });
 
 Template.edit_todo.helpers({
+  /*notes: function () {
+    console.log("accessed notes");
+    console.log(this);
+    return this.notes;
+  },*/
   waiting_on: function () {
     // it has a hide_until & that value is in the future
     if ( this.hide_until && this.hide_until.getTime() > new Date().getTime()) {
@@ -858,7 +682,7 @@ Template.edit_daily.events({
                           text: title_input.val(),
                           project: project_input.val()}});
 
-        $('#site-modal').modal('toggle');
+        $('#site-modal').modal('hide');
       }
     }
     stopProp(evt);
@@ -873,22 +697,19 @@ Template.edit_daily.events({
                           text: title_input.val(),
                           project: project_input.val()}});
 
-    $('#site-modal').modal('toggle');
+    $('#site-modal').modal('hide');
 
   },
   'click button#delete' : function () {
     if(confirm("sure you want to delete this?"))
       Dailies.remove(this._id);
 
-    $('#site-modal').modal('toggle');
+    $('#site-modal').modal('hide');
 
   },
   'click button#cancel' : function (evt, temp) {
-    temp.$('p.tdp_edit-text>input').val(this.text);
-    temp.$('p.tdp_edit-notes>textarea').val(this.notes);
-    temp.$('p.tdp_edit-goals>select').val(this.project);
 
-    $('#site-modal').modal('toggle');
+    $('#site-modal').modal('hide');
   }
 });
 
@@ -909,7 +730,7 @@ Template.edit_habit.events({
                           freq: freq_input.val(),
                           project: project_input.val()}});
 
-        $('#site-modal').modal('toggle');
+        $('#site-modal').modal('hide');
       }
     }
     stopProp(evt);
@@ -926,21 +747,17 @@ Template.edit_habit.events({
                           freq: freq_input.val(),
                           project: project_input.val()}});
 
-    $('#site-modal').modal('toggle');
+    $('#site-modal').modal('hide');
 
   },
   'click button#delete' : function () {
     if(confirm("sure you want to delete this?"))
       Habits.remove(this._id);
 
-    $('#site-modal').modal('toggle');
+    $('#site-modal').modal('hide');
 
   },
   'click button#cancel' : function (evt, temp) {
-    temp.$('p.tdp_edit-text>input').val(this.text);
-    temp.$('p.tdp_edit-notes>textarea').val(this.notes);
-    temp.$('p.tdp_edit-goals>select').val(this.project);
-    temp.$('p.tdp_edit-freq>input').val(this.freq);
-    $('#site-modal').modal('toggle');
+    $('#site-modal').modal('hide');
   }
 });
