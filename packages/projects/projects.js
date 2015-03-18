@@ -2,13 +2,17 @@ Session.setDefault('active_project', false);
 
 Goals = new Meteor.Collection("goals");
 
+if (Meteor.isCordova) {
+    Ground.Collection(Goals);
+}
+
 var goalHandle = Meteor.subscribe('goals', function () {
 
 });
 
 // template to provide select list for todolist items.
 Template.project_select.helpers({
-  is_selected: function (parentThis)  { 
+  is_selected: function (parentThis)  {
     return (parentThis.project == this._id ? "selected" : "");
   },
   projects:  function () {
@@ -18,7 +22,7 @@ Template.project_select.helpers({
 
 
 // Projects functions helpers
-proj_helpers = { 
+proj_helpers = {
   projects:  function () {
     return Goals.find({userId: Meteor.userId()});
   },
@@ -36,7 +40,7 @@ proj_helpers = {
 Template.projects.helpers(proj_helpers);
 Template.projectsNav.helpers(proj_helpers);
 
-proj_events = {  
+proj_events = {
  'keydown #add-project, keyup #add-project, focusout #add-project': function (evt) {
     if(evt.type === 'keyup' && evt.which === 27) { //esc -> cancel
       //cancel
