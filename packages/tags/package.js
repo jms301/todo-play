@@ -13,7 +13,6 @@ Package.onUse(function(api) {
   api.use('ground:db', 'web.cordova');
   api.use('less');
   api.use('iron:router');
-  api.use('sergeyt:typeahead');
   api.use('mediator');
 
   api.addFiles('setup.js');

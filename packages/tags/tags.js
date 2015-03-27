@@ -37,7 +37,7 @@ tags_events = {
     }
     stopProp(evt);
   },
-  'click .tag-list' : function(evt) {
+  'click .tdp_tag-list' : function(evt) {
     setTimeout(function () {
       $('input#new-tag').focus()
     }, 1)
@@ -113,15 +113,8 @@ Template.tag.helpers({
 });
 
 Template.todo_tags.helpers({
-  autocomplete: function () {
-    return Tags.find().fetch().map(function(tag) { return tag.name; });
-  }
-});
 
-Template.todo_tags.rendered = function () {
-  var element = this.$('input.typeahead');
-  Meteor.typeahead(element);
-};
+});
 
 Template.todo_tags.events({
   'click ul.tdp_tag-list-todo' : function (evt, tmp) {
