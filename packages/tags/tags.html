@@ -1,6 +1,6 @@
 
 <template name="tagsNav">
-<div class="tdp_tag-list-nav">
+<div class="tdp_tag-list-nav tdp_phone-show">
 <ul class="form-control">
 {{#each tags}}
   {{>tag}}
@@ -13,7 +13,7 @@
 </template>
 
 <template name="tags">
-<ul class="tdp_tag-list form-control">
+<ul class="tdp_tag-list form-control tdp_phone-hide">
 {{#each tags}}
   {{>tag}}
 {{/each}}

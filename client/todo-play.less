@@ -1,3 +1,21 @@
+@import "client/todo-play.import.less";
+
 div#tdp_navbar {
   margin-bottom: 10px;
+
+  @media (min-width: @screen-sm-min) {
+    min-height: 35px;
+    line-height: 35px;
+    height: 35px;
+  }
+}
+
+.navbar-brand,
+.navbar-nav li a {
+  @media (min-width: @screen-sm-min) {
+    min-height: 35px;
+    line-height: 35px;
+    height: 35px;
+    padding-top: 0;
+  }
 }

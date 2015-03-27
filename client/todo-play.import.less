@@ -46,8 +46,21 @@
 @screen-sm-max: (@screen-md-min - 1);
 @screen-md-max: (@screen-lg-min - 1);
 
+.tdp_phone-hide {
+  @media (max-width: @screen-xs-max) {
+    display: none;
+  }
+
+}
+
+.tdp_phone-show {
+  @media (min-width: @screen-sm-min) {
+    display: none;
+  }
+}
+
 .tdp_tablet-hide {
-  @media (max-width: @screen-md-min) {
+  @media (max-width: @screen-sm-max) {
     display: none;
   }
 }
