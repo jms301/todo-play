@@ -21,3 +21,6 @@ rajit:bootstrap3-datepicker
 underscore
 admin
 twbs:bootstrap
+mdg:reload-on-resume
+email
+meteorhacks:fast-render
