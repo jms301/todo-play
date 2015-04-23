@@ -565,6 +565,21 @@ var edit_common = {
   },
 };
 
+rendered_common = function () {
+  console.log("rendered");
+  template = this;
+  if(template.$('input').val().length < 30)
+    template.$('p.tdp_edit-text>input').css('font-size', '2em');
+  else if(template.$('input').val().length < 45)
+    template.$('p.tdp_edit-text>input').css('font-size', '1.5em');
+  else
+    template.$('p.tdp_edit-text>input').css('font-size', '1em');
+
+}
+Template.edit_todo.rendered = rendered_common;
+Template.edit_daily.rendered = rendered_common;
+Template.edit_habit.rendered = rendered_common;
+
 Template.edit_todo.events(edit_common);
 Template.edit_todo.events({
   //enter saves & closes
