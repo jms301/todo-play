@@ -15,14 +15,16 @@ chuangbo:cookie@1.1.0
 datariot:ganalytics@0.2.1
 ddp@1.1.0
 deps@1.0.7
+dispatch:kernel@0.0.3
+dispatch:request-animation-frame@0.0.1
 doneticker@1.0.0
 ejson@1.0.6
 email@1.0.6
 fastclick@1.0.3
 geojson-utils@1.0.3
-ground:db@0.3.6
+ground:db@0.3.9
 ground:dictionary@0.2.0
-ground:localstorage@0.1.7
+ground:localstorage@0.1.8
 ground:minimax@1.1.2
 ground:servertime@0.0.3
 ground:store@0.1.1
@@ -30,7 +32,7 @@ ground:util@0.1.13
 html-tools@1.0.4
 htmljs@1.0.4
 http@1.1.0
-ian:accounts-ui-bootstrap-3@1.2.39
+ian:accounts-ui-bootstrap-3@1.2.54
 id-map@1.0.3
 iron:controller@1.0.7
 iron:core@1.0.7
