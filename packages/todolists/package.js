@@ -27,10 +27,6 @@ Package.onUse(function(api) {
   api.export('Habits');
   api.export('Todos');
   api.export('Dailies');
-
-
-  api.export('saveEdit');
-  api.export('saveHabit');
 });
 
 Package.onTest(function(api) {

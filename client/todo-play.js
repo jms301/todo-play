@@ -34,16 +34,5 @@ Template.ApplicationLayout.events({
     //auto focus the e-mail field when logging in.
     setTimeout(function () { $('#login-email').focus(); }, 1);
   },
-  /*'click' : function (evt)  {
-    if (Session.get('edit_todo'))
-      saveEdit(Session.get('edit_todo'), Todos);
-    if (Session.get('edit_daily'))
-      saveEdit(Session.get('edit_daily'), Dailies);
-    if (Session.get('edit_habit'))
-      saveHabit(Session.get('edit_habit'), Habits);
-    Session.set('edit_todo', null);
-    Session.set('edit_daily', null);
-    Session.set('edit_habit', null);
-  }*/
 });
 
