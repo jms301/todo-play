@@ -31,8 +31,10 @@
             <li> <a id="edit_config" href="{{pathFor route='config'}}">config</a></li>
           {{/if}}
           {{>loginButtons}}
-          {{>projectsNav}}
-          {{>tagsNav}}
+          {{#if currentUser}}
+            {{>projectsNav}}
+            {{>tagsNav}}
+          {{/if}}
         </ul>
       </div>
     </div>
@@ -57,4 +59,20 @@ fade
 </template>
 
 <template name="blank">
+</template>
+
+<template name="Loading">
+
+  <div>
+    <h3>Welcome to todo-Play.</h3>
+    <p>
+    You are not currently logged in, we are connecting to our web service at www.todo-play.com so you can log in or sign up.
+    </p>
+    {{#if isCordova}}
+    <p>
+    After signup tdp <i> does not require a connection to work</i>. Edits are backed up online when you use tdp whilst connected.
+    </p>
+    {{/if}}
+  </div>
+
 </template>

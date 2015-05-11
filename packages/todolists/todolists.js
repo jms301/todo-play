@@ -1,17 +1,3 @@
-//Collection handles
-var todoHandle = Meteor.subscribe('todos', function () {
-
-});
-
-var dailiesHandle = Meteor.subscribe('dailies', function () {
-
-});
-
-var habitsHandle = Meteor.subscribe('habits', function () {
-
-});
-
-
 if (Meteor.isCordova) {
   Ground.Collection(Todos);
   Ground.Collection(Dailies);

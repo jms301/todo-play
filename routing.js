@@ -1,7 +1,4 @@
 Router.configure({
-  layoutTemplate: 'ApplicationLayout'
-});
-
-Router.route('/', function () {
-  this.render('ItemLists');
+  layoutTemplate: 'ApplicationLayout',
+  loadingTemplate: 'Loading'
 });
