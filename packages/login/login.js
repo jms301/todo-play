@@ -1,5 +1,9 @@
 Session.setDefault("tdp_notify", "");
 
+var trimWS = function (x) {
+    return x.replace(/^\s+|\s+$/gm,'');
+};
+
 Template.TdpLogin.helpers({
   notify: function () {
     return Session.get("tdp_notify");
@@ -10,7 +14,7 @@ Template.TdpLogin.events({
   'submit #login-form' : function(evt, temp){
     evt.preventDefault();
     // retrieve the input field values
-    email = temp.$('input#login-email').val();
+    email = trimWS(temp.$('input#login-email').val());
     password = temp.$('input#login-password').val();
     Meteor.loginWithPassword(email, password, function(err){
       if (err)
@@ -21,7 +25,7 @@ Template.TdpLogin.events({
 
   'submit #create-form' : function(evt, temp){
 
-    email = temp.$('input#create-email').val();
+    email = trimWS(temp.$('input#create-email').val());
     password = temp.$('input#create-password').val();
 
     // Trim and validate the input
@@ -38,7 +42,7 @@ Template.TdpLogin.events({
 
   'submit #reset-pass-form' : function(evt, temp){
 
-    email = temp.$('input#reset-email').val();
+    email = trimWS(temp.$('input#reset-email').val());
 
     Accounts.forgotPassword({email: email}, function(err) {
       if (err) {
