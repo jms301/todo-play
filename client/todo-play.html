@@ -64,7 +64,9 @@ fade
 <template name="Loading">
 
   <div>
-    <h3>Welcome to todo-Play.</h3>
+    <center>
+      {{>spinner}}
+    <h3>Connecting to todo-Play.</h3>
     <p>
     You are not currently logged in, we are connecting to our web service at www.todo-play.com so you can log in or sign up.
     </p>
@@ -73,6 +75,7 @@ fade
     After signup tdp <i> does not require a connection to work</i>. Edits are backed up online when you use tdp whilst connected.
     </p>
     {{/if}}
+  </center>
   </div>
 
 </template>
