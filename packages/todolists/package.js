@@ -15,7 +15,6 @@ Package.onUse(function(api) {
   api.use('ground:db', 'web.cordova');
   api.use('mediator');
   api.use('projects');
-  api.use('stats');
   api.use('tags');
 
   api.addFiles('setup.js'); // shared setup for collections

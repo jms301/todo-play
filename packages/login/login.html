@@ -1,0 +1,39 @@
+<template name="TdpLogin">
+  <div id="main-pane" class="container">
+    <div class="row row-centered">
+      <div id="tdp_login-box" class="col-xs-6 col-centered">
+      <div id="tdp_login">
+        <h3>Sign in / Create Account</h3>
+        <form id="login-form">
+          <input type="email" id="login-email" class="form-control" placeholder="Email"><br/>
+          <input type="password" id="login-password" class="form-control" placeholder="Password"><br/>
+          <input type="submit" id="login-button" class="btn btn-primary form-control" value ="Sign in">
+        </form>
+        <a href='#' id="tdp_reset-pass" class="pull-left">Forgot password?</a>
+        <a href='#' id="tdp_create-acc" class="pull-right">Create account</a>
+      </div>
+
+      <div id="tdp_create" class="hidden">
+       <h3>Create Account / Sign in</h3>
+       <form id="create-form">
+          <input type="email" id="create-email" class="form-control" placeholder="Email"><br/>
+          <input type="password" id="create-password" class="form-control" placeholder="Password"><br/>
+          <input type="submit" id="create-button" class="btn btn-primary form-control" value ="Create">
+          <input id="tdp_cancel-create" type="Cancel" class="btn btn-default form-control" value ="Cancel">
+        </form>
+      </div>
+      <div id="tdp_reset" class="hidden">
+       <h3>Password reset</h3>
+       <form id="reset-pass-form">
+          <input type="email" id="reset-email" class="form-control" placeholder="Email"><br/>
+          <input type="submit" id="reset-button" class="btn btn-primary form-control" value ="Reset password">
+          <input id="tdp_cancel-reset" type="Cancel" class="btn btn-default form-control" value ="Cancel">
+        </form>
+      </div>
+      <div id="tdp_notification">
+        {{notify}}
+      </div>
+    </div>
+    </div>
+  </div>
+</template>

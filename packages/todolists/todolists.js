@@ -367,15 +367,6 @@ Template.todos.helpers({
         filter.project = Session.get('active_project');
 
       return Todos.find(filter , {sort: ["rank", "desc"]});
-    } else {
-      return [{
-          text: "Sign up for Todo:play",
-          userId: null,
-          done: false,
-          notes: "",
-          timestamp: (new Date()).getTime(),
-          _id: "fake"
-      }];
     }
   }
 });

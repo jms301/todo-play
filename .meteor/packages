@@ -13,7 +13,6 @@ iron:router@1.0.0-pre4
 projects
 userconfig
 todolists
-stats
 doneticker
 waitingon
 andruschka:jquery-ui-sortable
@@ -23,4 +22,3 @@ admin
 twbs:bootstrap
 mdg:reload-on-resume
 email
-meteorhacks:fast-render

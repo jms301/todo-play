@@ -1,7 +1,7 @@
 App.info({
   name: 'todo-Play',
   description: 'A simple GTD style todo list app',
-  version: '0.0.25'
+  version: '0.0.31'
   });
 
 App.icons({

@@ -11,7 +11,6 @@ blaze-tools@1.0.3
 boilerplate-generator@1.0.3
 callback-hook@1.0.3
 check@1.0.5
-chuangbo:cookie@1.1.0
 datariot:ganalytics@0.2.1
 ddp@1.1.0
 deps@1.0.7
@@ -53,9 +52,6 @@ mdg:reload-on-resume@1.0.4
 mediator@1.0.0
 meteor@1.1.6
 meteor-platform@1.2.2
-meteorhacks:fast-render@2.3.2
-meteorhacks:inject-data@1.2.3
-meteorhacks:picker@1.0.2
 minifiers@1.1.5
 minimongo@1.0.8
 mobile-status-bar@1.0.3
@@ -82,7 +78,6 @@ spacebars@1.0.6
 spacebars-compiler@1.0.6
 srp@1.0.3
 standard-app-packages@1.0.5
-stats@1.0.0
 stylus@1.0.7
 tags@1.0.0
 templating@1.1.1
