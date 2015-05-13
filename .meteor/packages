@@ -22,3 +22,4 @@ admin
 twbs:bootstrap
 mdg:reload-on-resume
 email
+login
