@@ -15,6 +15,8 @@ Package.onUse(function(api) {
   api.use('ground:db', 'web.cordova');
 
 
+  api.addFiles('setup.js');
+  api.addFiles('server.js', 'server');
   api.addFiles('projects.less', 'client');
   api.addFiles('projects.html', 'client');
   api.addFiles('projects.js', 'client');

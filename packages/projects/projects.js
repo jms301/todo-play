@@ -1,7 +1,5 @@
 Session.setDefault('active_project', false);
 
-Goals = new Meteor.Collection("goals");
-
 if (Meteor.isCordova) {
     Ground.Collection(Goals);
 }

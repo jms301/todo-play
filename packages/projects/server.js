@@ -1,4 +1,3 @@
-Goals = new Meteor.Collection("goals");
 
 Meteor.publish('goals', function () {
   return Goals.find({userId: this.userId} , {});
