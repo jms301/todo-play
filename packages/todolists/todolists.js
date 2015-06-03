@@ -195,17 +195,17 @@ Template.item.events({
     if(this.type == "todo") {
       Todos.update(this.data._id, {$set:
                               {done: !this.data.done, ticktime: (new Date())}});
-      updateStats('todos', !this.data.done, this.data.ticktime);
+      //updateStats('todos', !this.data.done, this.data.ticktime);
 
     } else if (this.type == "daily") {
       var is_ticked = isDailyTicked(this.data);
       Dailies.update(this.data._id, {$set:
                       {done: !is_ticked, ticktime: (new Date()).getTime()}});
-      updateStats('dailies', !is_ticked, this.data.ticktime);
+      //updateStats('dailies', !is_ticked, this.data.ticktime);
 
     } else if (this.type == "habit") {
       Habits.update(this.data._id, {$set: {ticktime: (new Date()).getTime()}});
-      updateStats('habits', true, null); // habits can only be incremented
+      //updateStats('habits', true, null); // habits can only be incremented
       stopProp(evt);
     }
 
@@ -543,7 +543,6 @@ var edit_common = {
 };
 
 rendered_common = function () {
-  console.log("rendered");
   template = this;
   if(template.$('input').val().length < 30)
     template.$('p.tdp_edit-text>input').css('font-size', '2em');
