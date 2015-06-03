@@ -1,4 +1,9 @@
+Meteor.subscribe('todos');
+Meteor.subscribe('dailies');
+Meteor.subscribe('habits');
+
 if (Meteor.isCordova) {
+  Ground.Collection(Meteor.users);
   Ground.Collection(Todos);
   Ground.Collection(Dailies);
   Ground.Collection(Habits);
