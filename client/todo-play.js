@@ -4,13 +4,6 @@ Session.setDefault('time_now', new Date().getTime());
 Session.setDefault("modal_template", 'blank');
 Session.setDefault("modal_data", {});
 
-
-Template.Loading.helpers({
-  isCordova: function () {
-    return Meteor.isCordova;
-  }
-});
-
 Template.modal.helpers({
   modalTemplate: function () {
     return Session.get('modal_template');

@@ -5,3 +5,8 @@ stopProp = function (evt) {
     evt.cancelBubble = true;
   }
 };
+
+Template.registerHelper("isCordova", function () {
+      return Meteor.isCordova;
+});
+

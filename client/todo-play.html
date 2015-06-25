@@ -27,7 +27,7 @@
           {{/if}}
         </ul>
         <ul class="nav navbar-nav navbar-right">
-          {{#unless Meteor.isCordova}}
+          {{#unless isCordova}}
             <li> <a id="android_button" href="https://play.google.com/store/apps/details?id=com.id1pbsnuz6x4dy218duleg"><img src="android.png" alt="android store" height="24px" ></a></li>
           {{/unless}}
 
@@ -51,7 +51,7 @@
 
 <template name="modal">
   <div id="site-modal" class = "modal
-{{#unless Meteor.isCordova}}
+{{#unless isCordova}}
 fade
 {{/unless}}">
   <div class="modal-dialog">
