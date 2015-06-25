@@ -27,6 +27,10 @@
           {{/if}}
         </ul>
         <ul class="nav navbar-nav navbar-right">
+          {{#unless Meteor.isCordova}}
+            <li> <a id="android_button" href="https://play.google.com/store/apps/details?id=com.id1pbsnuz6x4dy218duleg"><img src="android.png" alt="android store" height="24px" ></a></li>
+          {{/unless}}
+
           {{#if currentUser}}
             <li> <a id="edit_config" href="{{pathFor route='config'}}">config</a></li>
           {{/if}}
